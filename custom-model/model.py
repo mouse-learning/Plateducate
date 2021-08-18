@@ -70,3 +70,11 @@ model.compile(optimizer='Adam',
 history = model.fit(train_batches,
                     epochs=1,
                     validation_data=validation_batches)
+
+## EVALUTE THE MODEL ##
+
+model.evaluate(test_batches)
+
+## SAVE THE MODEL AS .PB FILE ##
+
+tf.saved_model.save(model, "../pets/")
