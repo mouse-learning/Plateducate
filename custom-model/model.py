@@ -58,3 +58,9 @@ model = tf.keras.Sequential([
     tf.keras.layers.GlobalAveragePooling2D(),
     tf.keras.layers.Dense(1,'sigmoid')
 ])
+
+## COMPILE THE MODEL ##
+
+model.compile(optimizer='Adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
