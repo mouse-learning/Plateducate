@@ -1,20 +1,48 @@
-from tensorflow.keras import datasets
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from re import DEBUG
+import tensorflow as tf
+import numpy as np
+import json
+import requests, time, logging
+from tensorflow.keras.applications import inception_v3
 
-# Load dataset
-(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
+SIZE=128
+MODEL_URI = 'http://localhost:8501/v1/models/pets:predict'
+CLASSES = ['cat', 'dog']
 
-# For training, we will use 10000 images
-# And we will test our model on 1000 images
-train_labels = train_labels[:10000]
-test_labels = test_labels[:1000]
+def get_prediction(imagePath):
+    image = tf.keras.preprocessing.image.load_img(imagePath, target_size=(SIZE, SIZE))
+    image = tf.keras.preprocessing.image.img_to_array(image)
 
-# Normalize
-train_images = train_images[:10000].reshape(-1, 28 * 28) / 255.0
-test_images = test_images[:1000].reshape(-1, 28 * 28) / 255.0
+    '''
 
-# Define the model
-model = Sequential()
-model.add(Dense(512, activation='relu', input_shape=(784,)))
-model.add(Dense(10, activation='softmax'))
+    Preprocessed numpy.array or a tf.Tensor with type float32.
+    The inputs pixel values are scaled between -1 and 1, sample-wise.
+    For MobileNetV2, call tf.keras.applications.mobilenet_v2.preprocess_input 
+    on your inputs before passing them to the model. mobilenet_v2.preprocess_input 
+    will scale input pixels between -1 and 1.
+    https://www.tensorflow.org/api_docs/python/tf/keras/applications/mobilenet_v2/MobileNetV2
+    
+    '''
+    image = inception_v3.preprocess_input(image)
+    image = np.expand_dims(image, axis=0)
+
+    payload = json.dumps({
+        'instances' : image.tolist()
+    })
+
+    response = requests.post(MODEL_URI, data=payload.encode('utf-8'))
+    result = json.loads(response.text)
+    # print("RESULT:")
+    # print(result['predictions'])
+    # prediction = np.squeeze(result['predictions'][0])
+    # print("Prediction: ", prediction)
+    # class_name = CLASSES[int(prediction > 0.5)]
+
+    # r = requests.post(MODEL_URI, json=payload)
+    # pred = json.loads(r.content.decode('utf-8'))
+    # prediction = np.squeeze(result['predictions'][0])
+    print("Prediction: ", result)
+    print(json.dumps(inception_v3.decode_predictions(np.array(result['predictions']))[0]))
+
+    
+    # return class_name
