@@ -64,3 +64,9 @@ model = tf.keras.Sequential([
 model.compile(optimizer='Adam',
               loss='binary_crossentropy',
               metrics=['accuracy'])
+
+## TRAIN THE MODEL ##
+
+history = model.fit(train_batches,
+                    epochs=1,
+                    validation_data=validation_batches)
