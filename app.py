@@ -1,13 +1,10 @@
-# ACTS AS THE CONTROLLER OF THE APP
-
 from flask import Flask, render_template, url_for, request, redirect
 from flask_bootstrap import Bootstrap
 
 import os
 import model
-import time
 
-app = Flask(__name__, template_folder='template')
+app = Flask(__name__, template_folder='Template')
 Bootstrap(app)
 
 """
@@ -29,4 +26,4 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8500)
+    app.run(debug = True, port=8500)
