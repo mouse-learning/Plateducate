@@ -423,3 +423,5 @@ pip-selfcheck.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/venv,visualstudiocode,macos,node,python,pycharm
+cat2
+__pycache__
