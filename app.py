@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 import os
 import model
 
-app = Flask(__name__, template_folder='Template')
+app = Flask(__name__, template_folder='template')
 Bootstrap(app)
 
 """
@@ -26,4 +26,4 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug = True, port=8500)
+    app.run(debug = True, port=5000)
