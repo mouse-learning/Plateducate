@@ -77,4 +77,4 @@ model.evaluate(test_batches)
 
 ## SAVE THE MODEL AS .PB FILE ##
 
-tf.saved_model.save(model, "../pets/")
+tf.saved_model.save(model, "../serving/pets/")
