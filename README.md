@@ -17,11 +17,32 @@ pip install -r requirements.txt
 
 1. Clone the repository by running:
     ```
-    git clone https://github.com/nardienapratama/tensorflow-deployment.git
+    $ git clone https://github.com/nardienapratama/tensorflow-deployment.git
     ```
     
 2. `cd` into `tensorflow-deployment`.
 3. Install the docker image of Tensorflow Serving and create a new docker instance by running this command:
     ```
-    docker run -p 8501:8501 — name=pets -v “<path-to-pets-folder>:/models/pets/1” -e MODEL_NAME=pets tensorflow/serving
+    $ docker run -p 8501:8501 — name=pets -v “<path-to-pets-folder>:/models/pets/1” -e MODEL_NAME=pets tensorflow/serving
     ```
+    If the command runs successfully, the output should look like this:
+    
+    ![](https://github.com/nardienapratama/tensorflow-deployment/blob/main/documentation/docker-tf-serving-image-success.png)
+    
+4. Activate your virtual environment with Python 3.7.0.
+5. Set the following Flask variables in the `tensorflow-deployment` directory:
+    ```
+    $ export FLASK_APP=app
+    ```
+    
+    and 
+    
+    ```
+    $ export FLASK_ENV=development
+    ```
+6. In the `tensorflow-deployment` directory, run:
+    ```
+    python app.py
+    ```
+    
+7. And you're good to go!
