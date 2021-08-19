@@ -4,7 +4,9 @@ from flask_bootstrap import Bootstrap
 import os
 import model
 
-app = Flask(__name__, template_folder='../template')
+# static_url_path='' removes any preceding path from the URL (i.e. the default /static).
+# static_folder='web/static' to serve any files found in the folder web/static as static files.
+app = Flask(__name__, template_folder='template')
 Bootstrap(app)
 
 """
