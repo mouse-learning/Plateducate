@@ -7,6 +7,7 @@ from tensorflow.keras.applications import mobilenet_v2
 
 SIZE=128
 MODEL_URI = 'http://localhost:8501/v1/models/pets:predict'
+# MODEL_URI = 'http://tensorflow-serving:8501/v1/models/pets:predict'
 CLASSES = ['cat', 'dog']
 
 def get_prediction(imagePath):
@@ -31,6 +32,7 @@ def get_prediction(imagePath):
     })
     response = requests.post(MODEL_URI, data=data.encode('utf-8'))
     result = json.loads(response.text)
+    print(result)
     prediction = np.squeeze(result['predictions'][0])
     class_name = CLASSES[int(prediction > 0.5)]
     return class_name
