@@ -17,7 +17,10 @@ def index():
     if request.method == 'POST':
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
+            # LOCALLY
             image_path = os.path.join('static', uploaded_file.filename)
+            # WITH DOCKER COMPOSE (RAN FROM ROOT ABOVE flask_server to be able to access serving dir, so diff path. Locally, we run from inside flask_server)
+            # image_path = os.path.join('flask_server/static', uploaded_file.filename)
             print(image_path)
             uploaded_file.save(image_path)
             print("Uploaded")
@@ -31,4 +34,4 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug = True)
-    app.run(debug=True, host='0.0.0.0')
+    # app.run(debug=True, host='0.0.0.0')
