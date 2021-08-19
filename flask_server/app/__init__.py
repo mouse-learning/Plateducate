@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 import os
 import model
 
-app = Flask(__name__, template_folder='template')
+app = Flask(__name__, template_folder='../template')
 Bootstrap(app)
 
 """
@@ -16,7 +16,9 @@ def index():
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
             image_path = os.path.join('static', uploaded_file.filename)
+            print(image_path)
             uploaded_file.save(image_path)
+            print("Uploaded")
             class_name = model.get_prediction(image_path)
             result = {
                 'class_name': class_name,
