@@ -10,6 +10,7 @@ services:
       - FLASK_ENV=dev
       - FLASK_APP=flask_server/app
       - FLASK_RUN_HOST=0.0.0.0
+      # - FLASK_DEBUG=ON
     ports:
       - 5000:5000
     volumes:
@@ -22,15 +23,17 @@ services:
           - flask_server
 
   tensorflow-serving:
-    image: docker.io/bitnami/tensorflow-serving:latest
+    image: tensorflow/serving
     container_name: tensorflow-serving
     ports:
       - 8500:8500
       - 8501:8501
     volumes:
-      - tensorflow-serving_data:/bitnami
-      - ./serving/conf:/bitnami/tensorflow-serving/conf/
-      - ./serving/pets:/bitnami/model-data
+      - ./serving/conf:/tensorflow-serving/conf/
+      - ./serving/model-data:/tensorflow-serving/models/
+    command:
+      - "--model_base_path=/tensorflow-serving/models/"
+      - "--model_name=pets"
     networks:
       - ml-network
 
