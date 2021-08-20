@@ -37,28 +37,3 @@ def get_prediction(imagePath):
     prediction = np.squeeze(result['predictions'][0])
     class_name = CLASSES[int(prediction > 0.5)]
     return class_name
-
-    # r = requests.post(MODEL_URI, json=data)
-
-     # Decoding results from TensorFlow Serving server
-    # prediction = json.loads(r.content.decode('utf-8'))
-
-    # prediction = (np.array(prediction['predictions'])[0] > 0.5).astype(np.int)
-
-    # class_name = CLASSES[int(prediction > 0.5)]
-
-
-
-
-    # data = json.dumps({"signature_name": "serving_default", "instances":imlst})
-    # data = json.dumps({
-    #     'instances': image.tolist()
-    # })
-    # headers = {"content-type": "application/json"}
-    # json_response = requests.post(MODEL_URI, data=data, headers=headers)
-    # out = np.array((json.loads(json_response.text)['predictions']))
-
-    # # Returning JSON response
-    # return jsonify({"status": 200, "message": out.shape})
-
-    # return result
