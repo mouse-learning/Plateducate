@@ -4,8 +4,6 @@ from flask_bootstrap import Bootstrap
 import os
 import model, time
 
-# static_url_path='' removes any preceding path from the URL (i.e. the default /static).
-# static_folder='web/static' to serve any files found in the folder web/static as static files.
 app = Flask(__name__, template_folder='template')
 Bootstrap(app)
 
@@ -18,10 +16,7 @@ def index():
         time.sleep(2)
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
-            # LOCALLY
-            # image_path = os.path.join('static', uploaded_file.filename)
-            # WITH DOCKER COMPOSE (RAN FROM ROOT ABOVE flask_server to be able to access serving dir, so diff path. Locally, we run from inside flask_server)
-            image_path = os.path.join('flask_server/static', uploaded_file.filename)
+            image_path = os.path.join('static', uploaded_file.filename)
             print(image_path)
             uploaded_file.save(image_path)
             print("Uploaded")
