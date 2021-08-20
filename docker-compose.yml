@@ -8,12 +8,12 @@ services:
       dockerfile: Dockerfile
     environment:
       - FLASK_ENV=dev
-      - FLASK_APP=flask_server/app
+      - FLASK_APP=app
       - FLASK_RUN_HOST=0.0.0.0
     ports:
       - 5000:5000
     volumes:
-      - .:/flask_server
+      - ./flask_server:/flask_server/
     depends_on:
       - tensorflow-serving
     networks:
@@ -22,15 +22,17 @@ services:
           - flask_server
 
   tensorflow-serving:
-    image: docker.io/bitnami/tensorflow-serving:latest
+    image: tensorflow/serving
     container_name: tensorflow-serving
     ports:
       - 8500:8500
       - 8501:8501
     volumes:
-      - tensorflow-serving_data:/bitnami
-      - ./serving/conf:/bitnami/tensorflow-serving/conf/
-      - ./serving/pets:/bitnami/model-data
+      - ./serving/conf:/tensorflow-serving/conf/
+      - ./serving/model-data:/tensorflow-serving/models/
+    command:
+      - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
+      - "--model_config_file_poll_wait_seconds=60"
     networks:
       - ml-network
 

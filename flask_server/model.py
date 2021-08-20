@@ -7,8 +7,8 @@ import requests, time, logging
 from tensorflow.keras.applications import mobilenet_v2
 
 SIZE=128
-MODEL_URI = 'http://localhost:8501/v1/models/pets:predict'
-# MODEL_URI = 'http://172.18.0.2:8501/v1/models/pets:predict'
+# MODEL_URI = 'http://localhost:8501/v1/models/pets:predict'
+MODEL_URI = 'http://tensorflow-serving:8501/v1/models/pets:predict'
 CLASSES = ['cat', 'dog']
 
 def get_prediction(imagePath):
@@ -37,28 +37,3 @@ def get_prediction(imagePath):
     prediction = np.squeeze(result['predictions'][0])
     class_name = CLASSES[int(prediction > 0.5)]
     return class_name
-
-    # r = requests.post(MODEL_URI, json=data)
-
-     # Decoding results from TensorFlow Serving server
-    # prediction = json.loads(r.content.decode('utf-8'))
-
-    # prediction = (np.array(prediction['predictions'])[0] > 0.5).astype(np.int)
-
-    # class_name = CLASSES[int(prediction > 0.5)]
-
-
-
-
-    # data = json.dumps({"signature_name": "serving_default", "instances":imlst})
-    # data = json.dumps({
-    #     'instances': image.tolist()
-    # })
-    # headers = {"content-type": "application/json"}
-    # json_response = requests.post(MODEL_URI, data=data, headers=headers)
-    # out = np.array((json.loads(json_response.text)['predictions']))
-
-    # # Returning JSON response
-    # return jsonify({"status": 200, "message": out.shape})
-
-    # return result
