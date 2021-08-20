@@ -7,7 +7,7 @@ import requests, time, logging
 from tensorflow.keras.applications import mobilenet_v2
 
 SIZE=128
-# MODEL_URI = 'http://172.29.0.1:8501/v1/models/pets:predict'
+# MODEL_URI = 'http://localhost:8501/v1/models/pets:predict'
 MODEL_URI = 'http://tensorflow-serving:8501/v1/models/pets:predict'
 CLASSES = ['cat', 'dog']
 
