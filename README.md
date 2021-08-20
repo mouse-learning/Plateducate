@@ -15,7 +15,7 @@ Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) in
     
 2. Enter the `tensorflow-deployment` directory.
 3. Start up the application by running `docker-compose up` or `sudo docker-compose up` if you are in Linux.
-4. Enter http://localhost:5000/ in your browser to the application running.
+4. Enter http://localhost:5000/ in your browser to see the application running.
     
 ## Sources Used
 
