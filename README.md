@@ -5,7 +5,7 @@ Mobile Image Recognition Application
 
 ## Environment Pre-requisites
 
-Make sure you have [docker](https://docs.docker.com/get-docker/) and [docker compose](https://docs.docker.com/compose/install/) installed in your computer.
+Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed in your computer. 
 
 ## Execution
 
