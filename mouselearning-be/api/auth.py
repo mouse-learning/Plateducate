@@ -2,6 +2,8 @@ from flask import Blueprint
 
 auth = Blueprint('main', __name__)
 
+BASE_URL = "http://localhost:3000"
+
 @auth.route('/add_user', methods=['POST'])
 def add_user():
     return 'Successfully Added User', 201
