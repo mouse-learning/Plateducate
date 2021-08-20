@@ -8,13 +8,13 @@ services:
       dockerfile: Dockerfile
     environment:
       - FLASK_ENV=dev
-      - FLASK_APP=flask_server/app
+      - FLASK_APP=app
       - FLASK_RUN_HOST=0.0.0.0
       # - FLASK_DEBUG=ON
     ports:
       - 5000:5000
     volumes:
-      - .:/flask_server
+      - ./flask_server:/flask_server/
     depends_on:
       - tensorflow-serving
     networks:
@@ -32,8 +32,8 @@ services:
       - ./serving/conf:/tensorflow-serving/conf/
       - ./serving/model-data:/tensorflow-serving/models/
     command:
-      - "--model_base_path=/tensorflow-serving/models/"
-      - "--model_name=pets"
+      - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
+      - "--model_config_file_poll_wait_seconds=60"
     networks:
       - ml-network
 
