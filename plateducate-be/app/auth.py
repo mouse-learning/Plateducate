@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 
-auth = Blueprint('main', __name__)
+auth = Blueprint('auth', __name__)
 
 BASE_URL = "http://localhost:3000"
 
