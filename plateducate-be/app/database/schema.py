@@ -5,12 +5,9 @@ from jsonschema.exceptions import SchemaError
 user_schema = {
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string",
-        },
         "username": {
             "type": "string",
-            "maxLength": 18
+            "maxLength": 255
         },
         "email": {
             "type": "string",
@@ -20,10 +17,18 @@ user_schema = {
             "type": "string",
             "minLength": 5
         },
+        "firstname": {
+            "type": "string",
+            "maxLength": 255
+        },
+        "lastname": {
+            "type": "string",
+            "maxLength": 255
+        },
         "imgsrc": {
             "type": "string"
         },
     },
-    "required": ["email", "password"],
+    "required": ["username", "email", "password"],
     "additionalProperties": False
 }
