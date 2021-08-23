@@ -13,6 +13,7 @@ cryptography = "*"
 flask-sqlalchemy = "*"
 flask-mysql = "*"
 jsonschema = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.7"
