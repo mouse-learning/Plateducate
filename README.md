@@ -1,22 +1,28 @@
 # mouselearning
 Mobile Image Recognition Application
 
-# Deploying a Custom Deep Learning Tensorflow Model using Tensorflow Serving with Docker and Flask
+# mouselearning: Training a Pre-trained Tensorflow Model on the Food Dataset
 
-## Environment Pre-requisites
+## Dataset
+The UECFOOD256 food dataset can be found on [kaggle](https://www.kaggle.com/rkuo2000/uecfood256).
 
-Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed in your computer. 
+## Data Pre-processing
+The data has been pre-processed with the scripts in this [folder](https://github.com/mouse-learning/Plateducate/tree/ml/object-detection-ssd/Tensorflow/scripts) so that each JPG file contains the food class name and the id corresponding to its bounding box info.
 
-## Execution
+1. Create label.pbtxt file using this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/label_name_create.py).
+2. Rename class directories from their id to their class name, e.g. 1 -> 'abodos', and the .jpg files from their id to their class name and id, e.g. '123.jpg' -> 'nachos123.jpg' using this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/rename_dataset256.py).
+3. Generate XML files for each JPG in each class directory using this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/convert_to_XML.py).
+4. Split the data in each class directory into training and test data and copy to the training and test folders using this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/split_dataset.py).
+5. Check whether the bounding boxes are correct using this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/split_dataset.py). Note: this script still has bugs so beware (can't stop showing image after running the script).
 
-1. Clone the repository into your local machine using:
+## Creating the Tensorflow Records
+Run this [script](https://github.com/mouse-learning/Plateducate/blob/ml/object-detection-ssd/Tensorflow/scripts/generate_tfrecord.py) to generate the tensorflow records files for the training and test datasets.
 
-    ```git clone https://github.com/nardienapratama/tensorflow-deployment.git```
-    
-2. Enter the `tensorflow-deployment` directory.
-3. Start up the application by running `docker-compose up` or `sudo docker-compose up` if you are in Linux.
-4. Enter http://localhost:5000/ in your browser to see the application running.
-    
-## Sources Used
-
-This boilerplate is based on this [tutorial](https://towardsdatascience.com/deploying-deep-learning-models-using-tensorflow-serving-with-docker-and-flask-3b9a76ffbbda) and the image classification model was created based on this [tutorial](https://androidkt.com/tensorflow-model-for-prediction-from-scratch/), though modifications have been made accordingly.
+Run the script in this format:
+```
+python generate_tfrecord.py -x "path-to-training-images-directory" -l "path-to-pbtxt-file" -o "output-path-to-training-record-file" -c "output-path-to-training-csv-file"
+```
+Do the same for the test dataset:
+```
+python generate_tfrecord.py -x "path-to-training-images-directory" -l "path-to-pbtxt-file" -o "path-to-test-record-file-output" -c "path-to-test-csv-file-output"
+```
