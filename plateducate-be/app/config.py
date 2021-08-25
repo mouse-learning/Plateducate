@@ -1,3 +1,0 @@
-MYSQL_DATABASE_USER = "root"
-MYSQL_DATABASE_PASSWORD = "MouseLearning321"
-MYSQL_DATABASE_DB = "Plateducate"
