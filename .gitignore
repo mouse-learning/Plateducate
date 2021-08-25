@@ -430,5 +430,5 @@ __pycache__
 *.xml
 *.zip
 *.record
-./Tensorflow/workspace/training_ssd/annotations/test.record
-./Tensorflow/workspace/training_ssd/annotations/train.record
+/Tensorflow/workspace/training_ssd/annotations/test.record
+/Tensorflow/workspace/training_ssd/annotations/train.record
