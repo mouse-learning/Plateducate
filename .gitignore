@@ -488,3 +488,9 @@ pip-selfcheck.json
 cat2
 __pycache__
 /Tensorflow/
+*.jpg
+*.xml
+*.zip
+*.record
+./Tensorflow/workspace/training_ssd/annotations/test.record
+./Tensorflow/workspace/training_ssd/annotations/train.record
