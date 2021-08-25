@@ -181,9 +181,15 @@ if __name__ == '__main__':
 # -o [PATH_TO_ANNOTATIONS_FOLDER]/train.record
 
 
+<<<<<<< HEAD
 # python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/training" -l "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.record" -c "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.csv"
 
 # python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/test" -l "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.record" -c "/media/nardiena/7C1247391246F7A21/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.csv"
+=======
+# python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/training" -l "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.record" -c "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.csv"
+
+# python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/test" -l "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.record" -c "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.csv"
+>>>>>>> 67c60eb (Added script to automatically generate TF record from dataset)
 
 # Create test data:
 # python generate_tfrecord.py -x [PATH_TO_IMAGES_FOLDER]/test -l [PATH_TO_ANNOTATIONS_FOLDER]/label_map.pbtxt -o [PATH_TO_ANNOTATIONS_FOLDER]/test.record
