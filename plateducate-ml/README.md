@@ -17,4 +17,3 @@ Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) in
 ## Sources Used
 
 This boilerplate is based on this [tutorial](https://towardsdatascience.com/deploying-deep-learning-models-using-tensorflow-serving-with-docker-and-flask-3b9a76ffbbda) and the image classification model was created based on this [tutorial](https://androidkt.com/tensorflow-model-for-prediction-from-scratch/), though modifications have been made accordingly.
-
