@@ -425,6 +425,7 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/venv,visualstudiocode,macos,node,python,pycharm
 cat2
 __pycache__
+*.zip
 /Tensorflow/
 *.jpg
 *.xml
