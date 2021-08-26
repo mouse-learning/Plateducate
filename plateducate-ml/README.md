@@ -8,9 +8,9 @@ Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) in
 
 1. Clone the repository into your local machine using:
 
-    ```git clone https://github.com/nardienapratama/tensorflow-deployment.git```
+    ```git clone https://github.com/mouse-learning/Plateducate/edit/ml/object-detection.git```
     
-2. Enter the `tensorflow-deployment` directory.
+2. Enter the `plateducate-ml` directory.
 3. Start up the application by running `docker-compose up` or `sudo docker-compose up` if you are in Linux.
 4. Enter http://localhost:5000/ in your browser to see the application running.
     
