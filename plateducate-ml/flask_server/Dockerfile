@@ -1,8 +1,8 @@
 FROM python:3.7.0
 
-'''Add . directory into /tensorflow-deployment in docker container'''
-ADD . /tensorflow-deployment
-WORKDIR /tensorflow-deployment
+# '''Add . directory into /tensorflow-deployment in docker container'''
+ADD . /Plateducate/plateducate-ml
+WORKDIR /Plateducate/plateducate-ml
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
