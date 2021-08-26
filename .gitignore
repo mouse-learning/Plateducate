@@ -492,5 +492,6 @@ __pycache__
 *.xml
 *.zip
 *.record
+*.tar.gz
 /Tensorflow/workspace/training_ssd/annotations/test.record
 /Tensorflow/workspace/training_ssd/annotations/train.record
