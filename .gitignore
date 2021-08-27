@@ -1,0 +1,9 @@
+*.jpg
+*.xml
+*.zip
+*.record
+*.tar.gz
+/Tensorflow/workspace/training_ssd/annotations/test.record
+/Tensorflow/workspace/training_ssd/annotations/train.record
+*.code-workspace
+__pycache__
