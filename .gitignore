@@ -3,7 +3,11 @@
 *.zip
 *.record
 *.tar.gz
-/Tensorflow/workspace/training_ssd/annotations/test.record
-/Tensorflow/workspace/training_ssd/annotations/train.record
+/Tensorflow/workspace/training_faster_rcnn/annotations/test.record
+/Tensorflow/workspace/training_faster_rcnn/annotations/train.record
 *.code-workspace
 __pycache__
+/Tensorflow/workspace/training_faster_rcnn/pre-trained-models/faster_rcnn_inception_resnet_v2_640x640_coco17_tpu-8
+*ckpt*
+checkpoint
+*events*
