@@ -3,33 +3,9 @@ from flask import Flask, Blueprint, render_template, request, redirect, url_for,
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
-from dotenv import load_dotenv
+from .database import db
 
-
-#format for create_engine (mysql+pymysql://username:password@localhost/databasename)
-#have to install pymysql package
-auth = Flask(__name__)
-load_dotenv()
-url = "mysql+pymysql://{}:{}@{}/{}".format(os.getenv("SQL_USERNAME"), os.getenv("SQL_PASS"), os.getenv("URL"), os.getenv("SQL_DATABASE"))
-engine = create_engine(url)
-db = scoped_session(sessionmaker(bind=engine))
-# print(os.getenv("SQL_USERNAME"))
-# print(os.getenv("SQL_PASS"))
-# print(os.getenv("SQL_DATABASE"))
-# print(os.getenv("URL"))
-
-#auth = Blueprint('main', __name__)
-
-# REDUNDANT, COULD USE IF YOU WANT TO UTILISE flask_sqlalchemy instead of sqlalchemy like here
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(100), nullable=False)
-#     username = db.Column(db.Text, nullable=False)
-#     password = db.Column(db.String(20), nullable=False)
-#
-#     def __repr__(self):
-#         return 'User id: ' + str(self.name)
-
+auth = Blueprint('auth', __name__)
 
 @auth.route('/')
 def home():
@@ -108,8 +84,3 @@ def fetch_user():
 
     users = []
     return users, 201
-
-
-if __name__ == "__main__":
-    auth.secret_key = "somethingaboutmeltingblackfabric"
-    auth.run(debug=True)
