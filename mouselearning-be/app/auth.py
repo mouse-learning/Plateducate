@@ -1,16 +1,22 @@
-from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash
-from flask_sqlalchemy import SQLAlchemy
+import os
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
-
+from dotenv import load_dotenv
 
 
 #format for create_engine (mysql+pymysql://username:password@localhost/databasename)
 #have to install pymysql package
 auth = Flask(__name__)
-engine = create_engine("mysql+pymysql://root:Password1@localhost/register")
+load_dotenv()
+url = "mysql+pymysql://{}:{}@{}/{}".format(os.getenv("SQL_USERNAME"), os.getenv("SQL_PASS"), os.getenv("URL"), os.getenv("SQL_DATABASE"))
+engine = create_engine(url)
 db = scoped_session(sessionmaker(bind=engine))
+# print(os.getenv("SQL_USERNAME"))
+# print(os.getenv("SQL_PASS"))
+# print(os.getenv("SQL_DATABASE"))
+# print(os.getenv("URL"))
 
 #auth = Blueprint('main', __name__)
 
@@ -30,29 +36,28 @@ def home():
     return render_template('home.html')
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        name = request.form.get("name")
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
         username = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
         secure_password = sha256_crypt.encrypt(str(password))
+        try: 
+            if password == confirm:
+                db.execute("INSERT INTO plateducate.users(firstname, lastname, username, email, password) VALUES (:firstname, :lastname, :username, :email, :password)",
+                        {"firstname":firstname, "lastname":lastname, "username":username, "email":email, "password":secure_password})
+                db.commit()
+                return jsonify({'ok': True, 'message': "Success inserting user to database"}), 400
+            else:
+                return jsonify({'ok': False, 'message': "Password confirmation does not match"}), 400
+        except:
+            return jsonify({'ok': False, 'message': "Exception found committing to database"}), 500
 
-        if password == confirm:
-            db.execute("INSERT INTO users(name, username, password) VALUES (:name, :username, :password)",
-                       {"name":name, "username":username, "password":secure_password})
-            db.commit()
-            flash("you are registered and can login", "success")
-            # new_user = User(name=name, username=username, password=secure_password)
-            # db.session.add(new_user)
-            # db.session.commit()
-            return redirect(url_for('login'))
-        else:
-            flash("password does not match", "danger")
-            return render_template("register.html")
-
-    return render_template('register.html')
+    return jsonify({'ok': False, 'message': "False request method"}), 400
 
 
 @auth.route('/login', methods=['GET', 'POST'])

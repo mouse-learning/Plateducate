@@ -1,0 +1,5 @@
+SQL_USERNAME = "root"
+# SQL_PASS = "Password1"
+SQL_PASS = "MouseLearning321"
+# SQL_DATABASE = "register"
+SQL_DATABASE = "Plateducate"
