@@ -431,5 +431,17 @@ __pycache__
 *.zip
 *.record
 *.tar.gz
+*.png
 /Tensorflow/workspace/training_ssd/annotations/test.record
 /Tensorflow/workspace/training_ssd/annotations/train.record
+*.code-workspace
+cat2
+*ckpt*
+*checkpoint*
+*events*
+__pycache__./Tensorflow/workspace/training_ssd/annotations/test.record
+/Tensorflow/workspace/training_ssd/exported_models/2/ssd-model.zip
+
+/Tensorflow/workspace/training_ssd/models/my_ssd_mobilenet_v1_fpn/train/*
+
+/Tensorflow/workspace/training_ssd_100/models/my_ssd_mobilenet_v1_fpn/train/*
