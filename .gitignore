@@ -11,3 +11,5 @@ __pycache__
 *ckpt*
 checkpoint
 *events*
+/Tensorflow-ssd/
+*.png
