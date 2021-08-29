@@ -1,0 +1,500 @@
+item {
+	name: 'rice'
+	id: 1
+}
+
+item {
+	name: 'eels_on_rice'
+	id: 2
+}
+
+item {
+	name: 'pilaf'
+	id: 3
+}
+
+item {
+	name: 'chicken_and_egg_on_rice'
+	id: 4
+}
+
+item {
+	name: 'pork_cutlet_on_rice'
+	id: 5
+}
+
+item {
+	name: 'beef_curry'
+	id: 6
+}
+
+item {
+	name: 'sushi'
+	id: 7
+}
+
+item {
+	name: 'chicken_rice'
+	id: 8
+}
+
+item {
+	name: 'fried_rice'
+	id: 9
+}
+
+item {
+	name: 'tempura_bowl'
+	id: 10
+}
+
+item {
+	name: 'bibimbap'
+	id: 11
+}
+
+item {
+	name: 'toast'
+	id: 12
+}
+
+item {
+	name: 'croissant'
+	id: 13
+}
+
+item {
+	name: 'roll_bread'
+	id: 14
+}
+
+item {
+	name: 'raisin_bread'
+	id: 15
+}
+
+item {
+	name: 'chip_butty'
+	id: 16
+}
+
+item {
+	name: 'hamburger'
+	id: 17
+}
+
+item {
+	name: 'pizza'
+	id: 18
+}
+
+item {
+	name: 'sandwiches'
+	id: 19
+}
+
+item {
+	name: 'udon_noodle'
+	id: 20
+}
+
+item {
+	name: 'tempura_udon'
+	id: 21
+}
+
+item {
+	name: 'soba_noodle'
+	id: 22
+}
+
+item {
+	name: 'ramen_noodle'
+	id: 23
+}
+
+item {
+	name: 'beef_noodle'
+	id: 24
+}
+
+item {
+	name: 'tensin_noodle'
+	id: 25
+}
+
+item {
+	name: 'fried_noodle'
+	id: 26
+}
+
+item {
+	name: 'spaghetti'
+	id: 27
+}
+
+item {
+	name: 'Japanese-style_pancake'
+	id: 28
+}
+
+item {
+	name: 'takoyaki'
+	id: 29
+}
+
+item {
+	name: 'gratin'
+	id: 30
+}
+
+item {
+	name: 'sauteed_vegetables'
+	id: 31
+}
+
+item {
+	name: 'croquette'
+	id: 32
+}
+
+item {
+	name: 'grilled_eggplant'
+	id: 33
+}
+
+item {
+	name: 'sauteed_spinach'
+	id: 34
+}
+
+item {
+	name: 'vegetable_tempura'
+	id: 35
+}
+
+item {
+	name: 'miso_soup'
+	id: 36
+}
+
+item {
+	name: 'potage'
+	id: 37
+}
+
+item {
+	name: 'sausage'
+	id: 38
+}
+
+item {
+	name: 'oden'
+	id: 39
+}
+
+item {
+	name: 'omelet'
+	id: 40
+}
+
+item {
+	name: 'ganmodoki'
+	id: 41
+}
+
+item {
+	name: 'jiaozi'
+	id: 42
+}
+
+item {
+	name: 'stew'
+	id: 43
+}
+
+item {
+	name: 'teriyaki_grilled_fish'
+	id: 44
+}
+
+item {
+	name: 'fried_fish'
+	id: 45
+}
+
+item {
+	name: 'grilled_salmon'
+	id: 46
+}
+
+item {
+	name: 'salmon_meuniere'
+	id: 47
+}
+
+item {
+	name: 'sashimi'
+	id: 48
+}
+
+item {
+	name: 'grilled_pacific_saury'
+	id: 49
+}
+
+item {
+	name: 'sukiyaki'
+	id: 50
+}
+
+item {
+	name: 'sweet_and_sour_pork'
+	id: 51
+}
+
+item {
+	name: 'lightly_roasted_fish'
+	id: 52
+}
+
+item {
+	name: 'steamed_egg_hotchpotch'
+	id: 53
+}
+
+item {
+	name: 'tempura'
+	id: 54
+}
+
+item {
+	name: 'fried_chicken'
+	id: 55
+}
+
+item {
+	name: 'sirloin_cutlet'
+	id: 56
+}
+
+item {
+	name: 'nanbanzuke'
+	id: 57
+}
+
+item {
+	name: 'boiled_fish'
+	id: 58
+}
+
+item {
+	name: 'seasoned_beef_with_potatoes'
+	id: 59
+}
+
+item {
+	name: 'hamburg_steak'
+	id: 60
+}
+
+item {
+	name: 'beef_steak'
+	id: 61
+}
+
+item {
+	name: 'dried_fish'
+	id: 62
+}
+
+item {
+	name: 'ginger_pork_saute'
+	id: 63
+}
+
+item {
+	name: 'spicy_chilli-flavored_tofu'
+	id: 64
+}
+
+item {
+	name: 'yakitori'
+	id: 65
+}
+
+item {
+	name: 'cabbage_roll'
+	id: 66
+}
+
+item {
+	name: 'rolled_omelet'
+	id: 67
+}
+
+item {
+	name: 'egg_sunny-side_up'
+	id: 68
+}
+
+item {
+	name: 'fermented_soybeans'
+	id: 69
+}
+
+item {
+	name: 'cold_tofu'
+	id: 70
+}
+
+item {
+	name: 'egg_roll'
+	id: 71
+}
+
+item {
+	name: 'chilled_noodle'
+	id: 72
+}
+
+item {
+	name: 'stir-fried_beef_and_peppers'
+	id: 73
+}
+
+item {
+	name: 'simmered_pork'
+	id: 74
+}
+
+item {
+	name: 'boiled_chicken_and_vegetables'
+	id: 75
+}
+
+item {
+	name: 'sashimi_bowl'
+	id: 76
+}
+
+item {
+	name: 'sushi_bowl'
+	id: 77
+}
+
+item {
+	name: 'fish-shaped_pancake_with_bean_jam'
+	id: 78
+}
+
+item {
+	name: 'shrimp_with_chill_source'
+	id: 79
+}
+
+item {
+	name: 'roast_chicken'
+	id: 80
+}
+
+item {
+	name: 'steamed_meat_dumpling'
+	id: 81
+}
+
+item {
+	name: 'omelet_with_fried_rice'
+	id: 82
+}
+
+item {
+	name: 'cutlet_curry'
+	id: 83
+}
+
+item {
+	name: 'spaghetti_meat_sauce'
+	id: 84
+}
+
+item {
+	name: 'fried_shrimp'
+	id: 85
+}
+
+item {
+	name: 'potato_salad'
+	id: 86
+}
+
+item {
+	name: 'green_salad'
+	id: 87
+}
+
+item {
+	name: 'macaroni_salad'
+	id: 88
+}
+
+item {
+	name: 'Japanese_tofu_and_vegetable_chowder'
+	id: 89
+}
+
+item {
+	name: 'pork_miso_soup'
+	id: 90
+}
+
+item {
+	name: 'chinese_soup'
+	id: 91
+}
+
+item {
+	name: 'beef_bowl'
+	id: 92
+}
+
+item {
+	name: 'kinpira-style_sauteed_burdock'
+	id: 93
+}
+
+item {
+	name: 'rice_ball'
+	id: 94
+}
+
+item {
+	name: 'pizza_toast'
+	id: 95
+}
+
+item {
+	name: 'dipping_noodles'
+	id: 96
+}
+
+item {
+	name: 'hot_dog'
+	id: 97
+}
+
+item {
+	name: 'french_fries'
+	id: 98
+}
+
+item {
+	name: 'mixed_rice'
+	id: 99
+}
+
+item {
+	name: 'goya_chanpuru'
+	id: 100
+}
+
