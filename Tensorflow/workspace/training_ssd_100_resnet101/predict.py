@@ -12,7 +12,11 @@ import warnings
 warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 
 # LOAD THE MODEL
+<<<<<<< HEAD
 PATH_TO_SAVED_MODEL = 'exported_models/1/saved_model'
+=======
+PATH_TO_SAVED_MODEL = 'exported_models/2/saved_model'
+>>>>>>> 21c3ec2 (added ssd resnet101 100 dataset training dir)
 IMAGE_PATHS = ['images/test/egg_pan.jpg', 'images/test/rice16557.jpg', 'images/test/beef_bowl11556.jpg']
 
 print('Loading model...', end='')
