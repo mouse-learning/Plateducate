@@ -10,6 +10,8 @@ services:
       - FLASK_ENV=dev
       - FLASK_APP=app
       - FLASK_RUN_HOST=0.0.0.0
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=$PYTHONPATH:/flask_server/models/research/:/flask_server/models/research/slim/
     ports:
       - 5000:5000
     volumes:
@@ -30,6 +32,7 @@ services:
     volumes:
       - ./serving/conf:/tensorflow-serving/conf/
       - ./serving/model-data:/tensorflow-serving/models/
+      
     command:
       - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
       - "--model_config_file_poll_wait_seconds=60"
