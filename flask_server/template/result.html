@@ -2,11 +2,19 @@
 
 {% block content %}
   <div class="container">
-    <h1>Predicted Class: {{ result.class_name }}</h1>
-    <hr>
+    <h1>Model Name: {{ result.model_name }} </h1>
     <div>
-      <img src="{{ result.image_path }}" class="img-rounded" width="400" height="200">
+      <img src="{{ result.image_path }}" class="img-rounded" width="600">
     </div>
+    <h1>Predictions: </h1>
+    <ol>
+    {% for i, j in result.class_with_scores %}
+      <li>{{ i }} with a score of {{ j }}</li>
+    {% endfor %}
+    </ol>
+      
+
+    <hr>
     <a href="{{ url_for('index') }}" class="btn btn-default">Back</a>
   </div>
 
