@@ -1,6 +1,6 @@
 FROM python:3.7.0
 
-'''Add . directory into /tensorflow-deployment in docker container'''
+# '''Add . directory into /tensorflow-deployment in docker container'''
 ADD . /tensorflow-deployment
 WORKDIR /tensorflow-deployment
 
