@@ -13,3 +13,5 @@ checkpoint
 *events*
 train
 variables
+/Tensorflow-ssd/
+*.png
