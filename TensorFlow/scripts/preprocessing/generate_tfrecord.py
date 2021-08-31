@@ -80,8 +80,8 @@ def xml_to_csv(path):
 
     xml_list = []
     for xml_file in glob.glob(path + '/*.xml'):
-        print("-----------------------------XML FILE--------------------")
-        print(xml_file)
+        # print("-----------------------------XML FILE--------------------")
+        # print(xml_file)
         tree = ET.parse(xml_file)
         root = tree.getroot()
         filename = root.find('filename').text
@@ -160,8 +160,11 @@ def main(_):
 
     writer = tf.python_io.TFRecordWriter(args.output_path)
     path = os.path.join(args.image_dir)
+    print("xml to csv")
     examples = xml_to_csv(args.xml_dir)
+    print("split - filename")
     grouped = split(examples, 'filename')
+    print("group in grouped")
     for group in grouped:
         tf_example = create_tf_example(group, path)
         writer.write(tf_example.SerializeToString())
@@ -182,10 +185,10 @@ if __name__ == '__main__':
 
 
 # python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/training" -l "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.record" -c "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/train.csv"
-# python generate_tfrecord.py -x "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\images\train" -l "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\label_map.pbtxt" -o "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\train.record" -c "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\train.csv"
+# python generate_tfrecord.py -x "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\images\train" -l "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\label_name_100.pbtxt" -o "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\train.record" -c "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\train.csv"
 
 # python generate_tfrecord.py -x "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/images/test" -l "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/label_map.pbtxt" -o "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.record" -c "/media/nardiena/7C1247391246F7A2/Documents/programming-projects/Plateducate/Tensorflow/workspace/training_ssd/annotations/test.csv"
-# python generate_tfrecord.py -x "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\images\test" -l "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\label_map.pbtxt" -o "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\test.record" -c "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn\annotations\test.csv"
+# python generate_tfrecord.py -x "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\images\test" -l "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\label_name_100.pbtxt" -o "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\test.record" -c "D:\Practice\ML\Project\Plateducate\TensorFlow\workspace\training_faster_rcnn_100_image\annotations\test.csv"
 
 # Create test data:
 # python generate_tfrecord.py -x [PATH_TO_IMAGES_FOLDER]/test -l [PATH_TO_ANNOTATIONS_FOLDER]/label_map.pbtxt -o [PATH_TO_ANNOTATIONS_FOLDER]/test.record
