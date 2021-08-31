@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Avisgoo",
+    "slug": "snack-6c282850-a6e2-4ef3-befe-3b98f22bfbbf",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.Avisgoo.Avisgoo",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+        "package": "com.Avisgoo.Avisgoo",
+        "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
+    }
+  }
+}
