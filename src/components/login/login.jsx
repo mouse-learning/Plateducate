@@ -22,6 +22,8 @@ export class Login extends React.Component{
             </div>
             <div className="da-footer">
                 <button type="button" className="btn">Log In</button>
+                <h3>Forgot your password ?</h3>
+                
             </div>
         </div>
     }
