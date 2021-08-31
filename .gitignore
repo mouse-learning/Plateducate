@@ -502,6 +502,7 @@ cat2
 *ckpt*
 *checkpoint*
 *events*
+*.txt
 __pycache__./Tensorflow/workspace/training_ssd/annotations/test.record
 /Tensorflow/workspace/training_ssd/exported_models/2/ssd-model.zip
 
@@ -538,3 +539,9 @@ __pycache__./Tensorflow/workspace/training_ssd/annotations/test.record
 /Tensorflow/workspace/training_ssd_mobilenet_v1/models/my_ssd_mobilenet_v1_fpn/ckpt-67.data-00000-of-00001
 /Tensorflow/workspace/training_ssd_mobilenet_v1/models/my_ssd_mobilenet_v1_fpn/train/events.out.tfevents.1630087954.nardiena-legion-ubuntu.73932.1470.v2
 /Tensorflow/workspace/training_ssd_mobilenet_v1/models/my_ssd_mobilenet_v1_fpn/train/events.out.tfevents.1630131590.nardiena-legion-ubuntu.101020.1470.v2
+
+variables
+
+./flask_server/detection_boxes.txt
+./flask_server/output.txt
+./serving/model-data/ssd_resnet101/1/variables/variables.data-00000-of-00001
