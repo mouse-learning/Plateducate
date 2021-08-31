@@ -3,9 +3,13 @@ import tensorflow as tf
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
 <<<<<<< HEAD
+<<<<<<< HEAD
 from pprint import pprint
 =======
 >>>>>>> 0e82515 (added ssd mobilenet 100 dataset training dir)
+=======
+from pprint import pprint
+>>>>>>> adf2e28 (Fixed predict.py in training folders)
 
 import numpy as np
 from PIL import Image
@@ -18,10 +22,14 @@ warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 # LOAD THE MODEL
 PATH_TO_SAVED_MODEL = 'exported_models/2/saved_model'
 <<<<<<< HEAD
+<<<<<<< HEAD
 IMAGE_PATHS = ['images/test/french_fries15743.jpg']
 =======
 IMAGE_PATHS = ['images/test/egg_pan.jpg', 'images/test/rice16557.jpg', 'images/test/beef_bowl11556.jpg']
 >>>>>>> 0e82515 (added ssd mobilenet 100 dataset training dir)
+=======
+IMAGE_PATHS = ['images/test/french_fries15743.jpg']
+>>>>>>> adf2e28 (Fixed predict.py in training folders)
 
 print('Loading model...', end='')
 start_time = time.time()
@@ -78,10 +86,15 @@ for image_path in IMAGE_PATHS:
   detections = detect_fn(input_tensor)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   with open('detection_boxes.txt', 'wt') as out:
     pprint(detections, stream=out)
 =======
 >>>>>>> 0e82515 (added ssd mobilenet 100 dataset training dir)
+=======
+  with open('detection_boxes.txt', 'wt') as out:
+    pprint(detections, stream=out)
+>>>>>>> adf2e28 (Fixed predict.py in training folders)
   # All outputs are batches tensors.
   # Convert to numpy arrays, and take index [0] to remove the batch dimension.
   # We're only interested in the first num_detections.
@@ -96,9 +109,13 @@ for image_path in IMAGE_PATHS:
   image_np_with_detections = image_np.copy()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 0e82515 (added ssd mobilenet 100 dataset training dir)
+=======
+
+>>>>>>> adf2e28 (Fixed predict.py in training folders)
   viz_utils.visualize_boxes_and_labels_on_image_array(
         image_np_with_detections,
         detections['detection_boxes'],
