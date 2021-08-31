@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 
 # LOAD THE MODEL
-PATH_TO_SAVED_MODEL = 'exported_models/2/saved_model'
+PATH_TO_SAVED_MODEL = 'exported_models/1/saved_model'
 IMAGE_PATHS = ['images/test/egg_pan.jpg', 'images/test/rice16557.jpg', 'images/test/beef_bowl11556.jpg']
 
 print('Loading model...', end='')
