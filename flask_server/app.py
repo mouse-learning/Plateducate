@@ -20,10 +20,12 @@ def index():
             # print(image_path)
             uploaded_file.save(image_path)
             # print("Uploaded")
-            image_bb_path, class_name = model.get_prediction(image_path, uploaded_file.filename)
+            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename)
             result = {
-                'class_name': class_name,
-                'image_path': image_bb_path,
+                'model_name': model_name,
+                'class_with_scores': zip(class_name, scores),
+                'image_path': image_bb_path, 
+                'time_elapsed': time_elapsed
             }
             return render_template('result.html', result = result)
     return render_template('index.html')
