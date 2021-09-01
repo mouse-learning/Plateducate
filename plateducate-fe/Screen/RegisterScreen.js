@@ -15,22 +15,28 @@ import {
 } from 'react-native';
 
 import Loader from './Components/Loader';
+import Constants from "expo-constants";
+const { manifest } = Constants;
+
+const api = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
+  ? manifest.debuggerHost.split(`:`).shift().concat(`:80`)
+  : `api.example.com`;
 
 const RegisterScreen = (props) => {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userAge, setUserAge] = useState('');
   const [userPassword, setUserPassword] = useState('');
+  const [userConfirmPassword, setUserConfirmPassword] = useState('');
   const [userAddress, setUserAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
   const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
-  const nameInputRef = createRef();
+  const usernameInputRef = createRef();
   const emailInputRef = createRef();
-  const ageInputRef = createRef();
   const passwordInputRef = createRef();
-  const addressInputRef = createRef();
+  const confirmPasswordInputRef = createRef();
 
   const handleSubmitButton = () => {
     setErrortext('');
@@ -43,16 +49,19 @@ const RegisterScreen = (props) => {
       return;
     }
     if (!userPassword) {
-      alert('Please fill Address');
+      alert('Please fill Password');
       return;
     }
-    if (!userAge) {
-      alert('Please fill Age');
+    if (!userPassword) {
+      alert('Please confirm Password');
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!userConfirmPassword) {
+      alert('Please confirm Password');
       return;
+    }
+    if (userPassword != userConfirmPassword) {
+      alert('Password do not match!')
     }
     //Show Loader
     setLoading(true);
@@ -60,8 +69,7 @@ const RegisterScreen = (props) => {
       user_name: userName,
       user_email: userEmail,
       user_password: userPassword,
-      user_age: userAge,
-      user_address: userAddress,
+      user_confirmPassword: userConfirmPassword,
     };
     var formBody = [];
     for (var key in dataToSend) {
@@ -71,7 +79,8 @@ const RegisterScreen = (props) => {
     }
     formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/register.php', {
+    console.log('http:/192.168.137.1:80/register')
+    fetch('http:/192.168.137.1:80/register', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -85,7 +94,7 @@ const RegisterScreen = (props) => {
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
+        if (responseJson.status == 200) {
           setIsRegistraionSuccess(true);
           console.log('Registration Successful. Please Login to proceed');
         } else {
@@ -149,9 +158,10 @@ const RegisterScreen = (props) => {
               placeholder="Enter Username"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
+              ref={usernameInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
-                emailInputRef.current && emailInputRef.current.focus()
+                userName.current && userName.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -167,7 +177,7 @@ const RegisterScreen = (props) => {
               ref={emailInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
-                ageInputRef.current && ageInputRef.current.focus()
+                emailInputRef.current && emailInputRef.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -183,7 +193,7 @@ const RegisterScreen = (props) => {
               ref={passwordInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
-                ageInputRef.current && ageInputRef.current.focus()
+                passwordInputRef.current && passwordInputRef.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -191,30 +201,16 @@ const RegisterScreen = (props) => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={(UserAge) => setUserAge(UserAge)}
+              onChangeText={(userConfirmPassword) => setUserConfirmPassword(userConfirmPassword)}
               underlineColorAndroid="#f000"
-              placeholder="Enter Age"
+              placeholder="Confirm Password"
               placeholderTextColor="#8b9cb5"
-              keyboardType="numeric"
-              ref={ageInputRef}
+              secureTextEntry={true}
+              ref={passwordInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
-                addressInputRef.current && addressInputRef.current.focus()
+                confirmPasswordInputRef.current && confirmPasswordInputRef.current.focus()
               }
-              blurOnSubmit={false}
-            />
-          </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={(UserAddress) => setUserAddress(UserAddress)}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Address"
-              placeholderTextColor="#8b9cb5"
-              autoCapitalize="sentences"
-              ref={addressInputRef}
-              returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
             />
           </View>

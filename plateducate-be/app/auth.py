@@ -15,8 +15,8 @@ def home():
 @auth.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
+        # firstname = request.form.get("firstname")
+        # lastname = request.form.get("lastname")
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
@@ -25,9 +25,9 @@ def register():
         try: 
             if password == confirm:
                 db.execute("INSERT INTO plateducate.users(firstname, lastname, username, email, password) VALUES (:firstname, :lastname, :username, :email, :password)",
-                        {"firstname":firstname, "lastname":lastname, "username":username, "email":email, "password":secure_password})
+                        {"firstname":None, "lastname":None, "username":username, "email":email, "password":secure_password})
                 db.commit()
-                return jsonify({'ok': True, 'message': "Success inserting user to database"}), 400
+                return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
             else:
                 return jsonify({'ok': False, 'message': "Password confirmation does not match"}), 400
         except:
