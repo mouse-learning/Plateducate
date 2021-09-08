@@ -13,20 +13,27 @@ import matplotlib
 matplotlib.use('TkAgg') 
 
 SIZE=128
-model_name = 'ssd_mobilenet'
-MAX_BOXES_TO_DRAW = 3
-MODEL_URI = 'http://localhost:8501/v1/models/' + model_name + ':predict'
-# MODEL_URI = 'http://tensorflow-serving:8501/v1/models/ssd_mobilenet:predict'
-CLASSES = ['cat', 'dog']
+MAX_BOXES_TO_DRAW = 1
+MIN_SCORE_THRESH = 0.3
 PATH_TO_LABELS = './label_name_100.pbtxt'
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS,
                                                                     use_display_name=True)
+
+def convertLabelToStr(data):
+  model_name_str = data.split("_")
+
+  model_name_str = " ".join(model_name_str).upper()
+
+  return model_name_str
+
 
 def GetClassNameAndScoreList(data):
   classes_arr = []
   scores_arr = []
   for cl, score in data:
-    classes_arr.append(cl['name'])
+    class_name = convertLabelToStr(cl['name'])
+    classes_arr.append(class_name)
+    score = round(score*100)
     scores_arr.append(score)
   return classes_arr, scores_arr
 
@@ -46,7 +53,11 @@ def load_image_into_numpy_array(path):
   """
   return np.array(Image.open(path))
 
-def get_prediction(imagePath, fileName):
+def get_prediction(imagePath, fileName, modelName):
+  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/ssd_mobilenet:predict'
+
+
   # OBJECT DETECTION MODEL
   image_np = load_image_into_numpy_array(imagePath)
   # image_np = np.expand_dims(image_np, 0)
@@ -57,6 +68,7 @@ def get_prediction(imagePath, fileName):
   end = time.perf_counter()
   time_elapsed = end-start
   print(f"Took {time_elapsed:.2f}s")
+  time_elapsed = round(time_elapsed, 2)
   detections = res.json()
 
   # The JSON Response is a dictionary with key 'predictions'.
@@ -97,21 +109,25 @@ def get_prediction(imagePath, fileName):
         category_index,
         use_normalized_coordinates=True,
         max_boxes_to_draw=MAX_BOXES_TO_DRAW,
-        min_score_thresh=.20,
+        min_score_thresh=MIN_SCORE_THRESH,
         agnostic_mode=False)
 
-  # fig = plt.figure()
-  # plt.imshow(image_np_with_detections)
-  # print('Done')
+
   im = Image.fromarray(image_np_with_detections)
-  new_image_path = os.path.join('static', fileName)
+  new_image_path = os.path.join('static', modelName + fileName)
   im.save(new_image_path)
-  # plt.show()
 
 
-  #data processed
+  #Data processed
   classes = detections['detection_classes']
   scores = detections['detection_scores']
+
+  num_of_boxes_actually_drawn = 0
+  for i in scores:
+    if i >= MIN_SCORE_THRESH:
+      num_of_boxes_actually_drawn += 1
+  
+  num_of_boxes_actually_drawn = min(num_of_boxes_actually_drawn, MAX_BOXES_TO_DRAW)
 
   data = []
   for value, score in zip(classes, scores):
@@ -119,9 +135,7 @@ def get_prediction(imagePath, fileName):
     class_names, scores = GetClassNameAndScoreList(data)
 
 
-  model_name_str = model_name.split("_")
-
-  model_name_str = " ".join(model_name_str).upper()
+  model_name_str = convertLabelToStr(modelName)
 
 
-  return model_name_str, new_image_path, class_names[:MAX_BOXES_TO_DRAW], scores[:MAX_BOXES_TO_DRAW], time_elapsed
+  return model_name_str, new_image_path, class_names[:num_of_boxes_actually_drawn], scores[:num_of_boxes_actually_drawn], time_elapsed
