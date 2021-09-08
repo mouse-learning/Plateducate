@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
-    <h1>Model Name: {{ result.model_name }} </h1>
-    <div>
-      <img src="{{ result.image_path }}" class="img-rounded" width="600">
+<div class="container">
+  <div class="row">
+    <div class="column" style="float: left; width: 50%;">
+      <h1><b>{{ resultMobile.model_name }} Model</b></h1>
+      <div>
+        <img src="{{ resultMobile.image_path }}" class="img-rounded" width="500">
+      </div>
+      <h1><b>Time elapsed</b>: {{resultMobile.time_elapsed }} seconds</h1>
+      <h1><b>Predictions</b>: </h1>
+      <ol>
+      {% for i, j in resultMobile.class_with_scores %}
+        <h1><li>{{ i }} - {{ j }}%</li></h1>
+      {% endfor %}
+      </ol>
     </div>
-    <h1>Predictions: </h1>
-    <ol>
-    {% for i, j in result.class_with_scores %}
-      <li>{{ i }} with a score of {{ j }}</li>
-    {% endfor %}
-    </ol>
+    <div class="column" style="float: left; width: 50%;">
+      <h1><b>{{ resultResnet.model_name }} Model</b></h1>
+      <div>
+        <img src="{{ resultResnet.image_path }}" class="img-rounded" width="500">
+      </div>
+      <h1><b>Time elapsed</b>: {{resultResnet.time_elapsed }} seconds</h1>
+      <h1><b>Predictions</b>: </h1>
+      <ol>
+      {% for i, j in resultResnet.class_with_scores %}
+        <h1><li>{{ i }} - {{ j }}%</li></h1>
+      {% endfor %}
+      </ol>
+
+    </div>
+
+
       
 
     <hr>
     <a href="{{ url_for('index') }}" class="btn btn-default">Back</a>
   </div>
+</div>
 
 {% endblock %}
