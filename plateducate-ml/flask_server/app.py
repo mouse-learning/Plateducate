@@ -17,15 +17,26 @@ def index():
         uploaded_file = request.files['file']
         if uploaded_file.filename != '':
             image_path = os.path.join('static', uploaded_file.filename)
-            print(image_path)
+            # print(image_path)
             uploaded_file.save(image_path)
-            print("Uploaded")
-            class_name = model.get_prediction(image_path)
-            result = {
-                'class_name': class_name,
-                'image_path': image_path,
+            # print("Uploaded")
+            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_mobilenet')
+            resultMobile = {
+                'model_name': model_name,
+                'class_with_scores': zip(class_name, scores),
+                'image_path': image_bb_path, 
+                'time_elapsed': time_elapsed
             }
-            return render_template('result.html', result = result)
+
+            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_resnet101')
+            resultResnet = {
+                'model_name': model_name,
+                'class_with_scores': zip(class_name, scores),
+                'image_path': image_bb_path, 
+                'time_elapsed': time_elapsed
+            }
+
+            return render_template('result.html', resultMobile = resultMobile, resultResnet = resultResnet)
     return render_template('index.html')
 
 if __name__ == '__main__':
