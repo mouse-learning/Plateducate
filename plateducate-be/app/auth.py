@@ -69,10 +69,14 @@ def login():
 # Temporary route - change to other file later!
 @auth.route('/submit_photo', methods=['POST'])
 def submit_photo():
+    url = 'http://localhost:3000/receive_photo'
     base64Image = request.data
-    dataIsBytes = True if type(base64Image) == bytes else False
+    response = requests.post(url, data=base64Image)
 
-    return jsonify({'ok': True, 'message': "image post request sent", 'typeIsBytes': dataIsBytes}), 200
+    # dataIsBytes = True if type(base64Image) == bytes else False
+    # return jsonify({'ok': True, 'message': "image post request sent", 'typeIsBytes': dataIsBytes}), 200
+
+    return (response.text, response.status_code, response.headers.items())
 
 @auth.route('/logout')
 def logout():
