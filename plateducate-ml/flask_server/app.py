@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_bootstrap import Bootstrap
 
 import os
@@ -38,6 +38,17 @@ def index():
 
             return render_template('result.html', resultMobile = resultMobile, resultResnet = resultResnet)
     return render_template('index.html')
+
+@app.route('/receive_photo', methods=['POST', 'GET'])
+def receive_photo():
+    data = request.data
+    
+    dataIsBytes = True if type(data) == bytes else False
+
+    if data:
+        return jsonify({'ok': True, 'message': "ML flask server - image post request retrieved", 'typeIsBytes': dataIsBytes}), 200
+    else:
+        return jsonify({'ok': False, 'message': "ML flask server - no data found", 'typeIsBytes': dataIsBytes}), 400
 
 if __name__ == '__main__':
     # app.run(debug = True)
