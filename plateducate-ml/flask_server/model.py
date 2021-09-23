@@ -54,7 +54,8 @@ def load_image_into_numpy_array(path):
   return np.array(Image.open(path))
 
 def get_prediction(imagePath, fileName, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
   # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/ssd_mobilenet:predict'
 
 
