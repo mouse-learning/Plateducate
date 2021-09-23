@@ -5,6 +5,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
 from .database import db
 from dotenv import load_dotenv
+import datetime
 
 auth = Blueprint('auth', __name__)
 USER_ID = None
@@ -29,7 +30,7 @@ def register():
             db.execute("INSERT INTO plateducate.users(firstname, lastname, username, email, password) VALUES (:firstname, :lastname, :username, :email, :password)",
                     {"firstname":firstname, "lastname":lastname, "username":username, "email":email, "password":secure_password})
             db.commit()
-            return jsonify({'ok': True, 'message': "Success inserting user to database"}), 400
+            return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
         else:
             return jsonify({'ok': False, 'message': "Password confirmation does not match"}), 400
         # except:
@@ -70,7 +71,9 @@ def login():
 
 @auth.route('/logout')
 def logout():
-    session.clear()
+    # reset the current USER_ID
+    global USER_ID
+    USER_ID = None
     flash("You are now logged out", "success")
     return redirect(url_for('login'))
 
@@ -85,6 +88,30 @@ def get_profile():
     print(first_name, last_name, profile_pic, USER_ID)
 
     return jsonify({'ok': True, 'message': "Profile fetched"}), 200
+
+
+@auth.route('/add_food', methods=['GET', 'POST'])
+def add_food():
+    global USER_ID
+    print(USER_ID)
+    if request.method == 'POST':
+        if USER_ID is not None:
+            food = request.form.get("food")
+            ts = datetime.datetime.now().timestamp()
+            protein = request.form.get("protein")
+            carbs = request.form.get("carbs")
+            fat = request.form.get("fat")
+            fiber = request.form.get("fiber")
+
+            db.execute(
+                "INSERT INTO plateducate.consumption_records VALUES (:USER_ID, :food, :ts, :protein, :carbs, :fat, :fiber)",
+                {"USER_ID": USER_ID, "food": food, "ts": ts, "protein": protein, "carbs": carbs, "fat": fat,
+                 "fiber": fiber})
+            db.commit()
+            return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
+        else:
+            return jsonify({'ok': False, 'message': "User not logged in"}), 400
+
 
 # dummy page to display after user successfully logged in
 @auth.route('/photo')
