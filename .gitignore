@@ -5,6 +5,8 @@
 *.record
 *.tar.gz
 *.png
+*.pb
+*.weights
 __pycache__
 /Tensorflow/workspace/training_ssd/annotations/test.record
 /Tensorflow/workspace/training_ssd/annotations/train.record
