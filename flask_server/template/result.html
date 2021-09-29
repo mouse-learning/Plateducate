@@ -4,17 +4,6 @@
 <div class="container">
   <div class="row">
     <div class="column" style="float: left; width: 50%;">
-      <h1><b>{{ resultMobile.model_name }} Model</b></h1>
-      <div>
-        <img src="{{ resultMobile.image_path }}" class="img-rounded" width="500">
-      </div>
-      <h1><b>Time elapsed</b>: {{resultMobile.time_elapsed }} seconds</h1>
-      <h1><b>Predictions</b>: </h1>
-      <ol>
-      {% for i, j in resultMobile.class_with_scores %}
-        <h1><li>{{ i }} - {{ j }}%</li></h1>
-      {% endfor %}
-      </ol>
     </div>
     <div class="column" style="float: left; width: 50%;">
       <h1><b>{{ resultResnet.model_name }} Model</b></h1>
