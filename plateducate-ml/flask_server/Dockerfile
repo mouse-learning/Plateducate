@@ -6,9 +6,7 @@ WORKDIR /Plateducate/plateducate-ml
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt 
-    # export PYTHONPATH=$PYTHONPATH:/tensorflow-api/models/research/:/tensorflow-api/models/research/slim/
 
-# ENV PYTHONPATH "${PYTHONPATH}:/tensorflow-api/models/research/:/tensorflow-api/models/research/slim/"
 
 EXPOSE 5000
 EXPOSE 8501
