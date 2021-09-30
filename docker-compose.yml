@@ -2,40 +2,43 @@ version: "3"
 services:
 <<<<<<< HEAD
   flask_server:
-    container_name: flask_server
+    container_name: plateducate-ml-server
     restart: always
     build:
-      context: ./flask_server
+      context: ./flask_server #where the Dockerfile is
       dockerfile: Dockerfile
     environment:
       - FLASK_ENV=dev
       - FLASK_APP=app
       - FLASK_RUN_HOST=0.0.0.0
       - PYTHONUNBUFFERED=1
-      - PYTHONPATH=$PYTHONPATH:/flask_server/models/research/:/flask_server/models/research/slim/
+      - PYTHONPATH=$PYTHONPATH:/plateducate-ml-server/models/research/:/plateducate-ml-server/models/research/slim/:/plateducate-ml-server/darkflow/
     ports:
       - 5000:5000
     volumes:
-      - ./flask_server:/flask_server/
+      - ./flask_server/:/plateducate-ml-server/
+    
     depends_on:
       - tensorflow-serving
     networks:
       ml-network:
         aliases:
-          - flask_server
+          - plateducate-ml
 
   tensorflow-serving:
-    image: tensorflow/serving
     container_name: tensorflow-serving
+    build:
+      context: ./serving
+      dockerfile: Dockerfile
     ports:
       - 8500:8500
       - 8501:8501
     volumes:
       - ./serving/conf:/tensorflow-serving/conf/
       - ./serving/model-data:/tensorflow-serving/models/
-      
+    runtime: nvidia
     command:
-      - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
+      - "--model_config_file=/serving/conf/tensorflow-serving.conf"
       - "--model_config_file_poll_wait_seconds=60"
     networks:
       - ml-network
