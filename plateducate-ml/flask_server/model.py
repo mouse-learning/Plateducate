@@ -53,11 +53,11 @@ def load_image_into_numpy_array(path):
 
 
 def get_prediction_yolo(imagePath, fileName, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
 
-  options = {"model": "darkflow/cfg/yolov2-food100.cfg", "load": "darkflow/weights/yolov2-food100_10000.weights", "labels": "darkflow/labels.txt", "threshold": 0.1}
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1}
   tfnet = TFNet(options)
 
 
