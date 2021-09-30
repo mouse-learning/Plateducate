@@ -13,4 +13,3 @@ services:
       - 4000:4000
     volumes:
       - ./plateducate-be/.env:/Plateducate/.env
-    
