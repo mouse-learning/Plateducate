@@ -1,21 +1,19 @@
-FROM python:3.7.0
+FROM python:3.6
 
 # '''Add . directory into /tensorflow-deployment in docker container'''
-ADD . /Plateducate/plateducate-ml
-WORKDIR /Plateducate/plateducate-ml
-
-# RUN apt-get update
-# RUN apt-get install ffmpeg libsm6 libxext6  -y
-
+ADD . /app
+WORKDIR /app
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt 
-    # export PYTHONPATH=$PYTHONPATH:/tensorflow-api/models/research/:/tensorflow-api/models/research/slim/
+    pip install --no-cache-dir -r darkflow-tf-serving.txt 
 
-# ENV PYTHONPATH "${PYTHONPATH}:/tensorflow-api/models/research/:/tensorflow-api/models/research/slim/"
+WORKDIR /app/darkflow \
+    && pip install .
+
+RUN apt-get update \
+    && apt-get install -y libgl1-mesa-glx
 
 EXPOSE 5000
-EXPOSE 8501
 
-
+WORKDIR /app
 CMD [ "flask", "run" ]
