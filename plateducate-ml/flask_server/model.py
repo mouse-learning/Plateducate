@@ -6,6 +6,8 @@ import requests, time, logging
 from object_detection.utils import visualization_utils as viz_utils
 from object_detection.utils import label_map_util
 from PIL import Image
+import io
+import base64
 
 SIZE=128
 MAX_BOXES_TO_DRAW = 1
@@ -49,8 +51,8 @@ def load_image_into_numpy_array(path):
   return np.array(Image.open(path))
 
 def get_prediction(imagePath, fileName, modelName):
-  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
 
   # OBJECT DETECTION MODEL
@@ -209,6 +211,11 @@ def get_prediction_v2(imageFile, modelName):
         min_score_thresh=MIN_SCORE_THRESH,
         agnostic_mode=False)
 
+  new_im = Image.fromarray(image_np_with_detections)
+  buff = io.BytesIO()
+  new_im.save(buff, format="JPEG")
+  img_bb = base64.b64encode(buff.getvalue())
+
   # Data processed
   classes = detections['detection_classes']
   scores = detections['detection_scores']
@@ -230,4 +237,4 @@ def get_prediction_v2(imageFile, modelName):
 
 
   # return model_name_str, new_image_path, class_names[:num_of_boxes_actually_drawn], scores[:num_of_boxes_actually_drawn], time_elapsed
-  return model_name_str, class_names[:num_of_boxes_actually_drawn], scores[:num_of_boxes_actually_drawn], time_elapsed
+  return model_name_str, img_bb, class_names[:num_of_boxes_actually_drawn], scores[:num_of_boxes_actually_drawn], time_elapsed
