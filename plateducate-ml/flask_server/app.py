@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify
+from flask import Flask, render_template, url_for, request, redirect, jsonify, make_response
 from flask_bootstrap import Bootstrap
 from PIL import Image
 import base64
@@ -53,7 +53,8 @@ def receive_photo():
     # return jsonify({'ok': True, 'message': "ML flask server - image post request retrieved", 'data type': dataType, 'data content': dataContent}), 200
 
     # time.sleep(2)
-    model_name, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_mobilenet')
+    images_bb = []
+    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_mobilenet')
     resultMobile = {
         'model_name': model_name,
         'class_with_scores': {
@@ -62,20 +63,23 @@ def receive_photo():
         },
         'time_elapsed': time_elapsed
     }
+    images_bb.append(image_bb)
 
-    model_name, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
+    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
     resultResnet = {
         'model_name': model_name,
-        'class_with_scores': zip(class_name, scores),
+        'class_with_scores': {
+            'class_name': class_name,
+            'scores': scores
+        },
         'time_elapsed': time_elapsed
     }
+    images_bb.append(image_bb)
 
     if (resultResnet and resultMobile):
-    # if (resultMobile):
-    # if (resultResnet):
-        return jsonify({'ok': True, 'message': "ML prediction result", 'resultMobile': resultMobile, 'resultResnet': resultResnet}), 200
-        # return jsonify({'ok': True, 'message': "ML prediction result", 'resultMobile': resultMobile}), 200
-        # return jsonify({'ok': True, 'message': "ML prediction result", 'resultMobile': resultResnet}), 200
+        resp = make_response(jsonify({'ok': True, 'message': "ML prediction result", 'resultMobile': resultMobile, 'resultResnet': resultResnet}), 200)
+        resp.headers['images_bb'] = images_bb
+        return resp
     else:
         return jsonify({'ok': False, 'message': "ML flask server - no data found"}), 400
 
