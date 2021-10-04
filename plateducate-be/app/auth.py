@@ -1,4 +1,3 @@
-import requests
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -33,7 +32,7 @@ def register():
         except:
             return jsonify({'ok': False, 'message': "Exception found committing to database"}), 500
 
-    return jsonify({'ok': False, 'message': "False request method"}), 400
+    return jsonify({'ok': False, 'message': "False request method"}), 200
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -60,19 +59,6 @@ def login():
                     return render_template('login.html')
 
     return render_template('login.html')
-
-# Temporary route - change to other file later!
-@auth.route('/submit_photo', methods=['POST', 'GET'])
-def submit_photo():
-    base64Image = request.data
-    url = 'http://localhost:5000/receive_photo'
-    response = requests.post(url, data=base64Image)
-
-    # dataType = str(type(base64Image))
-    # dataContent = str(base64Image)
-    # return jsonify({'dataType': dataType, 'message': "image post request sent", 'ok': True, 'dataContent': dataContent}), 200
-
-    return (response.text, response.status_code, response.headers.items())
 
 @auth.route('/logout')
 def logout():
