@@ -1,5 +1,6 @@
 version: "3"
 services:
+<<<<<<< HEAD
   flask_server:
     container_name: flask_server
     restart: always
@@ -47,3 +48,19 @@ volumes:
 
 networks:
   ml-network:
+=======
+  plateducate-be-server:
+    container_name: plateducate-be-server
+    build:
+      context: ./plateducate-be
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 4000:4000
+    volumes:
+      - ./plateducate-be/.env:/Plateducate/.env
+    
+>>>>>>> c84f8ca (Add docker-compose and dockerfile for the backend)
