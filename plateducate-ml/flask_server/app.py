@@ -23,15 +23,15 @@ def index():
             # print(image_path)
             uploaded_file.save(image_path)
             # print("Uploaded")
-            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_mobilenet')
-            resultMobile = {
-                'model_name': model_name,
-                'class_with_scores': zip(class_name, scores),
-                'image_path': image_bb_path, 
-                'time_elapsed': time_elapsed
-            }
+            # model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_mobilenet')
+            # resultMobile = {
+            #     'model_name': model_name,
+            #     'class_with_scores': zip(class_name, scores),
+            #     'image_path': image_bb_path, 
+            #     'time_elapsed': time_elapsed
+            # }
 
-            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_resnet101')
+            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction_yolo(image_path, uploaded_file.filename, 'yolo-tf1')
             resultResnet = {
                 'model_name': model_name,
                 'class_with_scores': zip(class_name, scores),
@@ -39,7 +39,7 @@ def index():
                 'time_elapsed': time_elapsed
             }
 
-            return render_template('result.html', resultMobile = resultMobile, resultResnet = resultResnet)
+            return render_template('result.html', resultResnet = resultResnet)
     return render_template('index.html')
 
 @app.route('/receive_photo', methods=['POST', 'GET'])
@@ -88,8 +88,6 @@ def receive_photo():
     #     return jsonify({'ok': True, 'message': "ML flask server - image post request retrieved", 'dataType': dataType}), 200
     # else:
     #     return jsonify({'ok': False, 'message': "ML flask server - no data found", 'dataType': dataType}), 400
-
-
 
 if __name__ == '__main__':
     # app.run(debug = True)
