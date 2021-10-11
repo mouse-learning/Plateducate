@@ -1,0 +1,15 @@
+version: "3"
+services:
+  plateducate-be-server:
+    container_name: plateducate-be-server
+    build:
+      context: ./plateducate-be
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 4000:4000
+    volumes:
+      - ./plateducate-be/.env:/Plateducate/.env

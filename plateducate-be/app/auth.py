@@ -1,3 +1,4 @@
+import requests
 import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify, current_app
 import datetime
@@ -33,7 +34,7 @@ def register():
         except:
             return jsonify({'ok': False, 'message': "Exception found committing to database"}), 400
 
-    return jsonify({'ok': False, 'message': "False request method"}), 400
+    return jsonify({'ok': False, 'message': "False request method"}), 200
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -64,7 +65,6 @@ def login():
                     return jsonify({'ok': False, 'message': "Incorrect password"}), 400
 
     return jsonify({'ok': True, 'message': "Success login"}), 200
-
 
 @auth.route('/logout')
 def logout():
