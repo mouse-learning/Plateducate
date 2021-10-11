@@ -12,15 +12,7 @@ import warnings
 warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 
 # LOAD THE MODEL
-<<<<<<< HEAD
-<<<<<<< HEAD
 PATH_TO_SAVED_MODEL = 'exported_models/1/saved_model'
-=======
-PATH_TO_SAVED_MODEL = 'exported_models/2/saved_model'
->>>>>>> 21c3ec2 (added ssd resnet101 100 dataset training dir)
-=======
-PATH_TO_SAVED_MODEL = 'exported_models/1/saved_model'
->>>>>>> adf2e28 (Fixed predict.py in training folders)
 IMAGE_PATHS = ['images/test/egg_pan.jpg', 'images/test/rice16557.jpg', 'images/test/beef_bowl11556.jpg']
 
 print('Loading model...', end='')
@@ -41,7 +33,6 @@ category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABE
 # LOAD IMAGE, RUN IT THROUGH DETECTION MODEL AND VISUALIZE DETECTION RESULTS
 def load_image_into_numpy_array(path):
     """Load an image from file into a numpy array.
-
     Puts image into numpy array to feed into tensorflow graph.
     Note that by convention we put it into a numpy array with shape
     (height, width, channels), where channels=3 for RGB.
