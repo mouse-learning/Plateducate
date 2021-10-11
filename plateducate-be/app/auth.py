@@ -1,14 +1,12 @@
 import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify, current_app
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from passlib.hash import sha256_crypt
-from .database import db
-from dotenv import load_dotenv
 import datetime
+from passlib.hash import sha256_crypt
+from dotenv import load_dotenv
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from .database import db
 
 auth = Blueprint('auth', __name__)
-USER_ID = None
 
 @auth.route('/')
 def home():
@@ -18,23 +16,22 @@ def home():
 @auth.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        confirm = request.form.get("confirm")
+        payload = request.get_json()
+        username = payload["username"]
+        email = payload["email"]
+        password = payload["password"]
+        confirm = payload["confirm"]
         secure_password = sha256_crypt.encrypt(str(password))
-        # try:
-        if password == confirm:
-            db.execute("INSERT INTO plateducate.users(firstname, lastname, username, email, password) VALUES (:firstname, :lastname, :username, :email, :password)",
-                    {"firstname":firstname, "lastname":lastname, "username":username, "email":email, "password":secure_password})
-            db.commit()
-            return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
-        else:
-            return jsonify({'ok': False, 'message': "Password confirmation does not match"}), 400
-        # except:
-        #     return jsonify({'ok': False, 'message': "Exception found committing to database"}), 500
+        try:
+            if password == confirm:
+                db.execute("INSERT INTO plateducate.users(username, email, password) VALUES (:username, :email, :password)",
+                        {"username":username, "email":email, "password":secure_password})
+                db.commit()
+                return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
+            else:
+                return jsonify({'ok': False, 'message': "Password confirmation does not match"}), 400
+        except:
+            return jsonify({'ok': False, 'message': "Exception found committing to database"}), 400
 
     return jsonify({'ok': False, 'message': "False request method"}), 400
 
