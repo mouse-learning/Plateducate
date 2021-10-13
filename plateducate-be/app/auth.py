@@ -1,11 +1,12 @@
-import requests
 import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify, current_app
 import datetime
-from passlib.hash import sha256_crypt
-from dotenv import load_dotenv
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from .database import db
+from dotenv import load_dotenv
+
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify, current_app
+from flask_bcrypt import generate_password_hash, check_password_hash
+from passlib.hash import sha256_crypt
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 auth = Blueprint('auth', __name__)
 
@@ -20,13 +21,12 @@ def register():
         payload = request.get_json()
         username = payload["username"]
         email = payload["email"]
-        password = payload["password"]
+        password = generate_password_hash(payload["password"])
         confirm = payload["confirm"]
-        secure_password = sha256_crypt.encrypt(str(password))
         try:
-            if password == confirm:
+            if check_password_hash(password, confirm):
                 db.execute("INSERT INTO plateducate.users(username, email, password) VALUES (:username, :email, :password)",
-                        {"username":username, "email":email, "password":secure_password})
+                        {"username":username, "email":email, "password":password})
                 db.commit()
                 return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
             else:
@@ -34,37 +34,25 @@ def register():
         except:
             return jsonify({'ok': False, 'message': "Exception found committing to database"}), 400
 
-    return jsonify({'ok': False, 'message': "False request method"}), 200
+    return jsonify({'ok': False, 'message': "False request method"}), 400
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get("name")
-        password = request.form.get("password")
+        payload = request.get_json()
+        username = payload["username"]
+        password = payload["password"]
 
-        usernamedata = db.execute("SELECT Username FROM Plateducate.users WHERE Username=:username", {"username":username}).fetchone()
-        passworddata = db.execute("SELECT Password FROM Plateducate.users WHERE Username=:username", {"username":username}).fetchone()
-        userid = db.execute("SELECT UserID FROM Plateducate.users WHERE Username=:username", {"username":username}).fetchone()
+        user_query = db.execute("SELECT username, password FROM Plateducate.users WHERE username=:username", {"username":username}).fetchone()
+        if user_query and check_password_hash(user_query['password'], payload['password']):
+            access_token = create_access_token(identity=payload)
 
-        if usernamedata is None:
-            #flash("No username", "danger")
-            return jsonify({'ok': False, 'message': "No Username"}), 400
+            return jsonify({'ok': True, 'message': "Succesfully logged in", 'access_token': access_token}), 200
         else:
-            print(passworddata)
-            for password_d in passworddata:
-                if sha256_crypt.verify(password, password_d):
-                    #session["logged_in"] = True # add this session variable into your nav bar to display logout/login options
-                    #session["userID"] = userid
-                    #flash("You are now logged in")
-
-                    return jsonify({'ok': True, 'message': "You are now logged in"}), 200
-                    # return redirect(url_for("photo"))
-                else:
-                    #flash("incorrect password", "danger")
-                    return jsonify({'ok': False, 'message': "Incorrect password"}), 400
-
-    return jsonify({'ok': True, 'message': "Success login"}), 200
+            return jsonify({'ok': False, 'message': "Invalid username or password"}), 400
+    
+    return jsonify({'ok': False, 'message': "False request method"}), 400
 
 @auth.route('/logout')
 def logout():
