@@ -5,7 +5,7 @@
 import React from 'react';
 import {View, Text, SafeAreaView} from 'react-native';
 
-const MyDietScreen = () => {
+const RecommendationScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1, padding: 16}}>
@@ -21,7 +21,7 @@ const MyDietScreen = () => {
               textAlign: 'center',
               marginBottom: 16,
             }}>
-            This is the My Diet Screen
+            This is the Recommendations Screen
           </Text>
         </View>
         <Text
@@ -45,4 +45,4 @@ const MyDietScreen = () => {
   );
 };
 
-export default MyDietScreen;
+export default RecommendationScreen;

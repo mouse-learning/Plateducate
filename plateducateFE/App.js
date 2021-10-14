@@ -6,6 +6,7 @@ import RegisterScreen from './Screen/RegisterScreen';
 import SplashScreen from './Screen/SplashScreen';
 import HomeScreen from './Screen/HomeScreen';
 import MyDietScreen from './Screen/MyDietScreen';
+import RecommendationScreen from './Screen/RecommendationScreen';
 
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
@@ -68,7 +69,7 @@ function HomeStackScreen() {
         <HomeStack.Navigator>
             <HomeStack.Screen name="Homepage" component={HomeScreen} />
             <HomeStack.Screen name="MyDiet" component={MyDietScreen}/>
-            {/* <HomeStack.Screen name="Recommendation" component={RecommendationScreen}/> */}
+            <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
         </HomeStack.Navigator>
     )
 }
