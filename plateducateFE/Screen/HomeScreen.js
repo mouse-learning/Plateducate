@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.5}
-              onPress={() => navigate('Plateducate')}>
+              onPress={() => navigate('MyDiet')}>
               <Image
                 source={require('../static/square.png')}
                 style={styles.btnImage}
