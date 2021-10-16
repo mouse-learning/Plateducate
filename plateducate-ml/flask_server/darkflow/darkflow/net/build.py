@@ -108,14 +108,14 @@ class TFNet(object):
 		# Build the forward pass
 		state = identity(self.inp)
 		roof = self.num_layer - self.ntrain
-		self.say(HEADER, LINE)
+		# self.say(HEADER, LINE)
 		for i, layer in enumerate(self.darknet.layers):
 			scope = '{}-{}'.format(str(i),layer.type)
 			args = [layer, state, i, roof, self.feed]
 			state = op_create(*args)
 			mess = state.verbalise()
-			self.say(mess)
-		self.say(LINE)
+			# self.say(mess)
+		# self.say(LINE)
 
 		self.top = state
 		self.out = tf.identity(state.out, name='output')
