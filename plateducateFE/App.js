@@ -11,27 +11,7 @@ import RecommendationScreen from './Screen/RecommendationScreen';
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    landing: {
-        color: 'rgb(59,108,212)',
-        fontSize: 42,
-        fontWeight: '100',
-        textAlign: 'center',
-    },
-    login: { 
-        flex: 1, 
-        alignItems: 'center', 
-        justifyContent: 'center' 
-    }
-})
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
