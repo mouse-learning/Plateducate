@@ -23,7 +23,7 @@ def index():
             # print(image_path)
             uploaded_file.save(image_path)
             # print("Uploaded")
-            # model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'ssd_mobilenet')
+            # model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction(image_path, uploaded_file.filename, 'yolo-tf1')
             # resultMobile = {
             #     'model_name': model_name,
             #     'class_with_scores': zip(class_name, scores),
@@ -31,7 +31,7 @@ def index():
             #     'time_elapsed': time_elapsed
             # }
 
-            model_name, image_bb_path, class_name, scores, time_elapsed = model.get_prediction_yolo(image_path, uploaded_file.filename, 'yolo-tf1')
+            model_name, image_bb_path, class_name, scores, time_elapsed = model.predict_yolo_serving(image_path, uploaded_file.filename, 'yolo-tf1')
             resultResnet = {
                 'model_name': model_name,
                 'class_with_scores': zip(class_name, scores),

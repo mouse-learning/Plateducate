@@ -50,39 +50,70 @@ def load_image_into_numpy_array(path):
   """
   return np.array(Image.open(path))
 
+def predict_yolo_wo_serving(imagePath, fileName, modelName):
+  start = time.perf_counter()
 
-
-def get_prediction_yolo(imagePath, fileName, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
-
-
-  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1}
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu":1.0}
   tfnet = TFNet(options)
 
 
   # OBJECT DETECTION MODEL
   im = cv2.imread(imagePath)
   img_shape = im.shape[:2]
-  # print(img_shape)
-  # cv2.imshow("lalala", im)
-  # cv2.waitKey(0)
-  # cv2.destroyAllWindows()
+
+  result = tfnet.return_predict(im)
+  class_names_w_scores = []
+  new_image_path = os.path.join('static', modelName + fileName)
+  # imrsz = cv2.resize(im, (416, 416))
+  # imrsz = imrsz / 255.
+  for prediction in result:
+      old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
+      old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
+      cv2.rectangle(im, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+      new_img = cv2.convertScaleAbs(im, alpha=(255.0))
+      new_img = cv2.resize(new_img, img_shape)
+      cv2.imwrite(new_image_path,new_img)
+      class_names_w_scores.append((prediction['label'], prediction['confidence']))
+
+
+
+  class_names_w_scores = np.array(class_names_w_scores)
+  class_names = class_names_w_scores[:, 0]
+  scores = class_names_w_scores[:, 1]
+
+  model_name_str = convertLabelToStr(modelName)
+
+  
+  end = time.perf_counter()
+  time_elapsed = end-start
+  print(f"Took {time_elapsed:.2f}s")
+  time_elapsed = round(time_elapsed, 2)
+
+  return model_name_str, new_image_path, class_names, scores, time_elapsed
+
+
+def predict_yolo_serving(imagePath, fileName, modelName):
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+
+  start = time.perf_counter()
+
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu":1.0}
+  tfnet = TFNet(options)
+
+
+  # OBJECT DETECTION MODEL
+  im = cv2.imread(imagePath)
+  img_shape = im.shape[:2]
   imsz = cv2.resize(im, (416, 416))
   imsz = imsz / 255.
   imsz = imsz[:, :, ::-1]
   reshaped_img_shape = imsz.shape[:2]
   scale = np.flipud(np.divide(reshaped_img_shape, img_shape))  # you have to flip because the image.shape is (y,x) but your corner points are (x,y)
-  # print(scale)
 
 
   payload = '{"signature_name":"predict", "instances" : [{"input": %s}]}' % imsz.tolist()
-  start = time.perf_counter()
   res = requests.post(MODEL_URI, data=payload)
-  end = time.perf_counter()
-  time_elapsed = end-start
-  print(f"Took {time_elapsed:.2f}s")
-  time_elapsed = round(time_elapsed, 2)
 
   json_response = json.loads(res.text)
   with open('res.txt', 'wt') as out:
@@ -116,6 +147,8 @@ def get_prediction_yolo(imagePath, fileName, modelName):
               "y": tmpBox[3]}
       })
 
+
+
   class_names_w_scores = []
   new_image_path = os.path.join('static', modelName + fileName)
   imrsz = cv2.resize(im, (416, 416))
@@ -126,14 +159,11 @@ def get_prediction_yolo(imagePath, fileName, modelName):
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      new_top_left_corner = np.multiply(old_top_left, scale)
-      new_bottom_right_corner = np.multiply(old_bottom_right, scale )
-      # print("New top left: ", new_top_left_corner)
-      # print("New bottom right:", new_bottom_right_corner)
-
       cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
-      new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
-      new_img = cv2.resize(new_img, img_shape)
+      new_img = imrsz * 255.
+      new_img = cv2.resize(new_img, (img_shape[0], img_shape[1]))
+      # new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
+      # new_img = cv2.resize(new_img, img_shape)
       cv2.imwrite(new_image_path,new_img)
       # cv2.imshow("lalala", new_img)
       # cv2.waitKey(0)
@@ -148,6 +178,10 @@ def get_prediction_yolo(imagePath, fileName, modelName):
   model_name_str = convertLabelToStr(modelName)
 
   
+  end = time.perf_counter()
+  time_elapsed = end-start
+  print(f"Took {time_elapsed:.2f}s")
+  time_elapsed = round(time_elapsed, 2)
 
 
 
@@ -155,8 +189,8 @@ def get_prediction_yolo(imagePath, fileName, modelName):
   return model_name_str, new_image_path, class_names, scores, time_elapsed
 
 def get_prediction(imagePath, fileName, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
 
   # OBJECT DETECTION MODEL
