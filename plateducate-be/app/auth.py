@@ -45,7 +45,7 @@ def login():
         password = payload["password"]
 
         user_query = db.execute("SELECT username, password FROM Plateducate.users WHERE username=:username", {"username":username}).fetchone()
-        if user_query and check_password_hash(user_query['password'], payload['password']):
+        if user_query and check_password_hash(user_query['password'], password):
             access_token = create_access_token(identity=payload)
 
             return jsonify({'ok': True, 'message': "Succesfully logged in", 'access_token': access_token}), 200
