@@ -1,4 +1,4 @@
-version: "3"
+version: "2.3"
 services:
   flask_server:
     container_name: plateducate-ml-server
@@ -11,12 +11,20 @@ services:
       - FLASK_APP=app
       - FLASK_RUN_HOST=0.0.0.0
       - PYTHONUNBUFFERED=1
-      - PYTHONPATH=$PYTHONPATH:/plateducate-ml-server/models/research/:/plateducate-ml-server/models/research/slim/:/plateducate-ml-server/darkflow/
+      - PYTHONPATH=$PYTHONPATH:/plateducate-ml-server/models/research/:/plateducate-ml-server/models/research/slim/:/plateducate-ml-server/darkflow/:/plateducate-ml-server/darkflow/darkflow/
     ports:
       - 5000:5000
-    volumes:
-      - ./flask_server/:/plateducate-ml-server/
-    
+    runtime: nvidia
+    command: nvidia-smi
+    command: python3 -c "import tensorflow as tf;tf.test.is_gpu_available()"
+    command: flask run
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    # volumes:
+    #   - ./flask_server/:/plateducate-ml-server/
     depends_on:
       - tensorflow-serving
     networks:
@@ -35,10 +43,11 @@ services:
     volumes:
       - ./serving/conf:/tensorflow-serving/conf/
       - ./serving/model-data:/tensorflow-serving/models/
-    runtime: nvidia
+    # runtime: nvidia
     command:
-      - "--model_config_file=/serving/conf/tensorflow-serving.conf"
+      - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
       - "--model_config_file_poll_wait_seconds=60"
+      # - "--gpus all"
     networks:
       - ml-network
 
