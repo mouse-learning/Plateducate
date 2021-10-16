@@ -1,89 +1,85 @@
-import * as React from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import LoginScreen from './Screen/LoginScreen'; 
+// Import React and Component
+import React from 'react';
+
+// Import Navigators from React Navigation
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+// Import Screens
+import SplashScreen from './Screen/SplashScreen';
+import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
+import Home from './Screen/Home';
+// import Myprofile from './Screen/myprofile';
+// import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    landing: {
-        color: 'rgb(59,108,212)',
-        fontSize: 42,
-        fontWeight: '100',
-        textAlign: 'center',
-    },
-    login: { 
-        flex: 1, 
-        alignItems: 'center', 
-        justifyContent: 'center' 
-    }
-})
+const Stack = createNativeStackNavigator();
 
-const Stack = createNativeStackNavigator()
-const Tab = createBottomTabNavigator()
+const Auth = () => {
+  // Stack Navigator for Login and Sign up Screen
+  return (
+    <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterScreen"
+        component={RegisterScreen}
+        options={{
+          title: 'Register', //Set Header Title
+          headerStyle: {
+            backgroundColor: '#fff', //Set Header color
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+       <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
+       {/* <Stack.Screen
+        name="myprofile"
+        component={Myprofile}
+        options={{headerShown: false}}
+      /> */}
+    </Stack.Navigator>
+  );
+};
 
-function SplashPage({navigation}) {
-    return (
-        // <View style={styles.container}>
-        //     <Text style={styles.landing}>Plateducate</Text>
-        //     <Button 
-        //         title="Login" 
-        //         onPress={() => navigation.navigate('Login')}
-        //         />
-            <Tab.Navigator>
-                <Tab.Screen name="Register Page" component={Register} />
-                <Tab.Screen name="Login Page" component={Login} />
-            </Tab.Navigator>
-        // </View>
-    )
-}
-
-function Register() {
-    return (
-        <View style={styles.login}>
-            <Text>Register Screen</Text>
-        </View>
-    );
-}
-
-function Login() {
-    return (
-        <View style={styles.login}>
-            <Text>Login Screen</Text>
-        </View>
-    );
-}
-
-function Profile() {
-    return (
-        <View style={styles.login}>
-            <Text>Profile Screen</Text>
-        </View>
-    );
-}
-
-function App() {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName="Landing">
-                {/* <Stack.Screen 
-                    name="Landing" 
-                    component={SplashPage} 
-                    options={{headerShown: false}}    
-                />
-                <Stack.Screen name="Profile" component={Profile} /> */}
-                <Stack.Screen name="Register" component={RegisterScreen} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
-}
+/* Switch Navigator for those screens which needs to be switched only once
+  and we don't want to switch back once we switch from them to the next one */
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SplashScreen">
+        {/* SplashScreen which will come once for 5 Seconds */}
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        {/* Auth Navigator which includer Login Signup will come once */}
+        <Stack.Screen
+          name="Auth"
+          component={Auth}
+          options={{headerShown: false}}
+        />
+        {/* Navigation Drawer as a landing page
+        <Stack.Screen
+          name="DrawerNavigationRoutes"
+          component={DrawerNavigationRoutes}
+          // Hiding header for Navigation Drawer as we will use our custom header
+          options={{headerShown: false}}
+        /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default App;

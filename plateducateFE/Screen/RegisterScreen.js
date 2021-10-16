@@ -16,14 +16,14 @@ import {
 
 import Loader from './Components/Loader';
 
-const RegisterScreen = (props) => {
+const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('fe');
   const [userEmail, setUserEmail] = useState('fe@email.com');
   const [userPassword, setUserPassword] = useState('fe');
   const [userPasswordConfirm, setUserPasswordConfirm] = useState('fe');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
-  const [isRegistrationSuccess, setisRegistrationSuccess] = useState(false);
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
 
   const usernameInputRef = createRef();
   const emailInputRef = createRef();
@@ -77,6 +77,14 @@ const RegisterScreen = (props) => {
       fontSize: 18,
       padding: 30,
     },
+    registerTextStyle: {
+      color: '#307ECC',
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: 14,
+      alignSelf: 'center',
+      padding: 10,
+    },
   });
 
   const handleSubmitButton = () => {
@@ -124,7 +132,14 @@ const RegisterScreen = (props) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-    }).then(() => setLoading(false))
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.ok) {
+        setIsRegistrationSuccess(true)
+        setLoading(false)
+      }
+    })
     .catch((error) => {
       setLoading(false);
       console.error(error);
@@ -162,7 +177,7 @@ const RegisterScreen = (props) => {
         <TouchableOpacity
           style={styles.buttonStyle}
           activeOpacity={0.5}
-          onPress={() => props.navigation.navigate('LoginScreen')}>
+          onPress={() => navigation.navigate('LoginScreen')}>
           <Text style={styles.buttonTextStyle}>Login Now</Text>
         </TouchableOpacity>
       </View>
@@ -263,6 +278,11 @@ const RegisterScreen = (props) => {
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
+        <Text
+          style={styles.registerTextStyle}
+          onPress={() => navigation.navigate('LoginScreen')}>
+          Have an account? Login Here
+        </Text>
       </ScrollView>
     </View>
   );
