@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 
 from .objectDetection import objectDetection
+from .nutrients import nutrients
 
 __all__ = ["jwt"]
 
@@ -15,6 +16,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(auth)
 app.register_blueprint(objectDetection)
+app.register_blueprint(nutrients)
 app.secret_key = os.getenv("SECRET_KEY")
 
 if __name__ == '__main__':
