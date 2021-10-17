@@ -54,8 +54,8 @@ def receive_photo():
 
     # time.sleep(2)
     images_bb = []
-    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_mobilenet')
-    resultMobile = {
+    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_yolo_conversion(image, 'yolo-tf1')
+    resultYOLO = {
         'model_name': model_name,
         'class_with_scores': {
             'class_name': class_name,
@@ -64,20 +64,21 @@ def receive_photo():
         'time_elapsed': time_elapsed
     }
     images_bb.append(image_bb)
+    print(resultYOLO)
 
-    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
-    resultResnet = {
-        'model_name': model_name,
-        'class_with_scores': {
-            'class_name': class_name,
-            'scores': scores
-        },
-        'time_elapsed': time_elapsed
-    }
-    images_bb.append(image_bb)
+    # model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
+    # resultResnet = {
+    #     'model_name': model_name,
+    #     'class_with_scores': {
+    #         'class_name': class_name,
+    #         'scores': scores
+    #     },
+    #     'time_elapsed': time_elapsed
+    # }
+    # images_bb.append(image_bb)
 
-    if (resultResnet and resultMobile):
-        resp = make_response(jsonify({'ok': True, 'message': "ML prediction result", 'resultMobile': resultMobile, 'resultResnet': resultResnet}), 200)
+    if resultYOLO:
+        resp = make_response(jsonify({'ok': True, 'message': "ML prediction result", 'resultYOLO': resultYOLO}), 200)
         resp.headers['images_bb'] = images_bb
         return resp
     else:
