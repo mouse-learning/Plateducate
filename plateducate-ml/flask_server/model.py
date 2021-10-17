@@ -1,5 +1,7 @@
 from re import DEBUG
 from flask import jsonify
+import io
+import base64
 import numpy as np
 import os, json, cv2
 import requests, time, logging
@@ -184,9 +186,98 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   time_elapsed = round(time_elapsed, 2)
 
 
-
-
   return model_name_str, new_image_path, class_names, scores, time_elapsed
+
+def get_prediction_yolo_conversion(image, modelName):
+  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+
+
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1}
+  tfnet = TFNet(options)
+
+
+  # OBJECT DETECTION MODEL
+  im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+  img_shape = im.shape[:2]
+  # print(img_shape)
+  # cv2.imshow("lalala", im)
+  # cv2.waitKey(0)
+  # cv2.destroyAllWindows()
+  imsz = cv2.resize(im, (416, 416))
+  imsz = imsz / 255.
+  imsz = imsz[:, :, ::-1]
+  reshaped_img_shape = imsz.shape[:2]
+  scale = np.flipud(np.divide(reshaped_img_shape, img_shape))  # you have to flip because the image.shape is (y,x) but your corner points are (x,y)
+
+  payload = '{"signature_name":"predict", "instances" : [{"input": %s}]}' % imsz.tolist()
+  start = time.perf_counter()
+  res = requests.post(MODEL_URI, data=payload)
+  end = time.perf_counter()
+  time_elapsed = end-start
+  print(f"Took {time_elapsed:.2f}s")
+  time_elapsed = round(time_elapsed, 2)
+
+  json_response = json.loads(res.text)
+  with open('res.txt', 'wt') as out:
+    pprint(json_response, stream=out)
+  net_out = np.squeeze(np.array(json_response['predictions'], dtype='float32'))
+  detections = res.json()
+
+  # The JSON Response is a dictionary with key 'predictions'.
+  # We only want the value of this key which is equiv. to
+  # output of the model when ran in predict.py (from TFOD Tutorial)
+  detections = detections['predictions'][0]
+
+  boxes = tfnet.framework.findboxes(net_out)
+  h, w, _ = imsz.shape
+  threshold = tfnet.FLAGS.threshold
+  boxesInfo = list()
+  for box in boxes:
+      tmpBox = tfnet.framework.process_box(box, h, w, threshold)
+      if tmpBox is None:
+          continue
+      boxesInfo.append({
+          "label": tmpBox[4],
+          "confidence": tmpBox[6],
+          "topleft": {
+              "x": tmpBox[0],
+              "y": tmpBox[2]},
+          "bottomright": {
+              "x": tmpBox[1],
+              "y": tmpBox[3]}
+      })
+
+  class_names_w_scores = []
+  imrsz = cv2.resize(im, (416, 416))
+  imrsz = imrsz / 255.
+
+  for prediction in boxesInfo:
+      # print(prediction)
+      old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
+      old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
+
+      new_top_left_corner = np.multiply(old_top_left, scale)
+      new_bottom_right_corner = np.multiply(old_bottom_right, scale )
+
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+      new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
+      new_img = cv2.resize(new_img, img_shape)
+
+      class_names_w_scores.append((prediction['label'], prediction['confidence']))
+
+  new_im = Image.fromarray(new_img)
+  buff = io.BytesIO()
+  new_im.save(buff, format="JPEG")
+  img_bb = base64.b64encode(buff.getvalue())
+
+  class_names_w_scores = np.array(class_names_w_scores)
+  class_names = (class_names_w_scores[:, 0]).tolist()
+  scores = (class_names_w_scores[:, 1]).tolist()
+
+  model_name_str = convertLabelToStr(modelName)
+  
+  return model_name_str, img_bb, class_names, scores, time_elapsed
 
 def get_prediction(imagePath, fileName, modelName):
   # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
