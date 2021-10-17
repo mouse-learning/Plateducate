@@ -16,35 +16,76 @@ import { FloatingAction } from "react-native-floating-action";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
-export default function MyDietScreen() {
-  const actions = [
-    {
-      text: "Add from camera",
-      icon: require("../static/camera.png"),
-      name: "camera-btn",
-      position: 1,
-    },
-    {
-      text: "Add from gallery",
-      icon: require("../static/gallery.png"),
-      name: "gallery-btn",
-      position: 2
-    },
-  ];
+const actions = [
+  {
+    text: "Add from camera",
+    icon: require("../static/camera.png"),
+    name: "camera-btn",
+    position: 1,
+  },
+  {
+    text: "Add from gallery",
+    icon: require("../static/gallery.png"),
+    name: "gallery-btn",
+    position: 2
+  },
+];
 
-  const [pickerResponse, setPickerResponse] = useState(null);
-  const [visible, setVisible] = useState(false);
+export default class MyDietScreen extends Component  {
 
-  const onImageLibraryPress = useCallback(() => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgResponse: null,
+    } 
+  }
+
+  onImageLibraryPress = async () => {
     const options = {
       selectionLimit: 1,
       mediaType: 'photo',
       includeBase64: true,
     };
-    launchImageLibrary(options, setPickerResponse);
-  }, []);
 
-  const onCameraPress = useCallback(async () => {
+    
+    try {
+      const galleryGranted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Access Camera Roll',
+          message: 'App needs access to camera roll',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK'
+        }
+      );
+      if (galleryGranted == PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera roll permission given");
+        launchImageLibrary(options, (response) => {
+          console.log('Response = ', response);
+
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.errorMessage) {
+            console.log('Image Picker Error: ', response.errorMessage);
+          } else {
+            this.setState({imgResponse: response});
+            this.props.navigation.navigate('Prediction', {
+              data: this.state.imgResponse,
+            });
+          }
+        });
+      } else {
+        console.log("Camera roll permission denied");
+      }
+
+    } catch (err) {
+      console.warn(err);
+    }
+
+  }
+
+  onCameraPress = async () => {
     const options = {
       saveToPhotos: true,
       mediaType: 'photo',
@@ -52,7 +93,7 @@ export default function MyDietScreen() {
     };
     
     try {
-      const granted = await PermissionsAndroid.request(
+      const cameraGranted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
           title: "App Camera Permission",
@@ -62,7 +103,7 @@ export default function MyDietScreen() {
           buttonPositive: "OK"
         }
       );
-      if (granted == PermissionsAndroid.RESULTS.GRANTED) {
+      if (cameraGranted == PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission given");
         launchCamera(options, (response) => {
           console.log('Response = ', response);
@@ -73,9 +114,10 @@ export default function MyDietScreen() {
             console.log('ImagePicker Error: ', response.errorMessage);
           } else {
             console.log('response', JSON.stringify(response));
-            // console.log(response.assets[0].uri);
-            // console.log(response.assets[0].base64);
-            setPickerResponse(response);
+            this.setState({imgResponse: response});
+            this.props.navigation.navigate('Prediction', {
+              data: this.state.imgResponse,
+            });
           }
           
         });
@@ -85,39 +127,35 @@ export default function MyDietScreen() {
     } catch (err) {
       console.warn(err);
     }    
-  }, []);
+  }
 
-  const uri = pickerResponse?.assets && pickerResponse.assets[0].uri;
-  console.log(uri);
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.titleStyle}>
-          Example of Floating Action Button
-          with Multiple Option in React Native
-        </Text>
-        <Text style={styles.textStyle}>
-          Click on Action Button to see Alert
-        </Text>
-        <Image 
-          source={{uri: uri}}/>
-        <FloatingAction
-          // ref={(ref) => { this.floatingAction = ref; }}
-          actions={actions}
-          onPressItem={name => {
-            if (name == 'camera-btn') {
-              onCameraPress();
-            } else if (name == 'gallery-btn') {
-              onImageLibraryPress();
-            }
-            console.log(`selected button: ${name}`);
-          }}
-        />
-        
-      </View>
-    </SafeAreaView>
-  );
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <Text style={styles.titleStyle}>
+            Example of Floating Action Button
+            with Multiple Option in React Native
+          </Text>
+          <Text style={styles.textStyle}>
+            Click on Action Button to see Alert
+          </Text>
+          <FloatingAction
+            actions={actions}
+            onPressItem={name => {
+              if (name == 'camera-btn') {
+                this.onCameraPress();
+              } else if (name == 'gallery-btn') {
+                this.onImageLibraryPress();
+              }
+              console.log(`selected button: ${name}`);
+            }}
+          />
+          
+        </View>
+      </SafeAreaView>
+    );
+  };
 };
 
 const styles = StyleSheet.create({
@@ -143,44 +181,3 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-// const MyDietScreen = () => {
-//   return (
-//     <SafeAreaView style={{flex: 1}}>
-//       <View style={{flex: 1, padding: 16}}>
-//         <View
-//           style={{
-//             flex: 1,
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}>
-//           <Text
-//             style={{
-//               fontSize: 20,
-//               textAlign: 'center',
-//               marginBottom: 16,
-//             }}>
-//             This is the My Diet Screen
-//           </Text>
-//         </View>
-//         <Text
-//           style={{
-//             fontSize: 18,
-//             textAlign: 'center',
-//             color: 'grey',
-//           }}>
-//           Splash, Login and Register Example{'\n'}React Native
-//         </Text>
-//         <Text
-//           style={{
-//             fontSize: 16,
-//             textAlign: 'center',
-//             color: 'grey',
-//           }}>
-//           www.aboutreact.com
-//         </Text>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default MyDietScreen;
