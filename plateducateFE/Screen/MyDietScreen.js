@@ -8,7 +8,8 @@ import {
   StyleSheet,
   TouchableOpacity, 
   Button,
-  Image
+  Image,
+  PermissionsAndroid
 } from 'react-native';
 import { launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { FloatingAction } from "react-native-floating-action";
@@ -31,6 +32,64 @@ export default function MyDietScreen() {
     },
   ];
 
+  const [pickerResponse, setPickerResponse] = useState(null);
+  const [visible, setVisible] = useState(false);
+
+  const onImageLibraryPress = useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: true,
+    };
+    launchImageLibrary(options, setPickerResponse);
+  }, []);
+
+  const onCameraPress = useCallback(async () => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: true,
+    };
+    
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted == PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission given");
+        launchCamera(options, (response) => {
+          console.log('Response = ', response);
+    
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.errorMessage) {
+            console.log('ImagePicker Error: ', response.errorMessage);
+          } else {
+            console.log('response', JSON.stringify(response));
+            // console.log(response.assets[0].uri);
+            // console.log(response.assets[0].base64);
+            setPickerResponse(response);
+          }
+          
+        });
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }    
+  }, []);
+
+  const uri = pickerResponse?.assets && pickerResponse.assets[0].uri;
+  console.log(uri);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -41,6 +100,8 @@ export default function MyDietScreen() {
         <Text style={styles.textStyle}>
           Click on Action Button to see Alert
         </Text>
+        <Image 
+          source={{uri: uri}}/>
         <FloatingAction
           // ref={(ref) => { this.floatingAction = ref; }}
           actions={actions}
