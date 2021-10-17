@@ -139,10 +139,14 @@ const RegisterScreen = ({navigation}) => {
         setIsRegistrationSuccess(true)
         setLoading(false)
       }
+      else {
+        setLoading(false)
+        alert(`Registration Unsuccessful. \n${responseJson.message}`)
+      }
     })
     .catch((error) => {
       setLoading(false);
-      console.error(error);
+      alert(error);
     });
   };
   // .then((response) => response.text())
