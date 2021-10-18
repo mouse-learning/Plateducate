@@ -6,8 +6,6 @@ import React from 'react';
 import {
   View, 
   TouchableOpacity,
-  Button,
-  Alert,
   Text, 
   SafeAreaView, 
   ScrollView, 
@@ -18,7 +16,7 @@ import {
 from 'react-native';
 
 
-const dimensions = Dimensions.get('window');
+const dimensions = Dimensions.get('screen');
 
 const overlayStartPos = dimensions.height/2.5;
 const overlayHeight = dimensions.height - overlayStartPos;
@@ -37,7 +35,6 @@ const HomeScreen = ({ navigation: { navigate } }) => {
             resizeMode="cover"
             style={styles.image}
           >
-            {/* <Text style={styles.text}>Inside</Text> */}
           </ImageBackground>
           <View style={styles.overlay} >
             <TouchableOpacity
@@ -109,10 +106,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     padding: 15,
-    // display: "flex",
-    // flexWrap: "wrap",
-    // flexDirection: 'row',
-    // justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: 0,
@@ -125,15 +118,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     height: buttonInOverlayHeight/2, 
     resizeMode: 'contain',
-    // width: '20%',
   }, 
   btnText: {
     flex: 1,
     flexGrow: 2,
-    // width: '80%',
   },
   separator: {
-    // marginVertical: 8,
     borderBottomColor: 'grey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
