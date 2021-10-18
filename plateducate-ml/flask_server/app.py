@@ -48,12 +48,7 @@ def receive_photo():
     decoded = base64.b64decode(data)
     image = Image.open(io.BytesIO(decoded))
 
-    # dataType = str(type(data))
-    # dataContent = str(data)
-    # return jsonify({'ok': True, 'message': "ML flask server - image post request retrieved", 'data type': dataType, 'data content': dataContent}), 200
-
-    # time.sleep(2)
-    images_bb = []
+    images_bb = {}
     model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_yolo_conversion(image, 'yolo-tf1')
     resultYOLO = {
         'model_name': model_name,
@@ -63,7 +58,7 @@ def receive_photo():
         },
         'time_elapsed': time_elapsed
     }
-    images_bb.append(image_bb)
+    images_bb['yolo'] = image_bb
     print(resultYOLO)
 
     # model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
@@ -82,14 +77,7 @@ def receive_photo():
         resp.headers['images_bb'] = images_bb
         return resp
     else:
-        return jsonify({'ok': False, 'message': "ML flask server - no data found"}), 400
-
-    # dataType = type(resultMobile)
-    # if data:
-    #     return jsonify({'ok': True, 'message': "ML flask server - image post request retrieved", 'dataType': dataType}), 200
-    # else:
-    #     return jsonify({'ok': False, 'message': "ML flask server - no data found", 'dataType': dataType}), 400
-
+        return jsonify({'ok': False, 'message': "ML flask server - no data found"}), 500
 
 
 if __name__ == '__main__':
