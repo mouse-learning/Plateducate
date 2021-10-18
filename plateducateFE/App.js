@@ -47,15 +47,25 @@ const Auth = () => {
 
 const HomeStack = createNativeStackNavigator();
 
-function HomeStackScreen() {
+function HomeScreenStack() {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name="Homepage" component={HomeScreen} options={{headerShown: false }}/>
-            <HomeStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: false }}/>
             <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
             <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
         </HomeStack.Navigator>
     )
+}
+
+const DietStack = createNativeStackNavigator();
+
+function DietScreenStack() {
+  return(
+    <DietStack.Navigator>
+      <DietStack.Screen name="MyDiet" component={MyDietScreen} options={{headerShown: false }}/>
+      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: false }}/>
+    </DietStack.Navigator>
+  )
 }
 
 function LoggedIn() {
@@ -84,8 +94,8 @@ function LoggedIn() {
           })}
           >
             {/* List of tabs at bottom of screen */}
-            <Tab.Screen name="Home" component={HomeStackScreen} options={{headerShown: false}}/>
-            <Tab.Screen name="My Diet" component={MyDietScreen} options={{headerShown: false}}/>
+            <Tab.Screen name="Home" component={HomeScreenStack} options={{headerShown: false}}/>
+            <Tab.Screen name="My Diet" component={DietScreenStack} options={{headerShown: false}}/>
             <Tab.Screen name="Profile" component={RecommendationScreen} options={{headerShown: false}}/>
             {/* <Tab.Screen name="Profile"/> */}
         </Tab.Navigator>
