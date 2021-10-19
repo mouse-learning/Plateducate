@@ -95,18 +95,19 @@ def predict_yolo_wo_serving(imagePath, fileName, modelName):
 
 
 def predict_yolo_serving(imagePath, fileName, modelName):
-  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
   start = time.perf_counter()
 
-  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu":1.0}
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu": 0.4}
   tfnet = TFNet(options)
 
 
   # OBJECT DETECTION MODEL
   im = cv2.imread(imagePath)
   img_shape = im.shape[:2]
+  # img_shape = [height, width]
   imsz = cv2.resize(im, (416, 416))
   imsz = imsz / 255.
   imsz = imsz[:, :, ::-1]
@@ -163,7 +164,8 @@ def predict_yolo_serving(imagePath, fileName, modelName):
 
       cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
       new_img = imrsz * 255.
-      new_img = cv2.resize(new_img, (img_shape[0], img_shape[1]))
+      # resize(new_image, (width, height))
+      new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
       # new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
       # new_img = cv2.resize(new_img, img_shape)
       cv2.imwrite(new_image_path,new_img)
@@ -262,7 +264,7 @@ def get_prediction_yolo_conversion(image, modelName):
 
       cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
       new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
-      new_img = cv2.resize(new_img, img_shape)
+      new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
 
       class_names_w_scores.append((prediction['label'], prediction['confidence']))
 
