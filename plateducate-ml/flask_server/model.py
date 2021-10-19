@@ -162,8 +162,12 @@ def predict_yolo_serving(imagePath, fileName, modelName):
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0), 2) 
-      cv2.putText(imrsz, prediction['label'], (int(old_top_left[0]), int(old_top_left[1])-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,255), 2)
+
+      (w, h), _ = cv2.getTextSize(prediction['label'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
+      cv2.putText(imrsz, prediction['label'], (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0 ), 2)
+
       new_img = imrsz * 255.
       # resize(new_image, (width, height))
       new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
@@ -264,6 +268,11 @@ def get_prediction_yolo_conversion(image, modelName):
       new_bottom_right_corner = np.multiply(old_bottom_right, scale )
 
       cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+
+      (w, h), _ = cv2.getTextSize(prediction['label'], cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
+      cv2.putText(imrsz, prediction['label'], (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
+
       new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
       new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
 
