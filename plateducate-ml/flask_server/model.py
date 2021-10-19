@@ -158,11 +158,12 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   imrsz = imrsz / 255.
   # imrsz = imrsz[:, :, ::-1]
   for prediction in boxesInfo:
-      # print(prediction)
+      print(prediction)
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0), 2) 
+      cv2.putText(imrsz, prediction['label'], (int(old_top_left[0]), int(old_top_left[1])-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
       new_img = imrsz * 255.
       # resize(new_image, (width, height))
       new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
