@@ -1,6 +1,7 @@
 from re import DEBUG
 from flask import jsonify
 import io
+import re
 import base64
 import numpy as np
 import os, json, cv2
@@ -95,18 +96,19 @@ def predict_yolo_wo_serving(imagePath, fileName, modelName):
 
 
 def predict_yolo_serving(imagePath, fileName, modelName):
-  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
   start = time.perf_counter()
 
-  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu":1.0}
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu": 0.4}
   tfnet = TFNet(options)
 
 
   # OBJECT DETECTION MODEL
   im = cv2.imread(imagePath)
   img_shape = im.shape[:2]
+  # img_shape = [height, width]
   imsz = cv2.resize(im, (416, 416))
   imsz = imsz / 255.
   imsz = imsz[:, :, ::-1]
@@ -157,20 +159,26 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   imrsz = imrsz / 255.
   # imrsz = imrsz[:, :, ::-1]
   for prediction in boxesInfo:
-      # print(prediction)
+      label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,255), 2)
+
+      (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
+      cv2.putText(imrsz, label, (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0 ), 2)
+
       new_img = imrsz * 255.
-      new_img = cv2.resize(new_img, (img_shape[0], img_shape[1]))
+      # resize(new_image, (width, height))
+      new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
       # new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
       # new_img = cv2.resize(new_img, img_shape)
       cv2.imwrite(new_image_path,new_img)
       # cv2.imshow("lalala", new_img)
       # cv2.waitKey(0)
       # cv2.destroyAllWindows()
-      class_names_w_scores.append((prediction['label'], prediction['confidence']))
+      class_names_w_scores.append((label, prediction['confidence']))
       # {'label': 'bibimbap', 'confidence': 0.80018985, 'topleft': {'x': 67, 'y': 5}, 'bottomright': {'x': 415, 'y': 409}}
 
   class_names_w_scores = np.array(class_names_w_scores)
@@ -193,7 +201,7 @@ def get_prediction_yolo_conversion(image, modelName):
   # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
 
-  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1}
+  options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu": 0.4}
   tfnet = TFNet(options)
 
 
@@ -253,7 +261,7 @@ def get_prediction_yolo_conversion(image, modelName):
   imrsz = imrsz / 255.
 
   for prediction in boxesInfo:
-      # print(prediction)
+      label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
@@ -261,10 +269,15 @@ def get_prediction_yolo_conversion(image, modelName):
       new_bottom_right_corner = np.multiply(old_bottom_right, scale )
 
       cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
-      new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
-      new_img = cv2.resize(new_img, img_shape)
 
-      class_names_w_scores.append((prediction['label'], prediction['confidence']))
+      (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
+      cv2.putText(imrsz, label, (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
+
+      new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
+      new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
+
+      class_names_w_scores.append((label, prediction['confidence']))
 
   new_im = Image.fromarray(new_img)
   buff = io.BytesIO()
