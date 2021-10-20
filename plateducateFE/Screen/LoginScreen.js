@@ -55,9 +55,11 @@ const LoginScreen = ({ navigation }) => {
         .then((response) => response.json())
         .then((responseJson) => {
            if (responseJson.ok == true) {
+              console.log(responseJson)
               setLoading(false);
-              AsyncStorage.setItem('@user_id', responseJson.access_token);
+              AsyncStorage.setItem('@user_token', responseJson.access_token);
               AsyncStorage.setItem('@username', dataToSend['username']);
+              AsyncStorage.setItem('@user_id', responseJson.user_id);
               console.log()
               navigation.replace('LoggedIn');
             } else {

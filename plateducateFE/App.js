@@ -9,6 +9,7 @@ import HomeScreen from './Screen/HomeScreen';
 import MyDietScreen from './Screen/MyDietScreen';
 import RecommendationScreen from './Screen/RecommendationScreen';
 import PredictionScreen from './Screen/Prediction';
+import ProfileScreen from './Screen/ProfileScreen';
 
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
