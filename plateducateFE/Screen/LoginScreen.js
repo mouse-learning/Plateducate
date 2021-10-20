@@ -43,7 +43,8 @@ const LoginScreen = ({ navigation }) => {
        };
        console.log(dataToSend)
 
-      fetch('http://10.0.2.2:5000/login', {
+      
+      fetch('http://10.0.2.2:4000/login', {
         method: 'POST',
         body: JSON.stringify(dataToSend),
         headers: {
@@ -86,8 +87,8 @@ const LoginScreen = ({ navigation }) => {
                      <Image
                         source={require('../static/logo.png')}
                         style={{
-                           width: '50%',
-                           height: 100,
+                           width: 300,
+                           height: 300,
                            resizeMode: 'contain',
                            margin: 30,
                         }}

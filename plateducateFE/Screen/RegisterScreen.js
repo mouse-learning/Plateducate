@@ -125,7 +125,7 @@ const RegisterScreen = ({navigation}) => {
     console.log(formData)
     // console.log(JSON.stringify(dataToSend))
 
-    fetch('http://10.0.2.2:5000/register', {
+    fetch('http://10.0.2.2:4000/register', {
       method: 'POST',
       body: JSON.stringify(dataToSend),
       headers: {
@@ -200,8 +200,8 @@ const RegisterScreen = ({navigation}) => {
           <Image
             source={require('../static/logo.png')}
             style={{
-              width: '50%',
-              height: 100,
+              width: 200,
+              height: 200,
               resizeMode: 'contain',
               margin: 30,
             }}
