@@ -12,4 +12,13 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./plateducate-be/.env:/Plateducate/.env
+      - ./plateducate-be/.env:/plateducate-be/.env
+      - ./plateducate-be/app/__init__.py:/plateducate-be/app/__init__.py
+      - ./plateducate-be/app/auth.py:/plateducate-be/app/auth.py
+      - ./plateducate-be/app/nutrients.py:/plateducate-be/app/nutrients.py
+      - ./plateducate-be/app/objectDetection.py:/plateducate-be/app/objectDetection.py
+    networks:
+      - plateducate-ml_ml-network
+networks:
+  plateducate-ml_ml-network:
+    external: true

@@ -1,4 +1,4 @@
-version: "2.3"
+version: "3"
 services:
   flask_server:
     container_name: plateducate-ml-server
@@ -23,14 +23,14 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
-    # volumes:
-    #   - ./flask_server/:/plateducate-ml-server/
+    volumes:
+      - ./flask_server/yolo-src:/plateducate-ml-server/yolo-src
+      - ./flask_server/model.py:/plateducate-ml-server/model.py
+      - ./flask_server/app.py:/plateducate-ml-server/app.py
     depends_on:
       - tensorflow-serving
     networks:
-      ml-network:
-        aliases:
-          - plateducate-ml
+      - ml-network
 
   tensorflow-serving:
     container_name: tensorflow-serving
@@ -59,3 +59,4 @@ volumes:
 
 networks:
   ml-network:
+    driver: bridge   
