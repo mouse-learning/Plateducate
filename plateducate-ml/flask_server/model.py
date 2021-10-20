@@ -197,8 +197,8 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   return model_name_str, new_image_path, class_names, scores, time_elapsed
 
 def get_prediction_yolo_conversion(image, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
 
   options = {"model": "yolo-src/cfg/yolov2-food100.cfg", "load": "yolo-src/weights/yolov2-food100_10000.weights", "labels": "yolo-src/labels.txt", "threshold": 0.1, "gpu": 0.4}

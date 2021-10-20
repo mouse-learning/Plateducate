@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
+import AnimatedLoader from "react-native-animated-loader";
+import LottieView from "lottie-react-native";
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -23,7 +25,14 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
       <Image
         source={require('../static/logo.png')}
-        style={{width: '90%', resizeMode: 'contain', margin: 30}}
+        style={{width: '50%', resizeMode: 'contain', margin: 30}}
+      />
+      <AnimatedLoader
+        visible={animating}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../static/lottie-loader-new.json")}
+        animationStyle={styles.lottie}
+        speed={1}
       />
       <ActivityIndicator
         animating={animating}
@@ -48,4 +57,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
   },
+  lottie: {
+    width: 100,
+    height: 100
+  }
 });

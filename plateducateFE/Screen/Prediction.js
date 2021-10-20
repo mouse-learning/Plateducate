@@ -1,4 +1,4 @@
-import React, { Component, useState, useCallback } from 'react';
+import React, { Component, useState, useCallback, useEffect } from 'react';
 
 import {
     View, 
@@ -21,26 +21,54 @@ import {
 
   const PredictionScreen = ({ route, navigation }) => {
     let imgData = {
-        base64 : route.params.data.assets[0].base64,
-        uri: route.params.data.assets[0].uri,
-        width: route.params.data.assets[0].width,
-        height: route.params.data.assets[0].height,
-        fileSize: route.params.data.assets[0].fileSize,
-        type: route.params.data.assets[0].type,
-        fileName: route.params.data.assets[0].fileName,
+        data : route.params.data.assets[0],
     }
 
-    const imageType = imgData.type.split("/")[1];
-    const base64Image = 'data:image/' + imageType + ';base64,'+ imgData.base64;
-    const imageAspectRatio = imgData.width/imgData.height;
+    const imageType = imgData.data.type.split("/")[1];
+    const base64Image = 'data:image/' + imageType + ';base64,'+ imgData.data.base64;
+    const imageAspectRatio = imgData.data.width/imgData.data.height;
+    let base64ImagePrediction;
+    let images_bb_dict;
+
+    useEffect( () => {
+        fetch('http://10.0.2.2:4000/submit_photo', {
+            method: 'POST',
+            body: JSON.stringify(imgData.data.base64),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Expose-Headers': true,
+            },
+        })
+        .then((response) => {
+            if (response.ok == true) {
+                console.log(response.headers.map.images_bb[0]);
+                images_bb_new = JSON.parse(response.headers.map.images_bb)
+                console.log(images_bb_new);
+                // images_bb_dict = response.headers.map.images_bb;
+                // console.log(images_bb_dict);
+                base64ImagePrediction = response.resultYOLO;
+                resp_json = response.json()
+                // Take predictions and scores
+            } else {
+                // Error message
+                alert(responseJSON.message);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }, [])
+
+    base64ImagePrediction = 'data:image/' + imageType + ';base64,'+ base64ImagePrediction;
 
     return (
         <View>
             <ScrollView>
 
                 {/* <Text>Image Base64: {imgData.data.base64}</Text> */}
-                <Image style={{...styles.predictionImg, aspectRatio: imageAspectRatio }} source={{uri: base64Image}} />
-                <Text> Image URI: {base64Image}</Text>
+                <Image style={{...styles.predictionImg, aspectRatio: imageAspectRatio }} source={{uri: base64ImagePrediction}} />
+                <Text> Image URI: {base64ImagePrediction}</Text>
             </ScrollView>
         </View>
     );
