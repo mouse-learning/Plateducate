@@ -52,6 +52,7 @@ function HomeScreenStack() {
         <HomeStack.Navigator>
             <HomeStack.Screen name="Homepage" component={HomeScreen} options={{headerShown: false }}/>
             <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
+            <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{headerShown: false }}/>
             <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
         </HomeStack.Navigator>
     )
