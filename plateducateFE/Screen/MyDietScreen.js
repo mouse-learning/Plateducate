@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { FloatingAction } from "react-native-floating-action";
-import Icon from 'react-native-vector-icons/Ionicons';
 
 
 const actions = [
@@ -62,8 +61,6 @@ export default class MyDietScreen extends Component  {
       if (galleryGranted == PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera roll permission given");
         launchImageLibrary(options, (response) => {
-          console.log('Response = ', response);
-
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.errorMessage) {
@@ -105,15 +102,12 @@ export default class MyDietScreen extends Component  {
       );
       if (cameraGranted == PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission given");
-        launchCamera(options, (response) => {
-          console.log('Response = ', response);
-    
+        launchCamera(options, (response) => {    
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.errorMessage) {
             console.log('ImagePicker Error: ', response.errorMessage);
           } else {
-            console.log('response', JSON.stringify(response));
             this.setState({imgResponse: response});
             this.props.navigation.navigate('Prediction', {
               data: this.state.imgResponse,
