@@ -98,7 +98,7 @@ function LoggedIn() {
             {/* List of tabs at bottom of screen */}
             <Tab.Screen name="Home" component={HomeScreenStack} options={{headerShown: false}}/>
             <Tab.Screen name="My Diet" component={DietScreenStack} options={{headerShown: false}}/>
-            <Tab.Screen name="Profile" component={RecommendationScreen} options={{headerShown: false}}/>
+            <Tab.Screen name="Profile" component={ProfileScreen} options={{headerShown: false}}/>
             {/* <Tab.Screen name="Profile"/> */}
         </Tab.Navigator>
     )
