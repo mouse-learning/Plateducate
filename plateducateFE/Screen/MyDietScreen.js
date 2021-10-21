@@ -9,12 +9,17 @@ import {
   TouchableOpacity, 
   Button,
   Image,
+  ScrollView,
   PermissionsAndroid
 } from 'react-native';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { FloatingAction } from "react-native-floating-action";
+import moment from "moment";
+import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+// const NOW = 
 const actions = [
   {
     text: "Add from camera",
@@ -36,6 +41,12 @@ export default class MyDietScreen extends Component  {
     super(props);
     this.state = {
       imgResponse: null,
+      selectedDate: moment().format("YYYY-MM-DD"),
+      foodRecord: {},
+      annotations: {
+        [moment().format("YYYY-MM-DD")]: {selected: true},
+        
+      }
     } 
   }
 
@@ -123,17 +134,68 @@ export default class MyDietScreen extends Component  {
     }    
   }
 
+  componentDidMount = () => {
+    AsyncStorage.getItem('@user_id').then((user_id) => {
+      fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
+          method: 'GET',
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // console.log(responseJson.result)
+          this.setState({foodRecord: responseJson.result})
+          for (const [key, value] of Object.entries(this.state.foodRecord)) {
+            this.setState({
+              // ...this.state,
+              annotations: {
+                ...this.state.annotations,
+                [key]:{
+                  ...this.state.annotations[key],
+                  marked: true
+                }
+              }
+            })
+            // console.log(this.state.annotations)
+          }
+          this.set
+          })
+        .catch((error) => {
+          console.error(error);
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <Text style={styles.titleStyle}>
-            Example of Floating Action Button
-            with Multiple Option in React Native
-          </Text>
-          <Text style={styles.textStyle}>
-            Click on Action Button to see Alert
-          </Text>
+          <Calendar
+            onDayPress={(day) => {
+              this.setState({selectedDate: day["dateString"]})
+              // this.setState({marked: })
+            }}
+            markedDates={this.state.annotations}
+          />
+          {console.log("foodRecord:")}
+          {console.log(this.state.foodRecord[this.state.selectedDate])}
+          { (this.state.selectedDate in this.state.foodRecord) ?
+            <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+              <Text style={styles.titleStyle}>
+                Record Exists
+              </Text>
+              {/* <Text style={styles.textStyle}>
+                {this.state.foodRecord[this.state.selectedDate]}
+              </Text> */}
+            </ScrollView>
+            :
+            <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+              <Text style={styles.titleStyle}>
+                Record Does Not Exist
+              </Text>
+            </ScrollView>
+          }
           <FloatingAction
             actions={actions}
             onPressItem={name => {
