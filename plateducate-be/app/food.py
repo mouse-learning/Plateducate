@@ -1,12 +1,12 @@
-import os, sys; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+import os, sys
+from typing import DefaultDict; sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 import datetime
 from .database import db
+from collections import defaultdict
 from dotenv import load_dotenv
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, logging, session, flash, jsonify, current_app
-from flask_bcrypt import generate_password_hash, check_password_hash
-from passlib.hash import sha256_crypt
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+
 
 food = Blueprint('food', __name__)
 
@@ -37,9 +37,16 @@ def add_food():
         # except:
         #     return jsonify({'ok': False, 'message': "Exception found committing to database"}), 400
 
-# def fetch_food(userID):
-#     if request.method == 'GET':
-#         food_query = db.execute("SELECT * FROM Plateducate.consumption_records WHERE username=:username", {"username":username}).fetchone()
+@food.route('/fetch_food/<userID>', methods=['GET'])
+def fetch_food(userID):
+    if request.method == 'GET':
+        food_query = db.execute("SELECT * FROM Plateducate.consumption_records WHERE UserID=:UserID", {"UserID":userID}).fetchall()
+        res = defaultdict(list)
+        for i in food_query:
+            food = i._asdict()
+            res[food['DateOfConsumption'].strftime("%Y-%m-%d")].append(food)
+        
+        # res = json.dumps(({str(k):v for k,v in res.items()}))
+        return jsonify({'ok': True, 'message': "Success fetching food record", "result": res}), 200
 
-
-#     return jsonify({'ok': False, 'message': "False request method"}), 400
+    return jsonify({'ok': False, 'message': "False request method"}), 400
