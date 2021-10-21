@@ -18,6 +18,7 @@ import { FloatingAction } from "react-native-floating-action";
 import moment from "moment";
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from './Components/Loader';
 
 // const NOW = 
 const actions = [
@@ -40,6 +41,7 @@ export default class MyDietScreen extends Component  {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       imgResponse: null,
       selectedDate: moment().format("YYYY-MM-DD"),
       foodRecord: {},
@@ -156,14 +158,16 @@ export default class MyDietScreen extends Component  {
             })
             // console.log(this.state.annotations)
           }
-          this.set
-          })
+          this.setState({loading: false})
+        })
         .catch((error) => {
           console.error(error);
+          this.setState({loading: false})
         });
-    })
-    .catch((error) => {
-      console.error(error);
+      })
+      .catch((error) => {
+        console.error(error);
+        this.setState({loading: false})
     });
   }
 
@@ -180,7 +184,10 @@ export default class MyDietScreen extends Component  {
           />
           {console.log("foodRecord:")}
           {console.log(this.state.foodRecord[this.state.selectedDate])}
-          { (this.state.selectedDate in this.state.foodRecord) ?
+          {this.state.loading?
+            (<Loader loading={this.state.loading} />)
+          :
+            (this.state.selectedDate in this.state.foodRecord ?
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
               <Text style={styles.titleStyle}>
                 Record Exists
@@ -194,7 +201,7 @@ export default class MyDietScreen extends Component  {
               <Text style={styles.titleStyle}>
                 Record Does Not Exist
               </Text>
-            </ScrollView>
+            </ScrollView>)
           }
           <FloatingAction
             actions={actions}
