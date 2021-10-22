@@ -2,6 +2,8 @@
 // Import React and Component
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// Import Screens
 import LoginScreen from './Screen/LoginScreen'; 
 import RegisterScreen from './Screen/RegisterScreen';
 import SplashScreen from './Screen/SplashScreen';
@@ -24,11 +26,12 @@ const Auth = () => {
   // Stack Navigator for Login and Sign up Screen
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
+      <NativeBaseProvider>
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
         options={{headerShown: false}}
-      />
+        />
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
@@ -41,7 +44,8 @@ const Auth = () => {
             fontWeight: 'bold', //Set Header text style
           },
         }}
-      />
+        />
+      </NativeBaseProvider>
     </Stack.Navigator>
   );
 };
@@ -106,7 +110,7 @@ function LoggedIn() {
 
 function App() {
     return (
-        <NavigationContainer>
+          <NavigationContainer>
             <Stack.Navigator initialRouteName="SplashScreen">
                 {/* Splash screen appearing for a few seconds */}
                 <Stack.Screen 
@@ -126,7 +130,7 @@ function App() {
                 component={LoggedIn}
                 options={{headerShown: false}}/>
             </Stack.Navigator>
-        </NavigationContainer>
+          </NavigationContainer>
     )
 }
 
