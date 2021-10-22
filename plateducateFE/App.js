@@ -26,7 +26,6 @@ const Auth = () => {
   // Stack Navigator for Login and Sign up Screen
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
-      <NativeBaseProvider>
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
@@ -45,7 +44,6 @@ const Auth = () => {
           },
         }}
         />
-      </NativeBaseProvider>
     </Stack.Navigator>
   );
 };
