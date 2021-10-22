@@ -17,17 +17,18 @@ def add_food():
         payload = request.get_json()
         userID = payload["userID"]
         food_name = payload["food_name"]
+        energy = payload["energy"]
         protein = payload["protein"]
         carbs = payload["carbs"]
         fat = payload["fat"]
-        fiber = payload["fiber"]
         now = datetime.datetime.now()
         ts = now.strftime('%Y-%m-%d %H:%M:%S')
 
         db.execute(
-            "INSERT INTO plateducate.consumption_records(UserID, FoodName, DateOfConsumption, Proteins_100g, Carbs_100g, Fats_100g, Fiber_100g) VALUES (:USER_ID, :food_name, :ts, :protein, :carbs, :fat, :fiber)",
+            "INSERT INTO plateducate.consumption_records(UserID, FoodName, DateOfConsumption, Proteins_100g, Carbs_100g, Fats_100g, Energy_100g) \
+                VALUES (:USER_ID, :food_name, :ts, :protein, :carbs, :fat, :energy)",
             {"USER_ID": userID, "food_name": food_name, "ts": ts, "protein": protein, "carbs": carbs, "fat": fat,
-                "fiber": fiber})
+                "energy": energy})
         
         db.commit()
         
