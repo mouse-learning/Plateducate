@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity, 
   Button,
+  Dimensions,
   Image,
   ScrollView,
   PermissionsAndroid
@@ -19,6 +20,8 @@ import moment from "moment";
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from './Components/Loader';
+import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box } from 'native-base';
+import { flex } from 'styled-system';
 
 // const NOW = 
 const actions = [
@@ -136,6 +139,26 @@ export default class MyDietScreen extends Component  {
     }    
   }
 
+  onDayPress = async (day) => {
+    const prevDay = this.state.selectedDate
+    this.setState({
+      ...this.state,
+      annotations: {
+        ...this.state.annotations,
+        [prevDay]:{
+          ...this.state.annotations[prevDay],
+          selected: false
+        },
+        [day]:{
+          ...this.state.annotations[day],
+          selected: true
+        }
+      }
+    }, () => {
+      this.setState({selectedDate: day})
+    })
+  }
+
   componentDidMount = () => {
     AsyncStorage.getItem('@user_id').then((user_id) => {
       fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
@@ -147,7 +170,7 @@ export default class MyDietScreen extends Component  {
           this.setState({foodRecord: responseJson.result})
           for (const [key, value] of Object.entries(this.state.foodRecord)) {
             this.setState({
-              // ...this.state,
+              ...this.state,
               annotations: {
                 ...this.state.annotations,
                 [key]:{
@@ -173,50 +196,76 @@ export default class MyDietScreen extends Component  {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
-          <Calendar
-            onDayPress={(day) => {
-              this.setState({selectedDate: day["dateString"]})
-              // this.setState({marked: })
-            }}
-            markedDates={this.state.annotations}
-          />
-          {console.log("foodRecord:")}
-          {console.log(this.state.foodRecord[this.state.selectedDate])}
-          {this.state.loading?
-            (<Loader loading={this.state.loading} />)
-          :
-            (this.state.selectedDate in this.state.foodRecord ?
-            <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-              <Text style={styles.titleStyle}>
-                Record Exists
-              </Text>
-              {/* <Text style={styles.textStyle}>
-                {this.state.foodRecord[this.state.selectedDate]}
-              </Text> */}
-            </ScrollView>
+      <NativeBaseProvider>
+        <SafeAreaView style={styles.container}>
+          <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+          <View style={styles.container}>
+            <Calendar
+              onDayPress={(day) => this.onDayPress(day['dateString'])}
+              markedDates={this.state.annotations}
+            />
+            {/* {console.log("foodRecord:")}
+            {console.log(this.state.foodRecord[this.state.selectedDate])} */}
+            {this.state.loading?
+              (<Loader loading={this.state.loading} />)
             :
-            <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-              <Text style={styles.titleStyle}>
-                Record Does Not Exist
-              </Text>
-            </ScrollView>)
-          }
-          <FloatingAction
-            actions={actions}
-            onPressItem={name => {
-              if (name == 'camera-btn') {
-                this.onCameraPress();
-              } else if (name == 'gallery-btn') {
-                this.onImageLibraryPress();
-              }
-              console.log(`selected button: ${name}`);
-            }}
-          />
-          
-        </View>
-      </SafeAreaView>
+              (this.state.selectedDate in this.state.foodRecord ?
+              <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                <Text style={styles.titleStyle}>
+                  Food Consumed Today
+                </Text>
+                <Box m={3}>
+                  <Accordion>
+                    {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
+                      <Accordion.Item key={foodID}>
+                        <Accordion.Summary>
+                          <Text style={styles.summaryStyle}>
+                            {food['FoodName']}
+                          </Text>
+                          <Accordion.Icon />
+                        </Accordion.Summary>
+                        <Accordion.Details>
+                            <Text>
+                            ⚡ Energy: {food['Energy_100g']}kcal
+                            </Text>
+                            <Text>
+                            🍞 Carbs: {food['Carbs_100g']}g
+                            </Text>
+                            <Text>
+                            🥚 Protein: {food['Proteins_100g']}g
+                            </Text>
+                            <Text>
+                            🥓 Fat: {food['Fats_100g']}g
+                            </Text>
+                        </Accordion.Details>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                </Box>
+              </ScrollView>
+              :
+              <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                <Text style={styles.titleStyle}>
+                  Record Does Not Exist
+                </Text>
+              </ScrollView>)
+            }
+            
+          </View>
+          </ScrollView>
+            <FloatingAction
+              actions={actions}
+              onPressItem={name => {
+                if (name == 'camera-btn') {
+                  this.onCameraPress();
+                } else if (name == 'gallery-btn') {
+                  this.onImageLibraryPress();
+                }
+                console.log(`selected button: ${name}`);
+              }}
+              />
+        </SafeAreaView>
+      </NativeBaseProvider>
     );
   };
 };
@@ -229,6 +278,12 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+  },
+  summaryStyle: {
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 10,
