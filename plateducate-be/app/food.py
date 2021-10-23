@@ -45,6 +45,7 @@ def fetch_food(userID):
         res = defaultdict(list)
         for i in food_query:
             food = i._asdict()
+            food['TimeOfConsumption'] = food['DateOfConsumption'].strftime("%H:%M:%S")
             res[food['DateOfConsumption'].strftime("%Y-%m-%d")].append(food)
         
         # res = json.dumps(({str(k):v for k,v in res.items()}))
