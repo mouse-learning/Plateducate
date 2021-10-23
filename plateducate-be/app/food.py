@@ -52,3 +52,18 @@ def fetch_food(userID):
         return jsonify({'ok': True, 'message': "Success fetching food record", "result": res}), 200
 
     return jsonify({'ok': False, 'message': "False request method"}), 400
+
+@food.route('/delete_food/', methods=['POST'])
+def delete_food():
+    if request.method == 'POST':
+        try:
+            payload = request.get_json()
+            foodID = payload["foodID"]
+            food_query = db.execute("DELETE FROM Plateducate.consumption_records WHERE ID=:ID", {"ID": foodID})
+            db.commit()
+
+            return jsonify({'ok': True, 'message': "Success deleting food record with ID: "+str(foodID)}), 200
+        except: 
+            return jsonify({'ok': False, 'message': "Exception found committing to database"}), 400
+    
+    return jsonify({'ok': False, 'message': "False request method"}), 400

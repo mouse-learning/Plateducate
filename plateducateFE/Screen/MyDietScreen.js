@@ -20,7 +20,7 @@ import moment from "moment";
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from './Components/Loader';
-import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box } from 'native-base';
+import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box, HStack, Stack } from 'native-base';
 import { flex } from 'styled-system';
 
 // const NOW = 
@@ -159,6 +159,65 @@ export default class MyDietScreen extends Component  {
     })
   }
 
+  onDeletePress = (foodID) => {
+    this.setState({loading: true}, () => {
+      var dataToSend = {
+        foodID: foodID,
+      };
+      fetch('http://10.0.2.2:4000/delete_food', {
+        method: 'POST',
+        body: JSON.stringify(dataToSend),
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.ok == true) {
+          AsyncStorage.getItem('@user_id').then((user_id) => {
+            fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
+                method: 'GET',
+              })
+              .then((response) => response.json())
+              .then((responseJson) => {
+                // console.log(responseJson.result)
+                this.setState({foodRecord: responseJson.result})
+                for (const [key, value] of Object.entries(this.state.foodRecord)) {
+                  this.setState({
+                    ...this.state,
+                    annotations: {
+                      ...this.state.annotations,
+                      [key]:{
+                        ...this.state.annotations[key],
+                        marked: true
+                      }
+                    }
+                  })
+                  // console.log(this.state.annotations)
+                }
+                this.setState({loading: false})
+              })
+              .catch((error) => {
+                console.error(error);
+                this.setState({loading: false})
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+              this.setState({loading: false})
+            });
+        } else {
+          this.setState({loading: false});
+          alert(responseJson.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    })
+  }
+
   componentDidMount = () => {
     AsyncStorage.getItem('@user_id').then((user_id) => {
       fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
@@ -212,13 +271,13 @@ export default class MyDietScreen extends Component  {
               (this.state.selectedDate in this.state.foodRecord ?
               <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Text style={styles.titleStyle}>
-                  Food Consumed Today
+                  Food Consumed This Day
                 </Text>
                 <Box m={3}>
                   <Accordion>
                     {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
                       <Accordion.Item key={foodID}>
-                        <Accordion.Summary style={styles.accordionSummary} _expanded={{ backgroundColor: '#1cccd4' }}>
+                        <Accordion.Summary _expanded={{ backgroundColor: '#1cccd4' }}>
                           <Box>
                           <Text style={styles.summaryName}>
                             {food['FoodName']}
@@ -230,18 +289,33 @@ export default class MyDietScreen extends Component  {
                           <Accordion.Icon />
                         </Accordion.Summary>
                         <Accordion.Details>
-                            <Text style={styles.foodDetails}>
-                            ⚡ Energy: {food['Energy_100g']}kcal
-                            </Text>
-                            <Text style={styles.foodDetails}>
-                            🍞 Carbs: {food['Carbs_100g']}g
-                            </Text>
-                            <Text style={styles.foodDetails}>
-                            🥚 Protein: {food['Proteins_100g']}g
-                            </Text>
-                            <Text style={styles.foodDetails}>
-                            🥓 Fat: {food['Fats_100g']}g
-                            </Text>
+                          <Stack space={2} justifyContent="space-between">
+                            <HStack space={2} justifyContent="space-between">
+                              <View>
+                                <Text style={styles.foodDetails}>
+                                ⚡ Energy: {food['Energy_100g']}kcal
+                                </Text>
+                                <Text style={styles.foodDetails}>
+                                🍞 Carbs: {food['Carbs_100g']}g
+                                </Text>
+                                <Text style={styles.foodDetails}>
+                                🥚 Protein: {food['Proteins_100g']}g
+                                </Text>
+                                <Text style={styles.foodDetails}>
+                                🥓 Fat: {food['Fats_100g']}g
+                                </Text>
+                              </View>
+                              <View>
+                                <TouchableOpacity
+                                  style={styles.buttonStyle}
+                                  activeOpacity={0.5}
+                                  onPress={() => this.onDeletePress(food['ID'])}
+                                >
+                                <Text style={styles.buttonTextStyle}>Delete</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </HStack>
+                          </Stack>
                         </Accordion.Details>
                       </Accordion.Item>
                     ))}
@@ -251,7 +325,10 @@ export default class MyDietScreen extends Component  {
               :
               <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Text style={styles.titleStyle}>
-                  Record Does Not Exist
+                  No Meals Recorded
+                </Text>
+                <Text style={styles.textStyle}>
+                  Click the + button to add one now! 
                 </Text>
               </ScrollView>)
             }
@@ -283,15 +360,17 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '500',
     textAlign: 'center',
     padding: 10,
     color: '#1c9da3'
   },
-  accordionSummary: {
-    // flexDirection: "row",
-    // justifyContent: "space-between",
-    // alignItems: 'flex-end',
+  textStyle: {
+    fontSize: 14,
+    // fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 30,
+    color: '#1c9da3'
   },
   summaryName: {
     fontSize: 16,
@@ -307,6 +386,19 @@ const styles = StyleSheet.create({
   },
   foodDetails: {
     fontSize: 15,
+  },
+  buttonStyle: {
+    backgroundColor: '#e33c30',
+    height: 40,
+    width: 65,
+    alignItems: 'center',
+    borderRadius: 3,
+    marginTop: 20,
+  },
+  buttonTextStyle: {
+      color: '#FFFFFF',
+      paddingVertical: 10,
+      fontSize: 16,
   },
   actionButtonIcon: {
     fontSize: 20,
