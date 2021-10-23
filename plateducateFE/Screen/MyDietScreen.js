@@ -218,23 +218,28 @@ export default class MyDietScreen extends Component  {
                   <Accordion>
                     {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
                       <Accordion.Item key={foodID}>
-                        <Accordion.Summary>
-                          <Text style={styles.summaryStyle}>
+                        <Accordion.Summary style={styles.accordionSummary} _expanded={{ backgroundColor: '#1cccd4' }}>
+                          <Box>
+                          <Text style={styles.summaryName}>
                             {food['FoodName']}
                           </Text>
+                          <Text style={styles.summaryTime}>
+                            {food['TimeOfConsumption']}
+                          </Text>
+                          </Box>
                           <Accordion.Icon />
                         </Accordion.Summary>
                         <Accordion.Details>
-                            <Text>
+                            <Text style={styles.foodDetails}>
                             ⚡ Energy: {food['Energy_100g']}kcal
                             </Text>
-                            <Text>
+                            <Text style={styles.foodDetails}>
                             🍞 Carbs: {food['Carbs_100g']}g
                             </Text>
-                            <Text>
+                            <Text style={styles.foodDetails}>
                             🥚 Protein: {food['Proteins_100g']}g
                             </Text>
-                            <Text>
+                            <Text style={styles.foodDetails}>
                             🥓 Fat: {food['Fats_100g']}g
                             </Text>
                         </Accordion.Details>
@@ -277,21 +282,31 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   titleStyle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 10,
+    color: '#1c9da3'
   },
-  summaryStyle: {
+  accordionSummary: {
+    // flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: 'flex-end',
+  },
+  summaryName: {
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
-    padding: 10,
+    // textAlign: 'left',
+    // padding: 10,
   },
-  textStyle: {
-    fontSize: 16,
-    textAlign: 'center',
-    padding: 10,
+  summaryTime: {
+    fontSize: 12,
+    fontWeight: 'normal',
+    // textAlign: 'right',
+    // padding: 10,
+  },
+  foodDetails: {
+    fontSize: 15,
   },
   actionButtonIcon: {
     fontSize: 20,
