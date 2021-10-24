@@ -11,6 +11,8 @@ RUN apt-get update \
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
 RUN apt install -y python3-pip
 
+RUN apt-get update \
+    && apt-get install -y libgl1-mesa-glx
 
 # '''Add . directory into /tensorflow-deployment in docker container'''
 ADD . /plateducate-ml-server
@@ -25,8 +27,6 @@ RUN python3 setup.py build_ext --inplace
 
 RUN pip3 install .
 
-RUN apt-get update \
-    && apt-get install -y libgl1-mesa-glx
 
 WORKDIR /plateducate-ml-server
 
