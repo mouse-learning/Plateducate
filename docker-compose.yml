@@ -12,7 +12,7 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./plateducate-be/.env:/plateducate-be/.env
+      - ./plateducate-be/app/.env:/plateducate-be/app/.env
       - ./plateducate-be/app/__init__.py:/plateducate-be/app/__init__.py
       - ./plateducate-be/app/auth.py:/plateducate-be/app/auth.py
       - ./plateducate-be/app/nutrients.py:/plateducate-be/app/nutrients.py

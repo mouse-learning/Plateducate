@@ -27,6 +27,7 @@ services:
       - ./flask_server/yolo-src:/plateducate-ml-server/yolo-src
       - ./flask_server/model.py:/plateducate-ml-server/model.py
       - ./flask_server/app.py:/plateducate-ml-server/app.py
+      - ./flask_server/objectDetection.py:/plateducate-ml-server/objectDetection.py
     depends_on:
       - tensorflow-serving
     networks:
