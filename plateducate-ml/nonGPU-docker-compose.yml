@@ -1,0 +1,54 @@
+version: "3"
+services:
+  flask_server:
+    container_name: plateducate-ml-server
+    restart: always
+    build:
+      context: ./flask_server #where the Dockerfile is
+      dockerfile: nonGPU-Dockerfile
+    environment:
+      - FLASK_ENV=dev
+      - FLASK_APP=app
+      - FLASK_RUN_HOST=0.0.0.0
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=$PYTHONPATH:/plateducate-ml-server/models/research/:/plateducate-ml-server/models/research/slim/:/plateducate-ml-server/darkflow/:/plateducate-ml-server/darkflow/darkflow/
+    ports:
+      - 5000:5000
+    volumes:
+      - ./flask_server/yolo-src:/plateducate-ml-server/yolo-src
+      - ./flask_server/model.py:/plateducate-ml-server/model.py
+      - ./flask_server/app.py:/plateducate-ml-server/app.py
+      - ./flask_server/objectDetection.py:/plateducate-ml-server/objectDetection.py
+    depends_on:
+      - tensorflow-serving
+    networks:
+      - ml-network
+
+  tensorflow-serving:
+    container_name: tensorflow-serving
+    build:
+      context: ./serving
+      dockerfile: Dockerfile
+    ports:
+      - 8500:8500
+      - 8501:8501
+    volumes:
+      - ./serving/conf:/tensorflow-serving/conf/
+      - ./serving/model-data:/tensorflow-serving/models/
+    # runtime: nvidia
+    command:
+      - "--model_config_file=/tensorflow-serving/conf/tensorflow-serving.conf"
+      - "--model_config_file_poll_wait_seconds=60"
+      # - "--gpus all"
+    networks:
+      - ml-network
+
+volumes:
+  ml-db:
+    name: ml-db
+  tensorflow-serving_data:
+    driver: local
+
+networks:
+  ml-network:
+    driver: bridge   

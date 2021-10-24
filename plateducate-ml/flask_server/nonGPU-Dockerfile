@@ -1,0 +1,25 @@
+
+  
+FROM python:3.6
+
+# '''Add . directory into /tensorflow-deployment in docker container'''
+ADD . /plateducate-ml-server
+WORKDIR /plateducate-ml-server
+
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r darkflow.txt 
+
+WORKDIR /plateducate-ml-server/darkflow
+
+RUN python3 setup.py build_ext --inplace
+
+RUN pip3 install .
+
+WORKDIR /plateducate-ml-server
+
+RUN apt-get update \
+    && apt-get install -y libgl1-mesa-glx
+
+EXPOSE 5000
+
+CMD [ "flask", "run" ]
