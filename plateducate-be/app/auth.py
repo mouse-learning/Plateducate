@@ -44,11 +44,11 @@ def login():
         username = payload["username"]
         password = payload["password"]
 
-        user_query = db.execute("SELECT username, password FROM Plateducate.users WHERE username=:username", {"username":username}).fetchone()
+        user_query = db.execute("SELECT UserID, username, password FROM Plateducate.users WHERE username=:username", {"username":username}).fetchone()
         if user_query and check_password_hash(user_query['password'], password):
             access_token = create_access_token(identity=payload)
 
-            return jsonify({'ok': True, 'message': "Succesfully logged in", 'access_token': access_token}), 200
+            return jsonify({'ok': True, 'message': "Succesfully logged in", 'access_token': access_token, 'user_id': str(user_query['UserID'])}), 200
         else:
             return jsonify({'ok': False, 'message': "Invalid username or password"}), 400
     
@@ -74,43 +74,8 @@ def get_profile():
 
     return jsonify({'ok': True, 'message': "Profile fetched"}), 200
 
-
-@auth.route('/add_food', methods=['GET', 'POST'])
-def add_food():
-    global USER_ID
-    print(USER_ID)
-    if request.method == 'POST':
-        if USER_ID is not None:
-            food = request.form.get("food")
-            ts = datetime.datetime.now().timestamp()
-            protein = request.form.get("protein")
-            carbs = request.form.get("carbs")
-            fat = request.form.get("fat")
-            fiber = request.form.get("fiber")
-
-            db.execute(
-                "INSERT INTO plateducate.consumption_records VALUES (:USER_ID, :food, :ts, :protein, :carbs, :fat, :fiber)",
-                {"USER_ID": USER_ID, "food": food, "ts": ts, "protein": protein, "carbs": carbs, "fat": fat,
-                 "fiber": fiber})
-            db.commit()
-            return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
-        else:
-            return jsonify({'ok': False, 'message': "User not logged in"}), 400
-
-
 # dummy page to display after user successfully logged in
 @auth.route('/photo')
 def photo():
     return render_template("photo.html")
-
-
-@auth.route('/add_user', methods=['POST'])
-def add_user():
-    return 'Successfully Added User', 201
-
-
-@auth.route('/fetch_movies', methods=['POST'])
-def fetch_user():
-
-    users = []
-    return users, 201
+    

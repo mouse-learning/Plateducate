@@ -43,7 +43,6 @@ const LoginScreen = ({ navigation }) => {
        };
        console.log(dataToSend)
 
-      
       fetch('http://10.0.2.2:4000/login', {
         method: 'POST',
         body: JSON.stringify(dataToSend),
@@ -55,10 +54,11 @@ const LoginScreen = ({ navigation }) => {
         .then((response) => response.json())
         .then((responseJson) => {
            if (responseJson.ok == true) {
+              console.log(responseJson)
               setLoading(false);
-              AsyncStorage.setItem('@user_id', responseJson.access_token);
+              AsyncStorage.setItem('@user_token', responseJson.access_token);
               AsyncStorage.setItem('@username', dataToSend['username']);
-              console.log()
+              AsyncStorage.setItem('@user_id', responseJson.user_id);
               navigation.replace('LoggedIn');
             } else {
                setLoading(false);

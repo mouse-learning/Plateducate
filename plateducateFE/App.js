@@ -2,6 +2,8 @@
 // Import React and Component
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// Import Screens
 import LoginScreen from './Screen/LoginScreen'; 
 import RegisterScreen from './Screen/RegisterScreen';
 import SplashScreen from './Screen/SplashScreen';
@@ -9,6 +11,7 @@ import HomeScreen from './Screen/HomeScreen';
 import MyDietScreen from './Screen/MyDietScreen';
 import RecommendationScreen from './Screen/RecommendationScreen';
 import PredictionScreen from './Screen/Prediction';
+import ProfileScreen from './Screen/ProfileScreen';
 
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
@@ -27,7 +30,7 @@ const Auth = () => {
         name="LoginScreen"
         component={LoginScreen}
         options={{headerShown: false}}
-      />
+        />
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
@@ -40,7 +43,7 @@ const Auth = () => {
             fontWeight: 'bold', //Set Header text style
           },
         }}
-      />
+        />
     </Stack.Navigator>
   );
 };
@@ -97,7 +100,7 @@ function LoggedIn() {
             {/* List of tabs at bottom of screen */}
             <Tab.Screen name="Home" component={HomeScreenStack} options={{headerShown: false}}/>
             <Tab.Screen name="My Diet" component={DietScreenStack} options={{headerShown: false}}/>
-            <Tab.Screen name="Profile" component={RecommendationScreen} options={{headerShown: false}}/>
+            <Tab.Screen name="Profile" component={ProfileScreen} options={{headerShown: false}}/>
             {/* <Tab.Screen name="Profile"/> */}
         </Tab.Navigator>
     )
@@ -105,7 +108,7 @@ function LoggedIn() {
 
 function App() {
     return (
-        <NavigationContainer>
+          <NavigationContainer>
             <Stack.Navigator initialRouteName="SplashScreen">
                 {/* Splash screen appearing for a few seconds */}
                 <Stack.Screen 
@@ -125,7 +128,7 @@ function App() {
                 component={LoggedIn}
                 options={{headerShown: false}}/>
             </Stack.Navigator>
-        </NavigationContainer>
+          </NavigationContainer>
     )
 }
 
