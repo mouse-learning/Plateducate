@@ -17,6 +17,7 @@ import ProfileScreen from './Screen/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HeaderBackButton } from '@react-navigation/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,12 +51,15 @@ const Auth = () => {
 
 const HomeStack = createNativeStackNavigator();
 
-function HomeScreenStack() {
+function HomeScreenStack({navigation}) {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name="Homepage" component={HomeScreen} options={{headerShown: false }}/>
             <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
-            <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{headerShown: false }}/>
+            <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{
+              headerShown: true,
+              headerTitleAlign: 'center',
+              }}/>
             <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
         </HomeStack.Navigator>
     )
@@ -67,7 +71,7 @@ function DietScreenStack() {
   return(
     <DietStack.Navigator>
       <DietStack.Screen name="MyDiet" component={MyDietScreen} options={{headerShown: false }}/>
-      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: false }}/>
+      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: true }}/>
     </DietStack.Navigator>
   )
 }
@@ -93,8 +97,11 @@ function LoggedIn() {
               // You can return any component that you like here!
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: '#f5c92c',
+            tabBarActiveTintColor: '#00888e',
             tabBarInactiveTintColor: 'gray',
+            tabBarStyle: {
+              backgroundColor: 'white'
+            }
           })}
           >
             {/* List of tabs at bottom of screen */}
