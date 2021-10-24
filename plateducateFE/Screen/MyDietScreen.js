@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import { FloatingAction } from "react-native-floating-action";
 import moment from "moment";
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -30,12 +31,14 @@ const actions = [
     icon: require("../static/camera.png"),
     name: "camera-btn",
     position: 1,
+    color: '#00afb7',
   },
   {
     text: "Add from gallery",
     icon: require("../static/gallery.png"),
     name: "gallery-btn",
-    position: 2
+    position: 2,
+    color: '#00afb7',
   },
 ];
 
@@ -57,7 +60,9 @@ export default class MyDietScreen extends Component  {
 
   onImageLibraryPress = async () => {
     const options = {
-      selectionLimit: 1,
+      cropping: true,
+      width: 300,
+      height: 300,
       mediaType: 'photo',
       includeBase64: true,
     };
@@ -76,18 +81,19 @@ export default class MyDietScreen extends Component  {
       );
       if (galleryGranted == PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera roll permission given");
-        launchImageLibrary(options, (response) => {
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.errorMessage) {
-            console.log('Image Picker Error: ', response.errorMessage);
-          } else {
+        ImagePicker.openPicker(options).then(response => {
+          if (response) {
+            // console.log(response);
             this.setState({imgResponse: response});
             this.props.navigation.navigate('Prediction', {
-              data: this.state.imgResponse,
+              imgResp: this.state.imgResponse,
             });
+          } else {
+            console.log("no image opened")
           }
-        });
+        }).catch((error) => {
+          console.log(error);
+        })
       } else {
         console.log("Camera roll permission denied");
       }
@@ -100,7 +106,9 @@ export default class MyDietScreen extends Component  {
 
   onCameraPress = async () => {
     const options = {
-      saveToPhotos: true,
+      cropping: true,
+      width: 300,
+      height: 300,
       mediaType: 'photo',
       includeBase64: true,
     };
@@ -118,19 +126,19 @@ export default class MyDietScreen extends Component  {
       );
       if (cameraGranted == PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission given");
-        launchCamera(options, (response) => {    
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.errorMessage) {
-            console.log('ImagePicker Error: ', response.errorMessage);
-          } else {
+        ImagePicker.openCamera(options).then(response => {
+          if (response) {
+            console.log(response);
             this.setState({imgResponse: response});
             this.props.navigation.navigate('Prediction', {
-              data: this.state.imgResponse,
+              imgResp: this.state.imgResponse,
             });
+          } else {
+            console.log("no image opened")
           }
-          
-        });
+        }).catch((error) => {
+          console.log(error);
+        })
       } else {
         console.log("Camera permission denied");
       }
@@ -355,6 +363,8 @@ export default class MyDietScreen extends Component  {
                 }
                 console.log(`selected button: ${name}`);
               }}
+              buttonSize={50}
+              color={'#006166'}
               />
         </SafeAreaView>
       </NativeBaseProvider>
