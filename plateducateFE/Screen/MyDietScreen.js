@@ -175,6 +175,16 @@ export default class MyDietScreen extends Component  {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.ok == true) {
+          this.setState({
+            ...this.state,
+            annotations: {
+              ...this.state.annotations,
+              [this.state.selectedDate]:{
+                ...this.state.annotations[this.state.selectedDate],
+                marked: false
+              },
+            }
+          })
           AsyncStorage.getItem('@user_id').then((user_id) => {
             fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
                 method: 'GET',
