@@ -28,46 +28,44 @@ const Separator = () => (
 
 const HomeScreen = ({ navigation: { navigate } }) => {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.container}>
-          <ImageBackground
-            source={require('../static/food2.jpg')}
-            resizeMode="cover"
-            style={styles.image}
-          >
-          </ImageBackground>
-          <View style={styles.overlay} >
-            <TouchableOpacity
-              style={styles.button}
-              activeOpacity={0.5}
-              onPress={() => navigate('MyDiet')}>
-              <Image
-                source={require('../static/square.png')}
-                style={styles.btnImage}
-              />
-              <View style={styles.btnText}>
-                <Text style={styles.btnTextHeader}>Your Diet</Text>
-                <Text style={styles.btnTextBody}>See your food log or make a new food log!</Text>   
-              </View>
-            </TouchableOpacity>
-            <Separator />
-            <TouchableOpacity
-              style={{...styles.button, borderTopLeftRadius: 0, borderTopRightRadius: 0}}
-              activeOpacity={0.5}
-              onPress={() => navigate('Recommendations')}>
-              <Image
-                source={require('../static/square.png')}
-                style={styles.btnImage}
-              />
-              <View style={styles.btnText}>
-                <Text style={styles.btnTextHeader}>Food Recommendations</Text>
-                <Text style={styles.btnTextBody}>What should I eat next?</Text>  
-                            
-              </View>
-            </TouchableOpacity>
-          </View> 
-        </View>
-      </SafeAreaView>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../static/food2.jpg')}
+          resizeMode="cover"
+          style={styles.image}
+        >
+        </ImageBackground>
+        <View style={styles.overlay} >
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.5}
+            onPress={() => navigate('MyDiet')}>
+            <Image
+              source={require('../static/square.png')}
+              style={styles.btnImage}
+            />
+            <View style={styles.btnText}>
+              <Text style={styles.btnTextHeader}>Your Diet</Text>
+              <Text style={styles.btnTextBody}>See your food log or make a new food log!</Text>   
+            </View>
+          </TouchableOpacity>
+          <Separator />
+          <TouchableOpacity
+            style={{...styles.button, borderTopLeftRadius: 0, borderTopRightRadius: 0}}
+            activeOpacity={0.5}
+            onPress={() => navigate('Recommendations')}>
+            <Image
+              source={require('../static/square.png')}
+              style={styles.btnImage}
+            />
+            <View style={styles.btnText}>
+              <Text style={styles.btnTextHeader}>Food Recommendations</Text>
+              <Text style={styles.btnTextBody}>What should I eat next?</Text>  
+                          
+            </View>
+          </TouchableOpacity>
+        </View> 
+      </View>
     );
   };
   
