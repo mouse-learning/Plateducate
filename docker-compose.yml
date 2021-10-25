@@ -15,10 +15,13 @@ services:
       - ./plateducate-be/app/.env:/plateducate-be/app/.env
       - ./plateducate-be/app/__init__.py:/plateducate-be/app/__init__.py
       - ./plateducate-be/app/auth.py:/plateducate-be/app/auth.py
+      - ./plateducate-be/app/food.py:/plateducate-be/app/food.py
       - ./plateducate-be/app/nutrients.py:/plateducate-be/app/nutrients.py
       - ./plateducate-be/app/objectDetection.py:/plateducate-be/app/objectDetection.py
     networks:
       - plateducate-ml_ml-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 networks:
   plateducate-ml_ml-network:
     external: true
