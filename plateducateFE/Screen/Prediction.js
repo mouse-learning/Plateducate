@@ -18,6 +18,8 @@ import { fontWeight } from 'styled-system';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStyleAndFilteredProps } from 'native-base/lib/typescript/theme/styled-system';
 
+import Loader from './Components/Loader';
+
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
 
@@ -66,7 +68,7 @@ const PredictionScreen = ({ route, navigation }) => {
             .then((response) => response.json())
             .then((responseJSON) => {
                 if (responseJSON.ok == true) {
-                    setAddDB({...addDB, [foodName]: false});
+                    setAddDB({...addDB, [foodClass]: true});
                     console.log("Successfully added to DB");
                 }
                 else {
@@ -232,12 +234,12 @@ const PredictionScreen = ({ route, navigation }) => {
         <NativeBaseProvider>
             <SafeAreaView style={styles.container}>
                 <View style={styles.container}>
-                {isLoading ? <Text>Loading for Predictions...</Text> :
+                {isLoading ? (<Loader loading={isLoading} />) :
                     <View style={styles.container}>
                         <Image style={{...styles.predictionImg, aspectRatio: imageAspectRatio }} source={{uri: base64Img}} />
                         <View style={styles.overlay}>
                             <Text style={styles.predictionTitle}>Choose Food</Text>
-                            <ScrollView style={styles.predictionScroll}>
+                            <ScrollView>
                                 <Box m={foodList.length} bg={'white'} >
                                     <Accordion allowMultiple={true}>
                                         {foodList.map((prediction, index) => 
@@ -276,13 +278,26 @@ const PredictionScreen = ({ route, navigation }) => {
                                                                 </Text>
                                                             </View>
                                                             <View>
+                                                                {console.log(addDB[prediction.class_name])}
+                                                                {!addDB[prediction.class_name] ? 
                                                                 <TouchableOpacity
-                                                                    style={styles.buttonStyle}
+                                                                    style={styles.buttonStyleBefore}
                                                                     activeOpacity={0.5}
                                                                     onPress={() => onAddPress(prediction.class_name)}
                                                                 >
-                                                                    <Text style={styles.buttonTextStyle}>Add Food</Text>
+                                                                    <Text style={styles.buttonTextStyle}>Add Food</Text> 
+                                                                    
                                                                 </TouchableOpacity>
+                                                                :
+                                                                <TouchableOpacity
+                                                                    style={styles.buttonStyleAfter}
+                                                                    activeOpacity={0.5}
+                                                                    
+                                                                >
+                                                                    <Text style={styles.buttonTextStyle}>Added</Text> 
+                                                                    
+                                                                </TouchableOpacity>
+                                                                    }
                                                             </View>
                                                         </HStack>
                                                     </Stack>
@@ -341,14 +356,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#003a3d'
     },
-    buttonStyle: {
+    buttonStyleBefore: {
         backgroundColor: '#007176',
         height: 40,
-        width: 65,
+        width: 85,
         alignItems: 'center',
         borderRadius: 3,
         marginTop: 20,
-      },
+    },
+    buttonStyleAfter: {
+    backgroundColor: 'red',
+    height: 40,
+    width: 85,
+    alignItems: 'center',
+    borderRadius: 3,
+    marginTop: 20,
+    },
     buttonTextStyle: {
         color: '#FFFFFF',
         paddingVertical: 10,
