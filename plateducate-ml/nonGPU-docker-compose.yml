@@ -5,7 +5,7 @@ services:
     restart: always
     build:
       context: ./flask_server #where the Dockerfile is
-      dockerfile: Dockerfile
+      dockerfile: nonGPU-Dockerfile
     environment:
       - FLASK_ENV=dev
       - FLASK_APP=app
@@ -14,15 +14,6 @@ services:
       - PYTHONPATH=$PYTHONPATH:/plateducate-ml-server/models/research/:/plateducate-ml-server/models/research/slim/:/plateducate-ml-server/darkflow/:/plateducate-ml-server/darkflow/darkflow/
     ports:
       - 5000:5000
-    runtime: nvidia
-    command: nvidia-smi
-    command: python3 -c "import tensorflow as tf;tf.test.is_gpu_available()"
-    command: flask run
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
     volumes:
       - ./flask_server/yolo-src:/plateducate-ml-server/yolo-src
       - ./flask_server/model.py:/plateducate-ml-server/model.py

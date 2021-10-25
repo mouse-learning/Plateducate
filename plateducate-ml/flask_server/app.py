@@ -1,18 +1,15 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify, make_response
+from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
-from PIL import Image
-import base64
-import io
+import time, os, model
 
-import os
-import model, time
+from objectDetection import objectDetection
 
 app = Flask(__name__, template_folder='template')
 Bootstrap(app)
 
-"""
-Routes
-"""
+app.register_blueprint(objectDetection)
+
+
 @app.route('/', methods=['GET','POST'])
 def index():
     if request.method == 'POST':
@@ -41,45 +38,6 @@ def index():
 
             return render_template('result.html', resultResnet = resultResnet)
     return render_template('index.html')
-
-@app.route('/receive_photo', methods=['POST', 'GET'])
-def receive_photo():
-    data = request.data
-    decoded = base64.b64decode(data)
-    image = Image.open(io.BytesIO(decoded))
-
-    images_bb = {}
-    model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_yolo_conversion(image, 'yolo-tf1')
-    resultYOLO = {
-        'model_name': model_name,
-        'class_with_scores': {
-            'class_name': class_name,
-            'scores': scores
-        },
-        'time_elapsed': time_elapsed
-    }
-    images_bb['yolo'] = image_bb
-    print(resultYOLO)
-
-    # model_name, image_bb, class_name, scores, time_elapsed = model.get_prediction_v2(image, 'ssd_resnet101')
-    # resultResnet = {
-    #     'model_name': model_name,
-    #     'class_with_scores': {
-    #         'class_name': class_name,
-    #         'scores': scores
-    #     },
-    #     'time_elapsed': time_elapsed
-    # }
-    # images_bb.append(image_bb)
-
-    if resultYOLO:
-        resp = make_response(jsonify({'ok': True, 'message': "ML prediction result", 'resultYOLO': resultYOLO}), 200)
-        resp.headers['images_bb'] = images_bb
-        return resp
-    else:
-        return jsonify({'ok': False, 'message': "ML flask server - no data found"}), 500
-
-
 if __name__ == '__main__':
     # app.run(debug = True)
     app.run(debug=True, host='0.0.0.0')

@@ -11,6 +11,7 @@ import requests, time, logging
 from darkflow.net.build import TFNet
 from PIL import Image
 from pprint import pprint
+from random import randint
 
 SIZE=128
 MAX_BOXES_TO_DRAW = 1
@@ -67,8 +68,7 @@ def predict_yolo_wo_serving(imagePath, fileName, modelName):
   result = tfnet.return_predict(im)
   class_names_w_scores = []
   new_image_path = os.path.join('static', modelName + fileName)
-  # imrsz = cv2.resize(im, (416, 416))
-  # imrsz = imrsz / 255.
+
   for prediction in result:
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
@@ -96,8 +96,8 @@ def predict_yolo_wo_serving(imagePath, fileName, modelName):
 
 
 def predict_yolo_serving(imagePath, fileName, modelName):
-  MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
-  # MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
+  # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'
+  MODEL_URI = 'http://tensorflow-serving:8501/v1/models/' + modelName + ':predict'
 
   start = time.perf_counter()
 
@@ -120,8 +120,8 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   res = requests.post(MODEL_URI, data=payload)
 
   json_response = json.loads(res.text)
-  with open('res.txt', 'wt') as out:
-    pprint(json_response, stream=out)
+  # with open('res.txt', 'wt') as out:
+  #   pprint(json_response, stream=out)
   net_out = np.squeeze(np.array(json_response['predictions'], dtype='float32'))
   # with open('net.txt', 'wt') as out:
   #   pprint(net_out, stream=out)
@@ -158,29 +158,27 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   imrsz = cv2.resize(im, (416, 416))
   imrsz = imrsz / 255.
   # imrsz = imrsz[:, :, ::-1]
+  class_colors = (randint(0, 255), randint(0, 255), randint(0, 255))
   for prediction in boxesInfo:
       label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
+
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,255), 2)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), color=(randint(0, 255), randint(0, 255), randint(0, 255)), thickness=2)
 
+      bb_label = label + " - " + str(int(prediction['confidence']*100)) + "%"
       (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
-      cv2.putText(imrsz, label, (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0 ), 2)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_bottom_right[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_bottom_right[1])), color=(randint(0, 255), randint(0, 255), randint(0, 255)), thickness=-1)
+      cv2.putText(imrsz, label, 
+        (int(old_top_left[0]), int(old_bottom_right[1])-5), 
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
 
-      new_img = imrsz * 255.
-      # resize(new_image, (width, height))
+      new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
       new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
-      # new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
-      # new_img = cv2.resize(new_img, img_shape)
       cv2.imwrite(new_image_path,new_img)
-      # cv2.imshow("lalala", new_img)
-      # cv2.waitKey(0)
-      # cv2.destroyAllWindows()
-      class_names_w_scores.append((label, prediction['confidence']))
-      # {'label': 'bibimbap', 'confidence': 0.80018985, 'topleft': {'x': 67, 'y': 5}, 'bottomright': {'x': 415, 'y': 409}}
 
+      class_names_w_scores.append((prediction['label'], prediction['confidence']))
   class_names_w_scores = np.array(class_names_w_scores)
   class_names = class_names_w_scores[:, 0]
   scores = class_names_w_scores[:, 1]
@@ -208,10 +206,6 @@ def get_prediction_yolo_conversion(image, modelName):
   # OBJECT DETECTION MODEL
   im = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
   img_shape = im.shape[:2]
-  # print(img_shape)
-  # cv2.imshow("lalala", im)
-  # cv2.waitKey(0)
-  # cv2.destroyAllWindows()
   imsz = cv2.resize(im, (416, 416))
   imsz = imsz / 255.
   imsz = imsz[:, :, ::-1]
@@ -232,9 +226,6 @@ def get_prediction_yolo_conversion(image, modelName):
   net_out = np.squeeze(np.array(json_response['predictions'], dtype='float32'))
   detections = res.json()
 
-  # The JSON Response is a dictionary with key 'predictions'.
-  # We only want the value of this key which is equiv. to
-  # output of the model when ran in predict.py (from TFOD Tutorial)
   detections = detections['predictions'][0]
 
   boxes = tfnet.framework.findboxes(net_out)
@@ -262,35 +253,35 @@ def get_prediction_yolo_conversion(image, modelName):
 
   for prediction in boxesInfo:
       label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
+
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      new_top_left_corner = np.multiply(old_top_left, scale)
-      new_bottom_right_corner = np.multiply(old_bottom_right, scale )
-
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (255,0,0))
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (66, 199, 54), 2)
 
       (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_top_left[1])), (255, 0, 255), -1)
-      cv2.putText(imrsz, label, (int(old_top_left[0]), int(old_top_left[1])-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_bottom_right[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_bottom_right[1])), (66, 199, 54), thickness=-1)
+      cv2.putText(imrsz, label, 
+        (int(old_top_left[0]), int(old_bottom_right[1])-5), 
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
 
       new_img = cv2.convertScaleAbs(imrsz, alpha=(255.0))
       new_img = cv2.resize(new_img, (img_shape[1], img_shape[0]))
 
-      class_names_w_scores.append((label, prediction['confidence']))
-
+      class_names_w_scores.append({
+        "class_name": label, 
+        "score": str(prediction['confidence'])
+      })
+  new_img = cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)
   new_im = Image.fromarray(new_img)
   buff = io.BytesIO()
   new_im.save(buff, format="JPEG")
   img_bb = base64.b64encode(buff.getvalue())
-
-  class_names_w_scores = np.array(class_names_w_scores)
-  class_names = (class_names_w_scores[:, 0]).tolist()
-  scores = (class_names_w_scores[:, 1]).tolist()
+  base64_str = img_bb.decode('utf-8')
 
   model_name_str = convertLabelToStr(modelName)
   
-  return model_name_str, img_bb, class_names, scores, time_elapsed
+  return model_name_str, base64_str, class_names_w_scores, time_elapsed
 
 def get_prediction(imagePath, fileName, modelName):
   # MODEL_URI = 'http://localhost:8501/v1/models/' + modelName + ':predict'

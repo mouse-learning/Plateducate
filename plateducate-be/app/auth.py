@@ -44,7 +44,7 @@ def login():
         username = payload["username"]
         password = payload["password"]
 
-        user_query = db.execute("SELECT UserID, username, password FROM Plateducate.users WHERE username=:username", {"username":username}).fetchone()
+        user_query = db.execute("SELECT UserID, username, password FROM plateducate.users WHERE username=:username", {"username":username}).fetchone()
         if user_query and check_password_hash(user_query['password'], password):
             access_token = create_access_token(identity=payload)
 
