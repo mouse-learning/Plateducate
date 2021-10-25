@@ -7,22 +7,17 @@ import {
   SafeAreaView, 
   StyleSheet,
   TouchableOpacity, 
-  Button,
-  Dimensions,
-  Image,
+  RefreshControl,
   ScrollView,
   PermissionsAndroid
 } from 'react-native';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-import { launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import { FloatingAction } from "react-native-floating-action";
 import moment from "moment";
-import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from './Components/Loader';
-import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box, HStack, Stack } from 'native-base';
-import { flex } from 'styled-system';
+import { Accordion, NativeBaseProvider, Box, HStack, Stack } from 'native-base';
 
 // const NOW = 
 const actions = [
@@ -42,6 +37,10 @@ const actions = [
   },
 ];
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 export default class MyDietScreen extends Component  {
 
   constructor(props) {
@@ -51,11 +50,18 @@ export default class MyDietScreen extends Component  {
       imgResponse: null,
       selectedDate: moment().format("YYYY-MM-DD"),
       foodRecord: {},
+      refreshing: false,
       annotations: {
         [moment().format("YYYY-MM-DD")]: {selected: true},
         
       }
     } 
+  }
+
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    this.getData();
+    wait(1500).then(() => this.setState({refreshing: false}));
   }
 
   onImageLibraryPress = async () => {
@@ -236,14 +242,15 @@ export default class MyDietScreen extends Component  {
     })
   }
 
-  componentDidMount = () => {
+  getData = async() => {
     AsyncStorage.getItem('@user_id').then((user_id) => {
+      console.log(user_id);
       fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
           method: 'GET',
         })
         .then((response) => response.json())
         .then((responseJson) => {
-          // console.log(responseJson.result)
+          console.log(responseJson.result)
           this.setState({foodRecord: responseJson.result})
           for (const [key, value] of Object.entries(this.state.foodRecord)) {
             this.setState({
@@ -271,87 +278,101 @@ export default class MyDietScreen extends Component  {
     });
   }
 
+  componentDidMount = () => {
+    this.getData();
+    setInterval(this.getData, 30000); // runs every 5 seconds.
+  }
+
   render() {
     return (
       <NativeBaseProvider>
         <SafeAreaView style={styles.container}>
-          <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-          <View style={styles.container}>
-            <Calendar
-              onDayPress={(day) => this.onDayPress(day['dateString'])}
-              markedDates={this.state.annotations}
+          <ScrollView 
+          keyboardShouldPersistTaps="handled" 
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
             />
-            {/* {console.log("foodRecord:")}
-            {console.log(this.state.foodRecord[this.state.selectedDate])} */}
-            {this.state.loading?
-              (<Loader loading={this.state.loading} />)
-            :
-              (this.state.selectedDate in this.state.foodRecord ?
-              <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-                <Text style={styles.titleStyle}>
-                  Food Consumed This Day
-                </Text>
-                <Box m={3}>
-                  <Accordion>
-                    {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
-                      <Accordion.Item key={foodID}>
-                        <Accordion.Summary _expanded={{ backgroundColor: '#1cccd4' }}>
-                          <Box>
-                          <Text style={styles.summaryName}>
-                            {food['FoodName']}
-                          </Text>
-                          <Text style={styles.summaryTime}>
-                            {food['TimeOfConsumption']}
-                          </Text>
-                          </Box>
-                          <Accordion.Icon />
-                        </Accordion.Summary>
-                        <Accordion.Details>
-                          <Stack space={2} justifyContent="space-between">
-                            <HStack space={2} justifyContent="space-between">
-                              <View>
-                                <Text style={styles.foodDetails}>
-                                ⚡ Energy: {food['Energy_100g']}kcal
-                                </Text>
-                                <Text style={styles.foodDetails}>
-                                🍞 Carbs: {food['Carbs_100g']}g
-                                </Text>
-                                <Text style={styles.foodDetails}>
-                                🥚 Protein: {food['Proteins_100g']}g
-                                </Text>
-                                <Text style={styles.foodDetails}>
-                                🥓 Fat: {food['Fats_100g']}g
-                                </Text>
-                              </View>
-                              <View>
-                                <TouchableOpacity
-                                  style={styles.buttonStyle}
-                                  activeOpacity={0.5}
-                                  onPress={() => this.onDeletePress(food['ID'])}
-                                >
-                                <Text style={styles.buttonTextStyle}>Delete</Text>
-                                </TouchableOpacity>
-                              </View>
-                            </HStack>
-                          </Stack>
-                        </Accordion.Details>
-                      </Accordion.Item>
-                    ))}
-                  </Accordion>
-                </Box>
-              </ScrollView>
+          }
+          >
+            <View style={styles.container}>
+              <Calendar
+                onDayPress={(day) => this.onDayPress(day['dateString'])}
+                markedDates={this.state.annotations}
+              />
+              {/* {console.log("foodRecord:")}
+              {console.log(this.state.foodRecord[this.state.selectedDate])} */}
+              {this.state.loading?
+                (<Loader loading={this.state.loading} />)
               :
-              <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-                <Text style={styles.titleStyle}>
-                  No Meals Recorded
-                </Text>
-                <Text style={styles.textStyle}>
-                  Click the + button to add one now! 
-                </Text>
-              </ScrollView>)
-            }
-            
-          </View>
+                (this.state.selectedDate in this.state.foodRecord ?
+                <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                  <Text style={styles.titleStyle}>
+                    Food Consumed Today
+                  </Text>
+                  <Box m={3}>
+                    <Accordion>
+                      {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
+                        <Accordion.Item key={foodID}>
+                          <Accordion.Summary _expanded={{ backgroundColor: '#1cccd4' }}>
+                            <Box>
+                            <Text style={styles.summaryName}>
+                              {food['FoodName']}
+                            </Text>
+                            <Text style={styles.summaryTime}>
+                              {food['TimeOfConsumption']}
+                            </Text>
+                            </Box>
+                            <Accordion.Icon />
+                          </Accordion.Summary>
+                          <Accordion.Details>
+                            <Stack space={2} justifyContent="space-between">
+                              <HStack space={2} justifyContent="space-between">
+                                <View>
+                                  <Text style={styles.foodDetails}>
+                                  ⚡ Energy: {food['Energy_100g']}kcal
+                                  </Text>
+                                  <Text style={styles.foodDetails}>
+                                  🍞 Carbs: {food['Carbs_100g']}g
+                                  </Text>
+                                  <Text style={styles.foodDetails}>
+                                  🥚 Protein: {food['Proteins_100g']}g
+                                  </Text>
+                                  <Text style={styles.foodDetails}>
+                                  🥓 Fat: {food['Fats_100g']}g
+                                  </Text>
+                                </View>
+                                <View>
+                                  <TouchableOpacity
+                                    style={styles.buttonStyle}
+                                    activeOpacity={0.5}
+                                    onPress={() => this.onDeletePress(food['ID'])}
+                                  >
+                                  <Text style={styles.buttonTextStyle}>Delete</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </HStack>
+                            </Stack>
+                          </Accordion.Details>
+                        </Accordion.Item>
+                      ))}
+                    </Accordion>
+                  </Box>
+                </ScrollView>
+                :
+                <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                  <Text style={styles.titleStyle}>
+                    No Meals Recorded
+                  </Text>
+                  <Text style={styles.textStyle}>
+                    Click the + button to add one now! 
+                  </Text>
+                </ScrollView>)
+              }
+              
+            </View>
           </ScrollView>
             <FloatingAction
               actions={actions}
