@@ -97,10 +97,10 @@ function LoggedIn() {
               // You can return any component that you like here!
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: '#00888e',
-            tabBarInactiveTintColor: 'gray',
+            tabBarActiveTintColor: '#f5487f',
+            tabBarInactiveTintColor: '#5b7086',
             tabBarStyle: {
-              backgroundColor: 'white'
+              backgroundColor: '#2f3b52'
             }
           })}
           >

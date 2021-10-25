@@ -26,14 +26,14 @@ const actions = [
     icon: require("../static/camera.png"),
     name: "camera-btn",
     position: 1,
-    color: '#00afb7',
+    color: '#8f3b76',
   },
   {
     text: "Add from gallery",
     icon: require("../static/gallery.png"),
     name: "gallery-btn",
     position: 2,
-    color: '#00afb7',
+    color: '#8f3b76',
   },
 ];
 
@@ -42,7 +42,6 @@ const wait = timeout => {
 };
 
 export default class MyDietScreen extends Component  {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +53,7 @@ export default class MyDietScreen extends Component  {
       annotations: {
         [moment().format("YYYY-MM-DD")]: {selected: true},
         
-      }
+      },
     } 
   }
 
@@ -71,6 +70,9 @@ export default class MyDietScreen extends Component  {
       height: 300,
       mediaType: 'photo',
       includeBase64: true,
+      cropperToolbarWidgetColor: '#ffffff',
+      cropperToolbarColor: '#2f3b52',
+      cropperActiveWidgetColor: '#f5487f'
     };
 
     
@@ -117,6 +119,9 @@ export default class MyDietScreen extends Component  {
       height: 300,
       mediaType: 'photo',
       includeBase64: true,
+      cropperToolbarWidgetColor: '#ffffff',
+      cropperToolbarColor: '#2f3b52',
+      cropperActiveWidgetColor: '#f5487f'
     };
     
     try {
@@ -283,6 +288,12 @@ export default class MyDietScreen extends Component  {
     setInterval(this.getData, 30000); // runs every 5 seconds.
   }
 
+  componentWillUnmount() {
+    this.setState = (state,callback)=>{
+      return;
+    };
+  }
+
   render() {
     return (
       <NativeBaseProvider>
@@ -301,6 +312,25 @@ export default class MyDietScreen extends Component  {
               <Calendar
                 onDayPress={(day) => this.onDayPress(day['dateString'])}
                 markedDates={this.state.annotations}
+                style={{
+                  // height: 350,
+                  borderRadius: 10,
+                  // borderColor: '#8f3b76',
+                  // borderWidth: 1,
+                }}
+                theme={{
+                  calendarBackground: '#2f3b52',
+                  dayTextColor: 'white',
+                  textDisabledColor: '#5b7086',
+                  selectedDayBackgroundColor: '#f5487f',
+                  monthTextColor: '#ffffff',
+                  todayTextColor: '#c7417b',
+                  selectedDotColor: '#ffffff',
+                  dotColor: '#f5487f',
+                  arrowColor: '#f5487f',
+                  textDayFontSize: 14,
+                  textMonthFontSize: 16,
+                }}
               />
               {/* {console.log("foodRecord:")}
               {console.log(this.state.foodRecord[this.state.selectedDate])} */}
@@ -313,10 +343,10 @@ export default class MyDietScreen extends Component  {
                     Food Consumed Today
                   </Text>
                   <Box m={3}>
-                    <Accordion>
+                    <Accordion borderWidth={0} borderBottomColor={'#f5487f'} >
                       {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
                         <Accordion.Item key={foodID}>
-                          <Accordion.Summary _expanded={{ backgroundColor: '#1cccd4' }}>
+                          <Accordion.Summary bg={'#2f3b52'} _expanded={{ backgroundColor: '#c7417b' }}>
                             <Box>
                             <Text style={styles.summaryName}>
                               {food['FoodName']}
@@ -327,7 +357,7 @@ export default class MyDietScreen extends Component  {
                             </Box>
                             <Accordion.Icon />
                           </Accordion.Summary>
-                          <Accordion.Details>
+                          <Accordion.Details bg={'#ffffff'}>
                             <Stack space={2} justifyContent="space-between">
                               <HStack space={2} justifyContent="space-between">
                                 <View>
@@ -385,7 +415,7 @@ export default class MyDietScreen extends Component  {
                 console.log(`selected button: ${name}`);
               }}
               buttonSize={50}
-              color={'#006166'}
+              color={'#f5487f'}
               />
         </SafeAreaView>
       </NativeBaseProvider>
@@ -396,7 +426,7 @@ export default class MyDietScreen extends Component  {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#242e42',
     padding: 10,
   },
   titleStyle: {
@@ -404,24 +434,26 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     padding: 10,
-    color: '#1c9da3'
+    color: '#ffffff'
   },
   textStyle: {
     fontSize: 14,
     // fontWeight: 'bold',
     textAlign: 'center',
     padding: 30,
-    color: '#1c9da3'
+    color: '#5b7086'
   },
   summaryName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white'
     // textAlign: 'left',
     // padding: 10,
   },
   summaryTime: {
     fontSize: 12,
     fontWeight: 'normal',
+    color: '#5b7086'
     // textAlign: 'right',
     // padding: 10,
   },
@@ -446,4 +478,7 @@ const styles = StyleSheet.create({
     height: 22,
     color: 'white',
   },
+  calendarTheme: {
+    color: '#2f3b52'
+  }
 });

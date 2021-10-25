@@ -283,11 +283,14 @@ const PredictionScreen = ({ route, navigation }) => {
                 <View style={styles.container}>
                 {isLoading ? (<Loader loading={isLoading} />) :
                     <View style={styles.container}>
-                        <Image style={{...styles.predictionImg, aspectRatio: imageAspectRatio }} source={{uri: base64Img}} />
+                        <View style={styles.imgContainer}>
+                            <Image style={{...styles.predictionImg, aspectRatio: imageAspectRatio }} source={{uri: base64Img}} />
+
+                        </View>
                         <View style={styles.overlay}>
                             <Text style={styles.predictionTitle}>Choose Food</Text>
-                            <ScrollView>
-                                <Box m={foodList.length} bg={'white'} >
+                            <ScrollView style={styles.predictionScroll}>
+                                <Box m={foodList.length} >
                                     <Accordion allowMultiple={true}>
                                         {foodList.map((prediction, index) => 
                                             <Accordion.Item key={index}>
@@ -373,13 +376,14 @@ const PredictionScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     predictionImg: {
-        top: 0.1,
     //   height: screenHeight/2.5,
-        width: screenWidth,
+        // flex:1,
+        width: screenWidth*0.85,
         alignSelf: 'center',
     },
     container: {
         flex: 1,
+        backgroundColor: '#242e42',
     },
     overlay: {
         flex: 1,
@@ -391,16 +395,29 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'white',
+        backgroundColor: '#242e42',
         opacity: 1,
     },
+    imgContainer: {
+        top: 13,
+        // padding: 10,
+        flex: 1,
+        flexDirection: "column",
+        width: screenWidth*0.95,
+        height: screenWidth*0.95,
+        position: 'absolute',
+        justifyContent: 'center',
+        backgroundColor: 'yellow',
+        borderRadius: 20,
+    },
     predictionTitle: {
+        flex:1,
         alignSelf: 'flex-start',
         paddingLeft: 12,
         paddingBottom: 10,
         fontSize: 26,
         fontWeight: 'bold',
-        color: '#003a3d'
+        color: '#ffffff'
     },
     buttonStyleBefore: {
         backgroundColor: '#007176',
@@ -424,6 +441,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center'
     },
+    predictionScroll : {
+        // flex: 1,
+    }
 
 });
 
