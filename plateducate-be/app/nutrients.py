@@ -31,7 +31,6 @@ def submit_photo():
             else:
                 food_nutritions[food_name] = search_result['products'][0]['nutriments']
             
-            print(food_nutritions)
 
         if len(food_nutritions) == len(data):
             return jsonify({'ok': True, 'message': "image post request sent", 'food_nutritions': food_nutritions}), 200
