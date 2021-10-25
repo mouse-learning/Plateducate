@@ -10,7 +10,8 @@ import {
     Image,
     PermissionsAndroid,
     Dimensions,
-    ScrollView
+    ScrollView,
+	Alert
 } from 'react-native';
 
 import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box, HStack, Stack } from 'native-base';
@@ -19,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStyleAndFilteredProps } from 'native-base/lib/typescript/theme/styled-system';
 
 import Loader from './Components/Loader';
+import NutrientLimitCheck from './NutrientLimitCheck';
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -44,6 +46,47 @@ const PredictionScreen = ({ route, navigation }) => {
 
     const imageAspectRatio = imgData.data.width/imgData.data.height;true
     let base64ImagePrediction;
+
+	function addFood(foodClass, dataToSend) {
+		fetch('http://10.0.2.2:4000/add_food', {
+			method: 'POST',
+			body: JSON.stringify(dataToSend),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			}
+		})
+		.then((response) => response.json())
+		.then((responseJSON) => {
+			if (responseJSON.ok == true) {
+				setAddDB({...addDB, [foodClass]: true});
+				console.log("Successfully added to DB");
+			}
+			else {
+				alert(response.message);
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+		});
+	}
+
+	function getNutritionAlert(nutrientLimitCheck) {
+		var nutAlert = '';
+		for (var key of Object.keys(nutrientLimitCheck.overBy)) {
+			var unit;
+			if (key == 'energy') {
+				unit = 'kcal'
+			} else {
+				unit = 'g'
+			}
+			const amountOverBy = nutrientLimitCheck.overBy[key];
+			const temp = key.charAt(0).toUpperCase() + key.slice(1) + ' limit over by ' + amountOverBy + unit + "!"
+			nutAlert = nutAlert.concat(temp, '\n')
+		}
+		nutAlert = nutAlert.concat('\nAre you sure you want to add food to log?')
+		return nutAlert;
+	}
     
     function onAddPress(foodClass){
         // Async storage
@@ -57,27 +100,33 @@ const PredictionScreen = ({ route, navigation }) => {
                 fat: fourNutrientsDict[foodClass]['fat'],
             };
 
-            fetch('http://10.0.2.2:4000/add_food', {
-                method: 'POST',
-                body: JSON.stringify(dataToSend),
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then((response) => response.json())
-            .then((responseJSON) => {
-                if (responseJSON.ok == true) {
-                    setAddDB({...addDB, [foodClass]: true});
-                    console.log("Successfully added to DB");
-                }
-                else {
-                    alert(response.message);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+			const nutrientLimitCheck = NutrientLimitCheck(dataToSend);
+
+			if (nutrientLimitCheck.limitReached == true) {
+				console.log('limit reached');
+
+				return Alert.alert(
+					"Warning: Daily Nutrient Limit Reached ",
+					getNutritionAlert(nutrientLimitCheck),
+					[
+						{
+							text: "Yes",
+							onPress: () => {
+								addFood(foodClass, dataToSend);
+							},
+						},
+						{
+							text: "No",
+						},
+					]
+
+				);
+			} else {
+				console.log('limit not reached');
+				addFood(foodClass, dataToSend);
+			}
+
+            
         })
     }
 
@@ -157,28 +206,34 @@ const PredictionScreen = ({ route, navigation }) => {
         });
     }
 
+	function roundTwoDP(num) {
+		var m = Number((Math.abs(num) * 100).toPrecision(15));
+		return (Math.round(m) / 100 * Math.sign(num));
+	}
+	
+
     function getAndSetFourNutrients(nutrients) {
         var tempDict = {}
         for (var class_name of Object.keys(nutrients)) {
             if ("carbohydrates_serving" in nutrients[class_name]) {
-                var carbohydrates = nutrients[class_name]["carbohydrates_serving"];
+                var carbohydrates = roundTwoDP(parseFloat(nutrients[class_name]["carbohydrates_serving"]));
             } else {
-                var carbohydrates = nutrients[class_name]["carbohydrates_100g"];
+                var carbohydrates = roundTwoDP(parseFloat(nutrients[class_name]["carbohydrates_100g"]));
             }
             if ("proteins_serving" in nutrients[class_name]) {
-                var proteins = nutrients[class_name]["proteins_serving"];
+                var proteins = roundTwoDP(parseFloat(nutrients[class_name]["proteins_serving"]));
             } else {
-                var proteins = nutrients[class_name]["proteins_100g"];
+                var proteins = roundTwoDP(parseFloat(nutrients[class_name]["proteins_100g"]));
             }
             if ("fat_serving" in nutrients[class_name]) {
-                var fats = nutrients[class_name]["fat_serving"];
+                var fats = roundTwoDP(parseFloat(nutrients[class_name]["fat_serving"]));
             } else {
-                var fats = nutrients[class_name]["fat_100g"];
+                var fats = roundTwoDP(parseFloat(nutrients[class_name]["fat_100g"]));
             }
             if (nutrients[class_name]["energy_unit"] == "kj") {
-                var cals = ((parseInt(nutrients[class_name]["energy"]))*0.24).toString();
+                var cals = roundTwoDP((parseFloat(nutrients[class_name]["energy"]))*0.24);
             } else {
-                var cals = nutrients[class_name]["energy"];
+                var cals = roundTwoDP(parseFloat(nutrients[class_name]["energy"]));
             }
             
 
@@ -200,11 +255,7 @@ const PredictionScreen = ({ route, navigation }) => {
         getPredictions(base64Str).then(
             class_with_scores => getNutrients(class_with_scores)
         )
-        .then(() => {
-            console.log("finally")
-            console.log(foodList);
-            console.log(nutrientsDict);
-            
+        .then(() => {           
             console.log("finished")
         })
         .catch((error) => {
@@ -221,10 +272,6 @@ const PredictionScreen = ({ route, navigation }) => {
 
 
     useEffect( () => {
-        console.log(fourNutrientsDict);
-        console.log(Object.keys(nutrientsDict).length)
-        console.log(Object.keys(fourNutrientsDict).length == Object.keys(nutrientsDict).length)
-        console.log(Object.keys(fourNutrientsDict))
         if ((Object.keys(nutrientsDict).length) && (Object.keys(fourNutrientsDict).length == Object.keys(nutrientsDict).length)) {
             setNutrientsLoading(false);
         }
@@ -278,7 +325,6 @@ const PredictionScreen = ({ route, navigation }) => {
                                                                 </Text>
                                                             </View>
                                                             <View>
-                                                                {console.log(addDB[prediction.class_name])}
                                                                 {!addDB[prediction.class_name] ? 
                                                                 <TouchableOpacity
                                                                     style={styles.buttonStyleBefore}
