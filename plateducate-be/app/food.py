@@ -31,6 +31,7 @@ def add_food():
                 "energy": energy})
         
         db.commit()
+        db.close()
         
         
         return jsonify({'ok': True, 'message': "Success inserting user to database"}), 200
@@ -43,6 +44,7 @@ def add_food():
 def fetch_food(userID):
     if request.method == 'GET':
         food_query = db.execute("SELECT * FROM plateducate.consumption_records WHERE UserID=:UserID", {"UserID":userID}).fetchall()
+        db.close()
         res = defaultdict(list)
         for i in food_query:
             food = i._asdict()
@@ -62,6 +64,7 @@ def delete_food():
             foodID = payload["foodID"]
             food_query = db.execute("DELETE FROM plateducate.consumption_records WHERE ID=:ID", {"ID": foodID})
             db.commit()
+            db.close()
 
             return jsonify({'ok': True, 'message': "Success deleting food record with ID: "+str(foodID)}), 200
         except: 
