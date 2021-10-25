@@ -244,13 +244,13 @@ export default class MyDietScreen extends Component  {
 
   getData = async() => {
     AsyncStorage.getItem('@user_id').then((user_id) => {
-      console.log(user_id);
+      // console.log(user_id);
       fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
           method: 'GET',
         })
         .then((response) => response.json())
         .then((responseJson) => {
-          console.log(responseJson.result)
+          // console.log(responseJson.result)
           this.setState({foodRecord: responseJson.result})
           for (const [key, value] of Object.entries(this.state.foodRecord)) {
             this.setState({

@@ -68,8 +68,7 @@ def predict_yolo_wo_serving(imagePath, fileName, modelName):
   result = tfnet.return_predict(im)
   class_names_w_scores = []
   new_image_path = os.path.join('static', modelName + fileName)
-  # imrsz = cv2.resize(im, (416, 416))
-  # imrsz = imrsz / 255.
+
   for prediction in result:
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
@@ -163,9 +162,6 @@ def predict_yolo_serving(imagePath, fileName, modelName):
   for prediction in boxesInfo:
       label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
 
-      # if label not in class_colors:
-      #   class_colors[label] = [randint(0, 255), randint(0, 255), randint(0, 255)]
-      # print(label, " has color ", class_colors[label])
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
@@ -255,20 +251,16 @@ def get_prediction_yolo_conversion(image, modelName):
   imrsz = cv2.resize(im, (416, 416))
   imrsz = imrsz / 255.
 
-  class_colors = {}
   for prediction in boxesInfo:
       label = (re.sub("[^0-9a-zA-Z]+", " ", prediction['label'])).capitalize()
 
-      if label not in class_colors:
-        class_colors[label] = list(np.random.random(size=3) * 256)
-      print(label, " has color ", class_colors[label])
       old_top_left = np.array([prediction['topleft']['x'], prediction['topleft']['y']])
       old_bottom_right = np.array([prediction['bottomright']['x'], prediction['bottomright']['y']])
 
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (class_colors[label][0], class_colors[label][1], class_colors[label][2]), 2)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_top_left[1])), (int(old_bottom_right[0]), int(old_bottom_right[1])), (66, 199, 54), 2)
 
       (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
-      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_bottom_right[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_bottom_right[1])), color=(randint(0, 255), randint(0, 255), randint(0, 255)), thickness=-1)
+      cv2.rectangle(imrsz, (int(old_top_left[0]), int(old_bottom_right[1]) - 20), (int(old_top_left[0]) + int(w/1.15), int(old_bottom_right[1])), (66, 199, 54), thickness=-1)
       cv2.putText(imrsz, label, 
         (int(old_top_left[0]), int(old_bottom_right[1])-5), 
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
@@ -280,17 +272,12 @@ def get_prediction_yolo_conversion(image, modelName):
         "class_name": label, 
         "score": str(prediction['confidence'])
       })
-  print(class_colors)
   new_img = cv2.cvtColor(new_img, cv2.COLOR_BGR2RGB)
   new_im = Image.fromarray(new_img)
   buff = io.BytesIO()
   new_im.save(buff, format="JPEG")
   img_bb = base64.b64encode(buff.getvalue())
   base64_str = img_bb.decode('utf-8')
-
-  # class_names_w_scores = np.array(class_names_w_scores)
-  # class_names = (class_names_w_scores[:, 0]).tolist()
-  # scores = (class_names_w_scores[:, 1]).tolist()
 
   model_name_str = convertLabelToStr(modelName)
   
