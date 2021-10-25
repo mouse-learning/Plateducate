@@ -59,6 +59,10 @@ function HomeScreenStack({navigation}) {
             <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{
               headerShown: true,
               headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: '#2f3b52', //Set Header color
+              },
+              headerTintColor: 'white',
               }}/>
             <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
         </HomeStack.Navigator>

@@ -305,18 +305,23 @@ const PredictionScreen = ({ route, navigation }) => {
                         </View>
                         <View style={styles.overlay}>
                             <Text style={styles.predictionTitle}>Choose Food</Text>
-                            <ScrollView style={styles.predictionScroll}>
+                            <ScrollView>
                                 <Box m={foodList.length} >
                                     <Accordion allowMultiple={true}>
                                         {foodList.map((prediction, index) => 
                                             <Accordion.Item key={index}>
-                                                <Accordion.Summary  bg={'#00afb7'} _expanded={accordion.summaryExpanded} _text={accordion.summaryText}>
+                                                <Accordion.Summary  bg={'#2f3b52'} _expanded={accordion.summaryExpanded} _text={accordion.summaryText}>
                                                 {prediction.class_name}
                                                 <Accordion.Icon />
                                                 </Accordion.Summary>
                                                 {isNutrientsLoading ? 
-                                                <Accordion.Details>Loading Nutrients...</Accordion.Details> : 
                                                 <Accordion.Details>
+                                                    <Text style={{color: '#5b7086', backgroundColor:'#ffffff'}}>
+                                                        Loading Nutrients...
+
+                                                    </Text>
+                                                </Accordion.Details> : 
+                                                <Accordion.Details  bg={'#ffffff'}>
                                                     <Stack space={2} justifyContent="space-between">
                                                         <HStack space={2} justifyContent="space-between">
                                                             <View>
@@ -346,20 +351,20 @@ const PredictionScreen = ({ route, navigation }) => {
                                                             <View>
                                                                 {!addDB[prediction.class_name] ? 
                                                                 <TouchableOpacity
-                                                                    style={styles.buttonStyleBefore}
+                                                                    style={styles.addButtonStyleBefore}
                                                                     activeOpacity={0.5}
                                                                     onPress={() => onAddPress(prediction.class_name)}
                                                                 >
-                                                                    <Text style={styles.buttonTextStyle}>Add Food</Text> 
+                                                                    <Text style={styles.addButtonTextStyle}>Add Food</Text> 
                                                                     
                                                                 </TouchableOpacity>
                                                                 :
                                                                 <TouchableOpacity
-                                                                    style={styles.buttonStyleAfter}
+                                                                    style={styles.addButtonStyleAfter}
                                                                     activeOpacity={0.5}
                                                                     
                                                                 >
-                                                                    <Text style={styles.buttonTextStyle}>Added</Text> 
+                                                                    <Text style={styles.addButtonTextStyle}>Added</Text> 
                                                                     
                                                                 </TouchableOpacity>
                                                                     }
@@ -394,8 +399,9 @@ const styles = StyleSheet.create({
     predictionImg: {
     //   height: screenHeight/2.5,
         // flex:1,
-        width: screenWidth*0.85,
+        width: screenWidth*0.72,
         alignSelf: 'center',
+        borderRadius: 20,
     },
     container: {
         flex: 1,
@@ -405,9 +411,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         position: 'absolute',
-        padding:10,
+        padding:5,
         justifyContent: 'flex-start',
-        top: screenWidth,
+        top: screenWidth*0.85,
         left: 0,
         right: 0,
         bottom: 0,
@@ -419,23 +425,23 @@ const styles = StyleSheet.create({
         // padding: 10,
         flex: 1,
         flexDirection: "column",
-        width: screenWidth*0.95,
-        height: screenWidth*0.95,
+        width: screenWidth*0.8,
+        height: screenWidth*0.8,
         position: 'absolute',
         justifyContent: 'center',
-        backgroundColor: 'yellow',
+        alignSelf: 'center',
+        backgroundColor: '#c7417b',
         borderRadius: 20,
     },
     predictionTitle: {
-        flex:1,
         alignSelf: 'flex-start',
-        paddingLeft: 12,
+        paddingLeft: 14,
         paddingBottom: 10,
-        fontSize: 26,
+        fontSize: 22,
         fontWeight: 'bold',
         color: '#ffffff'
     },
-    buttonStyleBefore: {
+    addButtonStyleBefore: {
         backgroundColor: '#007176',
         height: 40,
         width: 85,
@@ -443,29 +449,26 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         marginTop: 20,
     },
-    buttonStyleAfter: {
-    backgroundColor: 'red',
-    height: 40,
-    width: 85,
-    alignItems: 'center',
-    borderRadius: 3,
-    marginTop: 20,
+    addButtonStyleAfter: {
+        backgroundColor: 'red',
+        height: 40,
+        width: 85,
+        alignItems: 'center',
+        borderRadius: 3,
+        marginTop: 20,
     },
-    buttonTextStyle: {
+    addButtonTextStyle: {
         color: '#FFFFFF',
         paddingVertical: 10,
         fontSize: 16,
         textAlign: 'center'
     },
-    predictionScroll : {
-        // flex: 1,
-    }
 
 });
 
 const accordion = {
     summaryExpanded : {
-        backgroundColor: '#007176', 
+        backgroundColor: '#c7417b', 
         _text: {
             bold: true, 
             color: 'white',
@@ -474,7 +477,7 @@ const accordion = {
     }, 
     summaryText : {
         fontSize: 'md',
-        color: '#003a3d',
+        color: '#ffffff',
         bold: true,
     }
 }
