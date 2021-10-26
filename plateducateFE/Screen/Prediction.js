@@ -277,6 +277,13 @@ const PredictionScreen = ({ route, navigation }) => {
         .catch((error) => {
             console.error(error);
         })
+        return() => {
+            setBase64Img(null);
+            setFoodList([]);
+            setAddDB(null);
+            setFourNutrientsDict({});
+            setNutrientsDict({});
+        }
         
     },[])
 
@@ -284,12 +291,18 @@ const PredictionScreen = ({ route, navigation }) => {
         if ((base64Img != null) && (foodList.length)) {
             setLoading(false);
         }
+        return () => {
+            setLoading(true);
+        }
     }, [base64Img, foodList])
 
 
     useEffect( () => {
         if ((Object.keys(nutrientsDict).length) && (Object.keys(fourNutrientsDict).length == Object.keys(nutrientsDict).length)) {
             setNutrientsLoading(false);
+        }
+        return () => {
+            setNutrientsLoading(true);
         }
     }, [nutrientsDict, fourNutrientsDict])
 
@@ -315,8 +328,8 @@ const PredictionScreen = ({ route, navigation }) => {
                                                 <Accordion.Icon />
                                                 </Accordion.Summary>
                                                 {isNutrientsLoading ? 
-                                                <Accordion.Details>
-                                                    <Text style={{color: '#5b7086', backgroundColor:'#ffffff'}}>
+                                                <Accordion.Details bg={'#ffffff'}>
+                                                    <Text>
                                                         Loading Nutrients...
 
                                                     </Text>
