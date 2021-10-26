@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     // flexDirection: 'row',
     // backgroundColor: 'white',
-    backgroundColor: '#f5487f',
+    backgroundColor: '#c7417b',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     // justifyContent: 'center',
