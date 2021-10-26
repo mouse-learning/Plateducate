@@ -23,10 +23,10 @@ const SplashScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Image
+      {/* <Image
         source={require('../static/logo.png')}
         style={{width: '50%', resizeMode: 'contain', margin: 30}}
-      />
+      /> */}
       <AnimatedLoader
         visible={animating}
         overlayColor="rgba(255,255,255,0.75)"
