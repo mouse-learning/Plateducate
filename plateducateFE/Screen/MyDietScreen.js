@@ -353,7 +353,7 @@ export default class MyDietScreen extends Component  {
                     }
                   >
                     <Box m={3}>
-                      <Accordion borderWidth={0} borderBottomColor={'#f5487f'} >
+                      <Accordion borderWidth={0} borderBottomColor={'#f5487f'}>
                         {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
                           <Accordion.Item key={foodID}> 
                             <Accordion.Summary bg={'#2f3b52'} _expanded={{ backgroundColor: '#c7417b' }}>
@@ -403,7 +403,16 @@ export default class MyDietScreen extends Component  {
                   </ScrollView>
                 </View>
                 :
-                <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                <ScrollView 
+                keyboardShouldPersistTaps="handled" 
+                style={styles.foodScroll}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />
+                }
+                >
                   <Text style={styles.titleStyle}>
                     No Meals Recorded
                   </Text>
@@ -494,6 +503,8 @@ const styles = StyleSheet.create({
     color: '#2f3b52'
   },
   foodScroll: {
-    paddingTop: 0
+    paddingTop: 0,
+    backgroundColor:'#242e42',
+    borderRadius: 10,
   }
 });

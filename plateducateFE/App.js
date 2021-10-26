@@ -75,7 +75,13 @@ function DietScreenStack() {
   return(
     <DietStack.Navigator>
       <DietStack.Screen name="MyDiet" component={MyDietScreen} options={{headerShown: false }}/>
-      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: true }}/>
+      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: '#2f3b52', //Set Header color
+        },
+        headerTintColor: 'white',
+        }}/>
     </DietStack.Navigator>
   )
 }
