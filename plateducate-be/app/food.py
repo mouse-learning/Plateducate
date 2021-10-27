@@ -70,14 +70,19 @@ def fetch_food_today(userID):
         db.close()
         res = defaultdict(list)
         print(food_query)
-        nutrients = food_query[0]._asdict()
-        print("Nutrients: ", nutrients)
-        res['date'] = nutrients['date']
-        res['total_energy'] = float(nutrients['total_energy'])
-        res['total_proteins'] = nutrients['total_proteins']
-        res['total_carbs'] = nutrients['total_carbs']
-        res['total_fats'] = nutrients['total_fats']
-        
+        if len(food_query) != 0:
+            nutrients = food_query[0]._asdict()
+            print("Nutrients: ", nutrients)
+            res['isEmpty'] = 'false'
+            res['date'] = nutrients['date']
+            res['total_energy'] = float(nutrients['total_energy'])
+            res['total_proteins'] = nutrients['total_proteins']
+            res['total_carbs'] = nutrients['total_carbs']
+            res['total_fats'] = nutrients['total_fats']
+        else:
+            res['isEmpty'] = 'True'
+
+            
         return jsonify({'ok': True, 'message': "Success fetching food record", "result": res}), 200
 
     return jsonify({'ok': False, 'message': "False request method"}), 400
