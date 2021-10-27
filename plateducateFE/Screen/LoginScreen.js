@@ -73,79 +73,77 @@ const LoginScreen = ({ navigation }) => {
 
    return (
       <View style={styles.mainBody}>
-         <Loader loading={loading} />
-         <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{
-               flex: 1,
-               justifyContent: 'center',
-               alignContent: 'center',
-            }}>
-            <View>
-               <KeyboardAvoidingView enabled>
-                  <View style={{ alignItems: 'center' }}>
-                     <Image
-                        source={require('../static/logo.png')}
-                        style={{
-                           width: 300,
-                           height: 300,
-                           resizeMode: 'contain',
-                           margin: 30,
-                        }}
-                     />
-                  </View>
-                  <View style={styles.SectionStyle}>
-                     <TextInput
-                        style={styles.inputStyle}
-                        onChangeText={(username) => setUsername(username)}
-                        placeholder="Enter Username"
-                        placeholderTextColor="#8b9cb5"
-                        autoCapitalize="none"
-                        keyboardType="default"
-                        returnKeyType="next"
-                        ref={usernameInputRef}
-                        onSubmitEditing={() =>
-                           usernameInputRef.current && usernameInputRef.current.focus()
-                        }
-                        underlineColorAndroid="#f000"
-                        blurOnSubmit={false}
-                     />
-                  </View>
-                  <View style={styles.SectionStyle}>
-                     <TextInput
-                        style={styles.inputStyle}
-                        onChangeText={(UserPassword) => setUserPassword(UserPassword)}
-                        placeholder="Enter Password"
-                        placeholderTextColor="#8b9cb5"
-                        keyboardType="default"
-                        ref={passwordInputRef}
-                        onSubmitEditing={() =>
-                           passwordInputRef.current && passwordInputRef.current.focus()
-                        }
-                        blurOnSubmit={false}
-                        secureTextEntry={true}
-                        underlineColorAndroid="#f000"
-                        returnKeyType="next"
-                     />
-                  </View>
-                  {errortext != '' ? (
-                     <Text style={styles.errorTextStyle}> {errortext} </Text>
-                  ) : null}
-                  <TouchableOpacity
-                     style={styles.buttonStyle}
-                     activeOpacity={0.5}
-                     onPress={handleSubmitBUtton}
-                  >
-                     <Text style={styles.buttonTextStyle}>LOGIN</Text>
-                  </TouchableOpacity>
-                  <Text
-                     style={styles.registerTextStyle}
-                     onPress={() => navigation.navigate('RegisterScreen')}>
-                     New Here ? Register
-                  </Text>
-               </KeyboardAvoidingView>
-            </View>
-         </ScrollView>
+         {loading ? <Loader loading={loading} /> :
+         
+            <ScrollView
+               keyboardShouldPersistTaps="handled"
+               >
+               <View style={{backgroundColor: '#242e42', alignSelf:'center' }}>
+                  <KeyboardAvoidingView enabled>
+                     <View >
+                        <Image
+                           source={require('../static/logo.png')}
+                           style={{
+                              width: 300,
+                              height: 300,
+                              resizeMode: 'contain',
+                              margin: 42,
+                           }}
+                        />
+                     </View>
+                     <View style={styles.SectionStyle}>
+                        <TextInput
+                           style={styles.inputStyle}
+                           onChangeText={(username) => setUsername(username)}
+                           placeholder="Enter Username"
+                           placeholderTextColor="#5b7086"
+                           autoCapitalize="none"
+                           keyboardType="default"
+                           returnKeyType="next"
+                           ref={usernameInputRef}
+                           onSubmitEditing={() =>
+                              usernameInputRef.current && usernameInputRef.current.focus()
+                           }
+                           underlineColorAndroid="#f000"
+                           blurOnSubmit={false}
+                        />
+                     </View>
+                     <View style={styles.SectionStyle}>
+                        <TextInput
+                           style={styles.inputStyle}
+                           onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                           placeholder="Enter Password"
+                           placeholderTextColor="#5b7086"
+                           keyboardType="default"
+                           ref={passwordInputRef}
+                           onSubmitEditing={() =>
+                              passwordInputRef.current && passwordInputRef.current.focus()
+                           }
+                           blurOnSubmit={false}
+                           secureTextEntry={true}
+                           underlineColorAndroid="#f000"
+                           returnKeyType="next"
+                        />
+                     </View>
+                     {errortext != '' ? (
+                        <Text style={styles.errorTextStyle}> {errortext} </Text>
+                     ) : null}
+                     <TouchableOpacity
+                        style={styles.buttonStyle}
+                        activeOpacity={0.5}
+                        onPress={handleSubmitBUtton}
+                     >
+                        <Text style={styles.buttonTextStyle}>LOGIN</Text>
+                     </TouchableOpacity>
+                     <Text
+                        style={styles.registerTextStyle}
+                        onPress={() => navigation.navigate('RegisterScreen')}>
+                        New Here ? Register
+                     </Text>
+                  </KeyboardAvoidingView>
+               </View>
+            </ScrollView>
+         }
       </View>
    );
 };
@@ -153,9 +151,7 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
    mainBody: {
       flex: 1,
-      justifyContent: 'center',
-      backgroundColor: '#fff',
-      alignContent: 'center',
+      backgroundColor: '#242e42',
    },
    SectionStyle: {
       flexDirection: 'row',
@@ -166,10 +162,10 @@ const styles = StyleSheet.create({
       margin: 10,
    },
    buttonStyle: {
-      backgroundColor: '#7DE24E',
+      backgroundColor: '#f5487f',
       borderWidth: 0,
       color: '#FFFFFF',
-      borderColor: '#7DE24E',
+      borderColor: '#f5487f',
       height: 40,
       alignItems: 'center',
       borderRadius: 3,
@@ -185,7 +181,7 @@ const styles = StyleSheet.create({
    },
    inputStyle: {
       flex: 1,
-      color: 'black',
+      color: 'white',
       paddingLeft: 15,
       paddingRight: 15,
       borderWidth: 1,

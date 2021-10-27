@@ -40,10 +40,10 @@ const RegisterScreen = ({navigation}) => {
       margin: 10,
     },
     buttonStyle: {
-      backgroundColor: '#7DE24E',
+      backgroundColor: '#f5487f',
       borderWidth: 0,
       color: '#FFFFFF',
-      borderColor: '#7DE24E',
+      borderColor: '#f5487f',
       height: 40,
       alignItems: 'center',
       borderRadius: 3,
@@ -59,7 +59,7 @@ const RegisterScreen = ({navigation}) => {
     },
     inputStyle: {
       flex: 1,
-      color: 'black',
+      color: 'white',
       paddingLeft: 15,
       paddingRight: 15,
       borderWidth: 1,
@@ -188,7 +188,7 @@ const RegisterScreen = ({navigation}) => {
     );
   }
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={{flex: 1, backgroundColor: '#242e42'}}>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -200,7 +200,7 @@ const RegisterScreen = ({navigation}) => {
           <Image
             source={require('../static/logo.png')}
             style={{
-              width: 200,
+              width: 300,
               height: 200,
               resizeMode: 'contain',
               margin: 30,
@@ -214,7 +214,7 @@ const RegisterScreen = ({navigation}) => {
               onChangeText={(UserName) => setUserName(UserName)}
               underlineColorAndroid="#f000"
               placeholder="Enter Username"
-              placeholderTextColor="#8b9cb5"
+              placeholderTextColor="#5b7086"
               ref={usernameInputRef}
               returnKeyType="next"
               onSubmitEditing={() =>
@@ -229,7 +229,7 @@ const RegisterScreen = ({navigation}) => {
               onChangeText={(UserEmail) => setUserEmail(UserEmail)}
               underlineColorAndroid="#f000"
               placeholder="Enter Email"
-              placeholderTextColor="#8b9cb5"
+              placeholderTextColor="#5b7086"
               keyboardType="email-address"
               ref={emailInputRef}
               returnKeyType="next"
@@ -245,7 +245,7 @@ const RegisterScreen = ({navigation}) => {
               onChangeText={(userPassword) => setUserPassword(userPassword)}
               underlineColorAndroid="#f000"
               placeholder="Enter Password"
-              placeholderTextColor="#8b9cb5"
+              placeholderTextColor="#5b7086"
               secureTextEntry={true}
               ref={passwordInputRef}
               returnKeyType="next"
@@ -261,7 +261,7 @@ const RegisterScreen = ({navigation}) => {
               onChangeText={(userPasswordConfirm) => setUserPasswordConfirm(userPasswordConfirm)}
               underlineColorAndroid="#f000"
               placeholder="Confirm Password"
-              placeholderTextColor="#8b9cb5"
+              placeholderTextColor="#5b7086"
               secureTextEntry={true}
               ref={passwordConfirmInputRef}
               returnKeyType="next"
