@@ -302,6 +302,7 @@ const PredictionScreen = ({ route, navigation }) => {
 
 
     useEffect( () => {
+        console.log(nutrientsDict);
         if ((Object.keys(nutrientsDict).length) && (Object.keys(fourNutrientsDict).length == Object.keys(nutrientsDict).length)) {
             setNutrientsLoading(false);
         }

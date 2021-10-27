@@ -22,13 +22,13 @@ const NutrientLimitCheck = (dataToSend, dailyTotal) => {
         nutritionLimit.overBy['proteins'] = limitOverBy;
         nutritionLimit.limitReached = true;
     }
-    if (dailyTotal.carbs + dataToSend.carbs > carbsLim) {
+    if (dailyTotal.total_carbs + dataToSend.carbs > carbsLim) {
         var totalAmount = dailyTotal.total_carbs + parseInt(dataToSend.carbs);
         var limitOverBy = Math.round(((totalAmount - carbsLim)*100)/100);
         nutritionLimit.overBy['carbohydrates'] = limitOverBy;
         nutritionLimit.limitReached = true;
     }
-    if (dailyTotal.fats + dataToSend.fat > fatsLim) {
+    if (dailyTotal.total_fats + dataToSend.fat > fatsLim) {
         var totalAmount = dailyTotal.total_fats + parseInt(dataToSend.fat);
         var limitOverBy = Math.round(((totalAmount - fatsLim)*100)/100);
         nutritionLimit.overBy['fats'] = limitOverBy;
