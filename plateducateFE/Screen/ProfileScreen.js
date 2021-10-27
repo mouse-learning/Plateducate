@@ -4,7 +4,8 @@
 // Import React and Component
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Image, RecyclerViewBackedScrollViewBase } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProfileScreen = ({navigation}) => {
 
@@ -14,44 +15,67 @@ const ProfileScreen = ({navigation}) => {
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<View style={{ flex: 1, padding: 16 }}>
-				<View
-					style={{
-						flex: 1,
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}>
-					<Text
-						style={{
-							fontSize: 20,
-							textAlign: 'center',
-							marginBottom: 16,
-						}}>
-						This is the Profile Screen
-					</Text>
+		<View>
+			<ScrollView showsVerticalScrollIndicator={false}>
+				<LinearGradient colors={['#c7417b', '#8f3b76', '#553772']}style={styles.linearGradient}>
+					{/* <Image source={require('../static/food2.jpg')} /> */}
+				</LinearGradient>
+				<View style={{backgroundColor: '#242e42'}}>
+					<View style={{alignItems:'center'}}>
+						<Image 
+						source={require('../static/profile.png')} 
+						style={{width:140, height:140, borderRadius:100, marginTop:-70}}></Image>
+					</View>
+					<View style={{alignItems: 'center'}}>
+						<Text style={{fontSize: 25, fontWeight:'bold', padding:10, color:'white'}}> Owen Jordan </Text>
+						<Text style={{fontSize: 15, fontWeight:'bold', color:'lightgrey'}}> Platinum Level User </Text>
+					</View>
+					<View style={styles.profileElements}>
+						<Text style={{fontSize: 15, fontWeight:'bold', color:'white'}}>
+							OwenJordan11
+						</Text>
+					</View>
+					<View style={styles.profileElements}>
+						<Text style={{fontSize: 15, fontWeight:'bold', color:'white'}}>
+							Owen@email.com
+						</Text>
+					</View>
+					<View style={styles.profileElements}>
+						<Text style={{fontSize: 15, fontWeight:'bold', color:'white'}}>
+							Share
+						</Text>
+					</View>
+					<TouchableOpacity
+						style={styles.buttonStyle}
+						activeOpacity={0.5}
+						onPress={handleSubmitButton}
+						>
+						<Text style={styles.buttonTextStyle}>Log Out</Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.buttonStyle}
-					activeOpacity={0.5}
-					onPress={handleSubmitButton}
-				>
-					<Text style={styles.buttonTextStyle}>Log Out</Text>
-				</TouchableOpacity>
-			</View>
-		</SafeAreaView>
+			</ScrollView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	buttonStyle: {
+	linearGradient: {
+		flex: 1,
+		// paddingLeft: 15,
+		// paddingRight: 15,
+		// borderRadius: 5, 
+		padding:10, 
+		width:'100%', 
+		height:150
+	 },
+	 buttonStyle: {
 		backgroundColor: '#C70039',
 		borderWidth: 0,
 		color: '#FFFFFF',
 		borderColor: '#7DE24E',
 		height: 40,
 		alignItems: 'center',
-		borderRadius: 3,
+		borderRadius: 15,
 		marginLeft: 35,
 		marginRight: 35,
 		marginTop: 20,
@@ -62,6 +86,19 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		fontSize: 16,
 	},
+	profileElements: {
+		alignSelf:'center', 
+		flexDirection:'row', 
+		justifyContent:'center', 
+		backgroundColor:'#2e3a51', 
+		width:'90%', 
+		padding:20, 
+		// paddingBottom:22, 
+		borderRadius:10, 
+		shadowOpacity:80, 
+		elevation: 15, 
+		margin: 10,
+	}
 });
 
 export default ProfileScreen;
