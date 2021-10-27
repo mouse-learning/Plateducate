@@ -17,7 +17,6 @@ import ProfileScreen from './Screen/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HeaderBackButton } from '@react-navigation/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,13 +35,7 @@ const Auth = () => {
         name="RegisterScreen"
         component={RegisterScreen}
         options={{
-          title: 'Register', //Set Header Title
-          headerStyle: {
-            backgroundColor: '#fff', //Set Header color
-          },
-          headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
-          },
+          headerShown: false,
         }}
         />
     </Stack.Navigator>
@@ -51,16 +44,18 @@ const Auth = () => {
 
 const HomeStack = createNativeStackNavigator();
 
-function HomeScreenStack({navigation}) {
+function HomeScreenStack() {
     return (
         <HomeStack.Navigator>
-            <HomeStack.Screen name="Homepage" component={HomeScreen} options={{headerShown: false }}/>
-            <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
-            <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{
+            <HomeStack.Screen name="Homepage" component={HomeScreen} options={{
               headerShown: true,
               headerTitleAlign: 'center',
-              }}/>
-            <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
+              title: 'Plateducate',
+              headerStyle: {
+                backgroundColor: '#2f3b52', //Set Header color
+              },
+              headerTintColor: '#f5487f',
+            }}/>
         </HomeStack.Navigator>
     )
 }
@@ -71,7 +66,13 @@ function DietScreenStack() {
   return(
     <DietStack.Navigator>
       <DietStack.Screen name="MyDiet" component={MyDietScreen} options={{headerShown: false }}/>
-      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{headerShown: true }}/>
+      <DietStack.Screen name="Prediction" component={PredictionScreen} options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: '#2f3b52', //Set Header color
+        },
+        headerTintColor: 'white',
+        }}/>
     </DietStack.Navigator>
   )
 }
@@ -101,8 +102,10 @@ function LoggedIn() {
             tabBarInactiveTintColor: '#5b7086',
             tabBarStyle: {
               backgroundColor: '#2f3b52'
-            }
-          })}
+            },
+          }
+          
+          )}
           >
             {/* List of tabs at bottom of screen */}
             <Tab.Screen name="Home" component={HomeScreenStack} options={{headerShown: false}}/>

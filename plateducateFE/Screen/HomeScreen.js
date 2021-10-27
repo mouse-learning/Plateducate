@@ -12,13 +12,14 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  RefreshControl,
   ImageBackground} 
 from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { VictoryPie, VictoryLabel } from 'victory-native';
 import moment from "moment";
-import { marginBottom } from 'styled-system';
+import { flex, marginBottom } from 'styled-system';
 import Loader from './Components/Loader';
 
 const dimensions = Dimensions.get('screen');
@@ -41,7 +42,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
   const [foodData, setFoodData] = useState(defaultFoodData)
   const isMounted = useRef(false)
 
-  useEffect(() => {
+  function getData() {
     AsyncStorage.getItem('@user_id').then((user_id) => {
       fetch('http://10.0.2.2:4000/fetch_food/'+user_id, {
           method: 'GET',
@@ -86,7 +87,12 @@ const HomeScreen = ({ navigation: { navigate } }) => {
         console.error(error);
         setLoading({loading: false})
     });
-  }, []);
+  }
+
+  useEffect(() => {
+    getData();
+  },[])
+
 
   useEffect(() => {
     if (isMounted.current) {
@@ -101,6 +107,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
 
     return (
       <SafeAreaView style={styles.root}>
+        
         <View style={styles.pieContainer}>
           <VictoryPie
             animate={{ easing: 'exp' }}
@@ -113,52 +120,54 @@ const HomeScreen = ({ navigation: { navigate } }) => {
             padAngle={3}
             radius={({ datum }) => 95 + datum.y * 0.05}
             labelComponent={<VictoryLabel inline style={{ fill: "white", fontSize: "15", fontWeight: "bold" }} />}
-            />          
+          />    
+        </View>
+        {console.log(loading)}      
         {loading ?
         (<Loader loading={loading} />)
           :
-          <View style={styles.summaryContainer} >
-            <View style={styles.summaryHeader}>
-              <Text style={styles.header}>
-                Nutrition Breakdown
-              </Text>
-            </View>
-            {/* {console.log(foodData)} */}
-            {/* <View style={styles.nutritionDetail}> */}
-            {foodData['energy']['y'] ?
-            <View>
-              <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Energy: </Text>
-                <Text style={styles.btnTextBody}>{foodData['energy']['y']} kcal</Text>   
-              </Text>
-              <Separator />
-              <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Carbohydrates: </Text>
-                <Text style={styles.btnTextBody}>{foodData['carbs']['y']} g</Text>   
-              </Text>
-              <Separator />
-              <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Fat: </Text>
-                <Text style={styles.btnTextBody}>{foodData['fat']['y']} g</Text>   
-              </Text>
-              <Separator />
-              <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Protein: </Text>
-                <Text style={styles.btnTextBody}>{foodData['protein']['y']} g</Text>   
-              </Text>
-              <Separator />
-            </View>
-            :
-            <View style={styles.noRecordContainer}>
-              <Text style={styles.noRecordHeader}>
-                No meals recorded today.
-              </Text>
-              <Text style={styles.noRecordText}>Log your food on the Diet page!</Text>   
-            </View>
-              }
-          </View> 
+        <View style={styles.summaryContainer} >
+          <View style={styles.summaryHeader}>
+            <Text style={styles.header}>
+              Daily Nutrition Breakdown
+            </Text>
+          </View>
+          {/* {console.log(foodData)} */}
+          {/* <View style={styles.nutritionDetail}> */}
+          {foodData['energy']['y'] ?
+          <View style={styles.nutritionContainer}>
+            <Text style={styles.nutritionTexts}>
+              <Text style={styles.btnTextHeader}>⚡ Energy: </Text>
+              <Text style={styles.btnTextBody}>{foodData['energy']['y']} kcal</Text>   
+            </Text>
+            <Separator />
+            <Text style={styles.nutritionTexts}>
+              <Text style={styles.btnTextHeader}>🍞 Carbohydrates: </Text>
+              <Text style={styles.btnTextBody}>{foodData['carbs']['y']} g</Text>   
+            </Text>
+            <Separator />
+            <Text style={styles.nutritionTexts}>
+              <Text style={styles.btnTextHeader}>🥓 Fat: </Text>
+              <Text style={styles.btnTextBody}>{foodData['fat']['y']} g</Text>   
+            </Text>
+            <Separator />
+            <Text style={styles.nutritionTexts}>
+              <Text style={styles.btnTextHeader}>🥚 Protein: </Text>
+              <Text style={styles.btnTextBody}>{foodData['protein']['y']} g</Text>   
+            </Text>
+            <Separator />
+          </View>
+          :
+          <View style={styles.noRecordContainer}>
+            <Text style={styles.noRecordHeader}>
+              No meals recorded today.
+            </Text>
+            <Text style={styles.noRecordText}>Log your food on the Diet page!</Text>   
+          </View>
+            }
+        </View> 
         }
-        </View>
+          
       </SafeAreaView>
     );
   };
@@ -168,8 +177,8 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: 'lightgray',
     backgroundColor: '#252e42',
+    alignItems: 'center'
   },
   header: {
     textAlign: 'center',
@@ -181,7 +190,6 @@ const styles = StyleSheet.create({
   pieContainer: {
     flex: 1,
     flexDirection: 'row',
-    // backgroundColor: 'white',
     backgroundColor: '#2e3a51',
     borderRadius: 25,
     justifyContent: 'center',
@@ -190,18 +198,14 @@ const styles = StyleSheet.create({
   summaryContainer: {
     flex: 1,
     flexDirection: "column",
-    // padding: 25,
-    position: 'absolute',
-    top: overlayStartPos,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    marginBottom:18,
     backgroundColor: 'white',
     opacity: 0.9,
-    borderRadius: 25
+    borderRadius: 25,
+    width: '75%'
   },
   summaryHeader: {
-    // flex: 1,
+    flex: 1,
     // flexDirection: 'row',
     // backgroundColor: 'white',
     backgroundColor: '#c7417b',
@@ -210,18 +214,22 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // margin: 18
   },
-  
+  nutritionContainer: {
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+  },
   separator: {
     borderBottomColor: 'grey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   btnTextHeader: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 14,
   },
   btnTextBody : {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 14,
+    // fontWeight: 'bold',
     // color: 'white',
   },
   nutritionDetail: {
@@ -241,19 +249,21 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   noRecordContainer: {
-    margin: 15,
-    padding: 15
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   noRecordHeader: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 15
   },
   noRecordText: {
-    fontSize: 16,
+    fontSize: 14,
     // fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    paddingBottom: 30
   }
 });
 

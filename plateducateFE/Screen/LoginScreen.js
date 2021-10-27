@@ -73,24 +73,21 @@ const LoginScreen = ({ navigation }) => {
 
    return (
       <View style={styles.mainBody}>
-         <Loader loading={loading} />
+         {/* {loading ? <Loader loading={loading} /> : */}
+         
          <ScrollView
             keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{
-               flex: 1,
-               justifyContent: 'center',
-               alignContent: 'center',
-            }}>
-            <View>
+            >
+            <View style={{backgroundColor: '#242e42', alignSelf:'center' }}>
                <KeyboardAvoidingView enabled>
-                  <View style={{ alignItems: 'center' }}>
+                  <View >
                      <Image
                         source={require('../static/logo.png')}
                         style={{
                            width: 300,
                            height: 300,
                            resizeMode: 'contain',
-                           margin: 30,
+                           margin: 42,
                         }}
                      />
                   </View>
@@ -99,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
                         style={styles.inputStyle}
                         onChangeText={(username) => setUsername(username)}
                         placeholder="Enter Username"
-                        placeholderTextColor="#8b9cb5"
+                        placeholderTextColor="#5b7086"
                         autoCapitalize="none"
                         keyboardType="default"
                         returnKeyType="next"
@@ -116,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
                         style={styles.inputStyle}
                         onChangeText={(UserPassword) => setUserPassword(UserPassword)}
                         placeholder="Enter Password"
-                        placeholderTextColor="#8b9cb5"
+                        placeholderTextColor="#5b7086"
                         keyboardType="default"
                         ref={passwordInputRef}
                         onSubmitEditing={() =>
@@ -146,6 +143,7 @@ const LoginScreen = ({ navigation }) => {
                </KeyboardAvoidingView>
             </View>
          </ScrollView>
+         {/* } */}
       </View>
    );
 };
@@ -153,9 +151,7 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
    mainBody: {
       flex: 1,
-      justifyContent: 'center',
-      backgroundColor: '#fff',
-      alignContent: 'center',
+      backgroundColor: '#242e42',
    },
    SectionStyle: {
       flexDirection: 'row',
@@ -166,10 +162,10 @@ const styles = StyleSheet.create({
       margin: 10,
    },
    buttonStyle: {
-      backgroundColor: '#7DE24E',
+      backgroundColor: '#f5487f',
       borderWidth: 0,
       color: '#FFFFFF',
-      borderColor: '#7DE24E',
+      borderColor: '#f5487f',
       height: 40,
       alignItems: 'center',
       borderRadius: 3,
@@ -185,7 +181,7 @@ const styles = StyleSheet.create({
    },
    inputStyle: {
       flex: 1,
-      color: 'black',
+      color: 'white',
       paddingLeft: 15,
       paddingRight: 15,
       borderWidth: 1,

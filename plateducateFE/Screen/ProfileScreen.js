@@ -15,12 +15,12 @@ const ProfileScreen = ({navigation}) => {
 	}
 
 	return (
-		<View>
-			<ScrollView showsVerticalScrollIndicator={false}>
+		<View style={{flex:1, backgroundColor: '#242e42'}}>
+			<ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: '#242e42'}}> 
 				<LinearGradient colors={['#c7417b', '#8f3b76', '#553772']}style={styles.linearGradient}>
 					{/* <Image source={require('../static/food2.jpg')} /> */}
 				</LinearGradient>
-				<View style={{backgroundColor: '#242e42'}}>
+				<View style={{flex: 1, backgroundColor: '#242e42'}}>
 					<View style={{alignItems:'center'}}>
 						<Image 
 						source={require('../static/profile.png')} 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		marginLeft: 35,
 		marginRight: 35,
-		marginTop: 20,
+		marginTop: 70,
 		marginBottom: 25,
 	},
 	buttonTextStyle: {
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
 		shadowOpacity:80, 
 		elevation: 15, 
 		margin: 10,
+		
 	}
 });
 

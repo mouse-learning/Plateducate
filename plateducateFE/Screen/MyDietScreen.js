@@ -298,7 +298,7 @@ export default class MyDietScreen extends Component  {
     return (
       <NativeBaseProvider>
         <SafeAreaView style={styles.container}>
-          <ScrollView 
+          {/* <ScrollView 
           keyboardShouldPersistTaps="handled" 
           style={styles.container}
           refreshControl={
@@ -307,7 +307,7 @@ export default class MyDietScreen extends Component  {
               onRefresh={this.onRefresh}
             />
           }
-          >
+          > */}
             <View style={styles.container}>
               <Calendar
                 onDayPress={(day) => this.onDayPress(day['dateString'])}
@@ -338,72 +338,94 @@ export default class MyDietScreen extends Component  {
                 (<Loader loading={this.state.loading} />)
               :
                 (this.state.selectedDate in this.state.foodRecord ?
-                <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+                <View style={styles.container}>
                   <Text style={styles.titleStyle}>
                     Food Consumed Today
                   </Text>
-                  <Box m={3}>
-                    <Accordion borderWidth={0} borderBottomColor={'#f5487f'} >
-                      {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
-                        <Accordion.Item key={foodID}>
-                          <Accordion.Summary bg={'#2f3b52'} _expanded={{ backgroundColor: '#c7417b' }}>
-                            <Box>
-                            <Text style={styles.summaryName}>
-                              {food['FoodName']}
-                            </Text>
-                            <Text style={styles.summaryTime}>
-                              {food['TimeOfConsumption']}
-                            </Text>
-                            </Box>
-                            <Accordion.Icon />
-                          </Accordion.Summary>
-                          <Accordion.Details bg={'#ffffff'}>
-                            <Stack space={2} justifyContent="space-between">
-                              <HStack space={2} justifyContent="space-between">
-                                <View>
-                                  <Text style={styles.foodDetails}>
-                                  ⚡ Energy: {food['Energy_100g']}kcal
-                                  </Text>
-                                  <Text style={styles.foodDetails}>
-                                  🍞 Carbs: {food['Carbs_100g']}g
-                                  </Text>
-                                  <Text style={styles.foodDetails}>
-                                  🥚 Protein: {food['Proteins_100g']}g
-                                  </Text>
-                                  <Text style={styles.foodDetails}>
-                                  🥓 Fat: {food['Fats_100g']}g
-                                  </Text>
-                                </View>
-                                <View>
-                                  <TouchableOpacity
-                                    style={styles.buttonStyle}
-                                    activeOpacity={0.5}
-                                    onPress={() => this.onDeletePress(food['ID'])}
-                                  >
-                                  <Text style={styles.buttonTextStyle}>Delete</Text>
-                                  </TouchableOpacity>
-                                </View>
-                              </HStack>
-                            </Stack>
-                          </Accordion.Details>
-                        </Accordion.Item>
-                      ))}
-                    </Accordion>
-                  </Box>
-                </ScrollView>
+                  <ScrollView 
+                    keyboardShouldPersistTaps="handled" 
+                    style={styles.foodScroll}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                      />
+                    }
+                  >
+                    <Box m={3}>
+                      <Accordion borderWidth={0} borderBottomColor={'#f5487f'}>
+                        {this.state.foodRecord[this.state.selectedDate].map((food, foodID) => (
+                          <Accordion.Item key={foodID}> 
+                            <Accordion.Summary bg={'#2f3b52'} _expanded={{ backgroundColor: '#c7417b' }}>
+                              <Box>
+                              <Text style={styles.summaryName}>
+                                {food['FoodName']}
+                              </Text>
+                              <Text style={styles.summaryTime}>
+                                {food['TimeOfConsumption']}
+                              </Text>
+                              </Box>
+                              <Accordion.Icon />
+                            </Accordion.Summary>
+                            <Accordion.Details bg={'#ffffff'}>
+                              <Stack space={2} justifyContent="space-between">
+                                <HStack space={2} justifyContent="space-between">
+                                  <View>
+                                    <Text style={styles.foodDetails}>
+                                    ⚡ Energy: {food['Energy_100g']}kcal
+                                    </Text>
+                                    <Text style={styles.foodDetails}>
+                                    🍞 Carbs: {food['Carbs_100g']}g
+                                    </Text>
+                                    <Text style={styles.foodDetails}>
+                                    🥚 Protein: {food['Proteins_100g']}g
+                                    </Text>
+                                    <Text style={styles.foodDetails}>
+                                    🥓 Fat: {food['Fats_100g']}g
+                                    </Text>
+                                  </View>
+                                  <View>
+                                    <TouchableOpacity
+                                      style={styles.buttonStyle}
+                                      activeOpacity={0.5}
+                                      onPress={() => this.onDeletePress(food['ID'])}
+                                    >
+                                    <Text style={styles.buttonTextStyle}>Delete</Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                </HStack>
+                              </Stack>
+                            </Accordion.Details>
+                          </Accordion.Item>
+                        ))}
+                      </Accordion>
+                    </Box>
+                  </ScrollView>
+                </View>
                 :
-                <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
-                  <Text style={styles.titleStyle}>
-                    No Meals Recorded
-                  </Text>
-                  <Text style={styles.textStyle}>
-                    Click the + button to add one now! 
-                  </Text>
-                </ScrollView>)
+                <View style={styles.container}>
+                  <ScrollView 
+                  keyboardShouldPersistTaps="handled" 
+                  style={styles.foodScroll}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefresh}
+                    />
+                  }
+                  >
+                    <Text style={styles.titleStyle}>
+                      No Meals Recorded
+                    </Text>
+                    <Text style={styles.textStyle}>
+                      Click the + button to add one now! 
+                    </Text>
+                  </ScrollView>
+                </View>)
               }
               
             </View>
-          </ScrollView>
+          {/* </ScrollView> */}
             <FloatingAction
               actions={actions}
               onPressItem={name => {
@@ -414,8 +436,9 @@ export default class MyDietScreen extends Component  {
                 }
                 console.log(`selected button: ${name}`);
               }}
-              buttonSize={50}
+              buttonSize={40}
               color={'#f5487f'}
+              distanceToEdge={20}
               />
         </SafeAreaView>
       </NativeBaseProvider>
@@ -433,7 +456,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '500',
     textAlign: 'center',
-    padding: 10,
+    paddingTop: 13,
+    paddingBottom: 10,
     color: '#ffffff'
   },
   textStyle: {
@@ -453,7 +477,7 @@ const styles = StyleSheet.create({
   summaryTime: {
     fontSize: 12,
     fontWeight: 'normal',
-    color: '#5b7086'
+    color: '#c9c9c9'
     // textAlign: 'right',
     // padding: 10,
   },
@@ -480,5 +504,10 @@ const styles = StyleSheet.create({
   },
   calendarTheme: {
     color: '#2f3b52'
+  },
+  foodScroll: {
+    paddingTop: 0,
+    backgroundColor:'#242e42',
+    borderRadius: 10,
   }
 });

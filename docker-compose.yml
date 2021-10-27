@@ -18,6 +18,8 @@ services:
       - ./plateducate-be/app/food.py:/plateducate-be/app/food.py
       - ./plateducate-be/app/nutrients.py:/plateducate-be/app/nutrients.py
       - ./plateducate-be/app/objectDetection.py:/plateducate-be/app/objectDetection.py
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     networks:
       - plateducate-ml_ml-network
     extra_hosts:
