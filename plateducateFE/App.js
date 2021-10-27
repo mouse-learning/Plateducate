@@ -36,13 +36,7 @@ const Auth = () => {
         name="RegisterScreen"
         component={RegisterScreen}
         options={{
-          title: 'Register', //Set Header Title
-          headerStyle: {
-            backgroundColor: '#fff', //Set Header color
-          },
-          headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
-          },
+          headerShown: false,
         }}
         />
     </Stack.Navigator>
@@ -51,11 +45,19 @@ const Auth = () => {
 
 const HomeStack = createNativeStackNavigator();
 
-function HomeScreenStack({navigation}) {
+function HomeScreenStack() {
     return (
         <HomeStack.Navigator>
-            <HomeStack.Screen name="Homepage" component={HomeScreen} options={{headerShown: false }}/>
-            <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
+            <HomeStack.Screen name="Homepage" component={HomeScreen} options={{
+              headerShown: true,
+              headerTitleAlign: 'center',
+              title: 'Plateducate',
+              headerStyle: {
+                backgroundColor: '#2f3b52', //Set Header color
+              },
+              headerTintColor: '#f5487f',
+            }}/>
+            {/* <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
             <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{
               headerShown: true,
               headerTitleAlign: 'center',
@@ -63,8 +65,8 @@ function HomeScreenStack({navigation}) {
                 backgroundColor: '#2f3b52', //Set Header color
               },
               headerTintColor: 'white',
-              }}/>
-            <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/>
+              }}/> */}
+            {/* <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/> */}
         </HomeStack.Navigator>
     )
 }

@@ -403,23 +403,25 @@ export default class MyDietScreen extends Component  {
                   </ScrollView>
                 </View>
                 :
-                <ScrollView 
-                keyboardShouldPersistTaps="handled" 
-                style={styles.foodScroll}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
-                  />
-                }
-                >
-                  <Text style={styles.titleStyle}>
-                    No Meals Recorded
-                  </Text>
-                  <Text style={styles.textStyle}>
-                    Click the + button to add one now! 
-                  </Text>
-                </ScrollView>)
+                <View style={styles.container}>
+                  <ScrollView 
+                  keyboardShouldPersistTaps="handled" 
+                  style={styles.foodScroll}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefresh}
+                    />
+                  }
+                  >
+                    <Text style={styles.titleStyle}>
+                      No Meals Recorded
+                    </Text>
+                    <Text style={styles.textStyle}>
+                      Click the + button to add one now! 
+                    </Text>
+                  </ScrollView>
+                </View>)
               }
               
             </View>
@@ -454,6 +456,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '500',
     textAlign: 'center',
+    paddingTop: 13,
     paddingBottom: 10,
     color: '#ffffff'
   },
@@ -474,7 +477,7 @@ const styles = StyleSheet.create({
   summaryTime: {
     fontSize: 12,
     fontWeight: 'normal',
-    color: '#5b7086'
+    color: '#c9c9c9'
     // textAlign: 'right',
     // padding: 10,
   },

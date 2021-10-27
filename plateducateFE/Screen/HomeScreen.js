@@ -120,30 +120,30 @@ const HomeScreen = ({ navigation: { navigate } }) => {
           <View style={styles.summaryContainer} >
             <View style={styles.summaryHeader}>
               <Text style={styles.header}>
-                Nutrition Breakdown
+                Daily Nutrition Breakdown
               </Text>
             </View>
             {/* {console.log(foodData)} */}
             {/* <View style={styles.nutritionDetail}> */}
             {foodData['energy']['y'] ?
-            <View>
+            <View style={styles.nutritionContainer}>
               <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Energy: </Text>
+                <Text style={styles.btnTextHeader}>⚡ Energy: </Text>
                 <Text style={styles.btnTextBody}>{foodData['energy']['y']} kcal</Text>   
               </Text>
               <Separator />
               <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Carbohydrates: </Text>
+                <Text style={styles.btnTextHeader}>🍞 Carbohydrates: </Text>
                 <Text style={styles.btnTextBody}>{foodData['carbs']['y']} g</Text>   
               </Text>
               <Separator />
               <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Fat: </Text>
+                <Text style={styles.btnTextHeader}>🥓 Fat: </Text>
                 <Text style={styles.btnTextBody}>{foodData['fat']['y']} g</Text>   
               </Text>
               <Separator />
               <Text style={styles.nutritionTexts}>
-                <Text style={styles.btnTextHeader}>Protein: </Text>
+                <Text style={styles.btnTextHeader}>🥚 Protein: </Text>
                 <Text style={styles.btnTextBody}>{foodData['protein']['y']} g</Text>   
               </Text>
               <Separator />
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 25
   },
   summaryHeader: {
-    // flex: 1,
+    flex: 1,
     // flexDirection: 'row',
     // backgroundColor: 'white',
     backgroundColor: '#c7417b',
@@ -210,17 +210,21 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // margin: 18
   },
-  
+  nutritionContainer: {
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+  },
   separator: {
     borderBottomColor: 'grey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   btnTextHeader: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
   },
   btnTextBody : {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     // color: 'white',
   },
@@ -241,19 +245,21 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   noRecordContainer: {
-    margin: 15,
-    padding: 15
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   noRecordHeader: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 15
   },
   noRecordText: {
-    fontSize: 16,
+    fontSize: 14,
     // fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    paddingBottom: 30
   }
 });
 
