@@ -18,7 +18,7 @@ const SplashScreen = ({navigation}) => {
       AsyncStorage.getItem('@user_id').then((value) =>
         navigation.replace(value === null ? 'Auth' : 'LoggedIn'),
       );
-    }, 2000);
+    }, 1500);
   }, []);
 
   return (
@@ -26,20 +26,20 @@ const SplashScreen = ({navigation}) => {
       {/* <Image
         source={require('../static/logo.png')}
         style={{width: '50%', resizeMode: 'contain', margin: 30}}
-      /> */}
-      <AnimatedLoader
+      />
+      {/* <AnimatedLoader
         visible={animating}
-        overlayColor="rgba(255,255,255,0.75)"
+        // overlayColor="rgba(255,255,255,0.75)"
         source={require("../static/lottie-loader-new.json")}
         animationStyle={styles.lottie}
         speed={1}
-      />
-      <ActivityIndicator
+      /> */}
+      {/* <ActivityIndicator
         animating={animating}
         color="#FFFFFF"
         size="large"
         style={styles.activityIndicator}
-      />
+      /> */}
     </View>
   );
 };
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#2f3b52',
   },
   activityIndicator: {
     alignItems: 'center',
