@@ -17,7 +17,6 @@ import ProfileScreen from './Screen/ProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HeaderBackButton } from '@react-navigation/stack';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,16 +56,6 @@ function HomeScreenStack() {
               },
               headerTintColor: '#f5487f',
             }}/>
-            {/* <HomeStack.Screen name="MyDiet" component={MyDietScreen}  options={{headerShown: false }}/>
-            <HomeStack.Screen name="Prediction" component={PredictionScreen}  options={{
-              headerShown: true,
-              headerTitleAlign: 'center',
-              headerStyle: {
-                backgroundColor: '#2f3b52', //Set Header color
-              },
-              headerTintColor: 'white',
-              }}/> */}
-            {/* <HomeStack.Screen name="Recommendations" component={RecommendationScreen}/> */}
         </HomeStack.Navigator>
     )
 }
@@ -113,8 +102,10 @@ function LoggedIn() {
             tabBarInactiveTintColor: '#5b7086',
             tabBarStyle: {
               backgroundColor: '#2f3b52'
-            }
-          })}
+            },
+          }
+          
+          )}
           >
             {/* List of tabs at bottom of screen */}
             <Tab.Screen name="Home" component={HomeScreenStack} options={{headerShown: false}}/>
