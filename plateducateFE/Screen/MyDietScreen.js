@@ -285,7 +285,7 @@ export default class MyDietScreen extends Component  {
 
   componentDidMount = () => {
     this.getData();
-    setInterval(this.getData, 30000); // runs every 5 seconds.
+    setInterval(this.getData, 1500); // runs every 5 seconds.
   }
 
   componentWillUnmount() {
