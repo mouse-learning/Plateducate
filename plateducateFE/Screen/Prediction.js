@@ -78,10 +78,10 @@ const PredictionScreen = ({ route, navigation }) => {
 			if (key == 'energy') {
 				unit = 'kcal'
 			} else {
-				unit = 'g'
+				unit = 'grams'
 			}
 			const amountOverBy = nutrientLimitCheck.overBy[key];
-			const temp = key.charAt(0).toUpperCase() + key.slice(1) + ' limit over by ' + amountOverBy + unit + "!"
+			const temp = key.charAt(0).toUpperCase() + key.slice(1) + ' limit over by ' + amountOverBy + " " + unit + "!";
 			nutAlert = nutAlert.concat(temp, '\n')
 		}
 		nutAlert = nutAlert.concat('\nAre you sure you want to add food to log?')
@@ -100,31 +100,47 @@ const PredictionScreen = ({ route, navigation }) => {
                 fat: fourNutrientsDict[foodClass]['fat'],
             };
 
-			const nutrientLimitCheck = NutrientLimitCheck(dataToSend);
+            fetch('http://10.0.2.2:4000/fetch_food_today/'+user_id, {
+                method: 'GET',
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson.result)
+                // DO EVERYTHING HERE
+                // NUTRIENT LIMIT CHECK AND THE CONFIRMATION DIALOG, ETC.
+                const nutrientLimitCheck = NutrientLimitCheck(dataToSend, responseJson.result);
+                console.log(nutrientLimitCheck);
 
-			if (nutrientLimitCheck.limitReached == true) {
-				console.log('limit reached');
+                if (nutrientLimitCheck.limitReached == true) {
+                    console.log('limit reached');
+    
+                    return Alert.alert(
+                        "Warning: Daily Nutrient Limit Reached ",
+                        getNutritionAlert(nutrientLimitCheck),
+                        [
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    addFood(foodClass, dataToSend);
+                                },
+                            },
+                            {
+                                text: "No",
+                            },
+                        ]
+    
+                    );
+                } else {
+                    console.log('limit not reached');
+                    addFood(foodClass, dataToSend);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                this.setState({loading: false})
+            });
 
-				return Alert.alert(
-					"Warning: Daily Nutrient Limit Reached ",
-					getNutritionAlert(nutrientLimitCheck),
-					[
-						{
-							text: "Yes",
-							onPress: () => {
-								addFood(foodClass, dataToSend);
-							},
-						},
-						{
-							text: "No",
-						},
-					]
 
-				);
-			} else {
-				console.log('limit not reached');
-				addFood(foodClass, dataToSend);
-			}
 
             
         })
