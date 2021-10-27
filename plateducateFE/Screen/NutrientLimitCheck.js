@@ -1,9 +1,10 @@
 const NutrientLimitCheck = (dataToSend, dailyTotal) => {
     // Check nutrient limits
-    const energyLim = 1600;
-    const proteinsLim = 50;
-    const carbsLim = 100;
-    const fatsLim = 70;
+    // Source: https://healthyeating.sfgate.com/recommended-grams-nutrients-per-day-healthy-weight-loss-6294.html
+    const energyLim = 2000;
+    const proteinsLim = 100; 
+    const carbsLim = 250;
+    const fatsLim = 66;
 
     var nutritionLimit = {
         limitReached: false,
