@@ -11,7 +11,7 @@ import {
     PermissionsAndroid,
     Dimensions,
     ScrollView,
-	Alert
+	Alert,
 } from 'react-native';
 
 import { Accordion, NativeBaseProvider, NavigationContainer, Center, Box, HStack, Stack } from 'native-base';
@@ -108,31 +108,35 @@ const PredictionScreen = ({ route, navigation }) => {
                 console.log(responseJson.result)
                 // DO EVERYTHING HERE
                 // NUTRIENT LIMIT CHECK AND THE CONFIRMATION DIALOG, ETC.
-                const nutrientLimitCheck = NutrientLimitCheck(dataToSend, responseJson.result);
-                console.log(nutrientLimitCheck);
-
-                if (nutrientLimitCheck.limitReached == true) {
-                    console.log('limit reached');
-    
-                    return Alert.alert(
-                        "Warning: Daily Nutrient Limit Reached ",
-                        getNutritionAlert(nutrientLimitCheck),
-                        [
-                            {
-                                text: "Yes",
-                                onPress: () => {
-                                    addFood(foodClass, dataToSend);
-                                },
-                            },
-                            {
-                                text: "No",
-                            },
-                        ]
-    
-                    );
-                } else {
-                    console.log('limit not reached');
+                if (responseJson.result.isEmpty == 'True') {
                     addFood(foodClass, dataToSend);
+                } else {
+                    const nutrientLimitCheck = NutrientLimitCheck(dataToSend, responseJson.result);
+                    console.log(nutrientLimitCheck);
+    
+                    if (nutrientLimitCheck.limitReached == true) {
+                        console.log('limit reached');
+        
+                        return Alert.alert(
+                            "Warning: Daily Nutrient Limit Reached ",
+                            getNutritionAlert(nutrientLimitCheck),
+                            [
+                                {
+                                    text: "Yes",
+                                    onPress: () => {
+                                        addFood(foodClass, dataToSend);
+                                    },
+                                },
+                                {
+                                    text: "No",
+                                },
+                            ]
+        
+                        );
+                    } else {
+                        console.log('limit not reached');
+                        addFood(foodClass, dataToSend);
+                    }
                 }
             })
             .catch((error) => {
