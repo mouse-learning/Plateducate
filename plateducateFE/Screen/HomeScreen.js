@@ -17,9 +17,9 @@ import {
 from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useIsFocused } from '@react-navigation/native';
 import { VictoryPie, VictoryLabel } from 'victory-native';
 import moment from "moment";
-import { flex, marginBottom } from 'styled-system';
 import Loader from './Components/Loader';
 
 const dimensions = Dimensions.get('screen');
@@ -41,6 +41,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
   const [graphicData, setGraphicData] = useState(defaultGraphicData);
   const [foodData, setFoodData] = useState(defaultFoodData)
   const isMounted = useRef(false)
+  const isFocused = useIsFocused();
 
   function getData() {
     AsyncStorage.getItem('@user_id').then((user_id) => {
@@ -76,6 +77,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
             console.log("no record found")
             graphData.push(results["carbs"],results["fat"],results["protein"],) 
             setGraphicData(graphData)
+            setFoodData(results)
           }
         })
         .catch((error) => {
@@ -91,7 +93,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
 
   useEffect(() => {
     getData();
-  },[])
+  },[isFocused])
 
 
   useEffect(() => {
@@ -107,7 +109,6 @@ const HomeScreen = ({ navigation: { navigate } }) => {
 
     return (
       <SafeAreaView style={styles.root}>
-        
         <View style={styles.pieContainer}>
           <VictoryPie
             animate={{ easing: 'exp' }}
