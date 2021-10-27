@@ -72,7 +72,7 @@ const RegisterScreen = ({navigation}) => {
       fontSize: 14,
     },
     successTextStyle: {
-      color: 'green',
+      color: '#ffffff',
       textAlign: 'center',
       fontSize: 18,
       padding: 30,
@@ -170,12 +170,12 @@ const RegisterScreen = ({navigation}) => {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#fff',
+          backgroundColor: '#242e42',
           justifyContent: 'center',
         }}>
         <Image
           source={require('../static/logo.png')}
-          style={{height: 150, resizeMode: 'contain', alignSelf: 'center'}}
+          style={{height: 70, resizeMode: 'contain', alignSelf: 'center'}}
         />
         <Text style={styles.successTextStyle}>Registration Successful.</Text>
         <TouchableOpacity
