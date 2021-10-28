@@ -28,6 +28,11 @@ const overlayStartPos = dimensions.height/2.4;
 const overlayHeight = dimensions.height - overlayStartPos;
 const buttonInOverlayHeight = overlayHeight/2.5;
 
+const energyLim = 2000;
+const proteinsLim = 100; 
+const carbsLim = 250;
+const fatsLim = 66;
+
 const Separator = () => (
   <View style={styles.separator} />
 );
@@ -92,6 +97,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
   }
 
   useEffect(() => {
+    console.log("isFocused")
     getData();
   },[isFocused])
 
@@ -119,7 +125,6 @@ const HomeScreen = ({ navigation: { navigate } }) => {
             innerRadius={50}
             padding={{ left: 70, right: 70 }}
             padAngle={3}
-            radius={({ datum }) => 95 + datum.y * 0.05}
             labelComponent={<VictoryLabel inline style={{ fill: "white", fontSize: "15", fontWeight: "bold" }} />}
           />    
         </View>
@@ -139,22 +144,38 @@ const HomeScreen = ({ navigation: { navigate } }) => {
           <View style={styles.nutritionContainer}>
             <Text style={styles.nutritionTexts}>
               <Text style={styles.btnTextHeader}>⚡ Energy: </Text>
-              <Text style={styles.btnTextBody}>{foodData['energy']['y']} kcal</Text>   
+              <Text style={styles.btnTextBody}>{foodData['energy']['y']} kcal</Text>
+              {foodData['energy']['y']>energyLim ? 
+              <Text style={styles.btnTextWarning}> (Over by {foodData['energy']['y']-energyLim} kcal!)</Text>   
+              :
+              null}
             </Text>
             <Separator />
             <Text style={styles.nutritionTexts}>
               <Text style={styles.btnTextHeader}>🍞 Carbohydrates: </Text>
               <Text style={styles.btnTextBody}>{foodData['carbs']['y']} g</Text>   
+              {foodData['carbs']['y']>carbsLim ? 
+              <Text style={styles.btnTextWarning}> (Over by {foodData['carbs']['y']-carbsLim} grams!)</Text>   
+              :
+              null}
             </Text>
             <Separator />
             <Text style={styles.nutritionTexts}>
               <Text style={styles.btnTextHeader}>🥓 Fat: </Text>
               <Text style={styles.btnTextBody}>{foodData['fat']['y']} g</Text>   
+              {foodData['fat']['y']>fatsLim ? 
+              <Text style={styles.btnTextWarning}> (Over by {foodData['fat']['y']-fatsLim} grams!)</Text>   
+              :
+              null}
             </Text>
             <Separator />
             <Text style={styles.nutritionTexts}>
               <Text style={styles.btnTextHeader}>🥚 Protein: </Text>
               <Text style={styles.btnTextBody}>{foodData['protein']['y']} g</Text>   
+              {foodData['protein']['y']>proteinsLim ? 
+              <Text style={styles.btnTextWarning}> (Over by {foodData['fat']['y']-proteinsLim} grams!)</Text>   
+              :
+              null}
             </Text>
             <Separator />
           </View>
@@ -232,6 +253,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     // fontWeight: 'bold',
     // color: 'white',
+  },
+  btnTextWarning : {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'darkred'
   },
   nutritionDetail: {
     flex: 1,
