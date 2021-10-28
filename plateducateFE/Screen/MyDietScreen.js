@@ -285,7 +285,7 @@ export default class MyDietScreen extends Component  {
 
   componentDidMount = () => {
     this.getData();
-    setInterval(this.getData, 1500); // runs every 5 seconds.
+    setInterval(this.getData, 30000); // runs every 5 seconds.
   }
 
   componentWillUnmount() {
@@ -332,6 +332,9 @@ export default class MyDietScreen extends Component  {
                   textMonthFontSize: 16,
                 }}
               />
+              <Text style={styles.refreshText}>
+                Scroll up to refresh page 
+              </Text>
               {/* {console.log("foodRecord:")}
               {console.log(this.state.foodRecord[this.state.selectedDate])} */}
               {this.state.loading?
@@ -453,10 +456,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   titleStyle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '500',
     textAlign: 'center',
-    paddingTop: 13,
     paddingBottom: 10,
     color: '#ffffff'
   },
@@ -465,6 +467,14 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     textAlign: 'center',
     padding: 30,
+    color: '#5b7086'
+  },
+  refreshText: {
+    fontSize: 14,
+    // fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 15,
+    paddingBottom: 0,
     color: '#5b7086'
   },
   summaryName: {
