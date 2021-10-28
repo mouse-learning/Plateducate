@@ -173,7 +173,7 @@ const HomeScreen = ({ navigation: { navigate } }) => {
               <Text style={styles.btnTextHeader}>🥚 Protein: </Text>
               <Text style={styles.btnTextBody}>{foodData['protein']['y']} g</Text>   
               {foodData['protein']['y']>proteinsLim ? 
-              <Text style={styles.btnTextWarning}> (Over by {foodData['fat']['y']-proteinsLim} grams!)</Text>   
+              <Text style={styles.btnTextWarning}> (Over by {foodData['protein']['y']-proteinsLim} grams!)</Text>   
               :
               null}
             </Text>
