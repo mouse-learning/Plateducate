@@ -1,5 +1,5 @@
 # mouselearning
-An Android Mobile Food Image Recognition Application which aims to helps users lose weight in order to avoid health problems, such as heart-related issues and asthma.
+An AI Diet Mobile Application which aims to helps users lose weight in order to avoid health problems, such as heart-related issues and asthma.
 
 # Team Members
 1. Nardiena Althafia Pratama - 46223713
