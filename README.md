@@ -1,6 +1,14 @@
 # mouselearning
 An AI Diet Mobile Application which aims to helps users lose weight in order to avoid health problems, such as heart-related issues and asthma.
 
+# Architecture
+The application consists of three main parts: front end (client), back end API, and the machine learning application. Each of these three services communicate between each other, sending and receiving requests for each of the application's features. The back end API and the machine learning application are containerised using Docker. The Darknet YOLO Model used for the food detector in the machine learning application has been set up with Tensorflow Serving to future-proof the application by easing the process of using a new or enhanced model in a production setting without changing any of the service architecture or APIs. 
+
+To find out more about deploying deep learning models using Tensorflow Serving, Docker, and Flask, click [here](https://towardsdatascience.com/deploying-deep-learning-models-using-tensorflow-serving-with-docker-and-flask-3b9a76ffbbda).
+
+To find out more about training a YOLO Food Detection Model using Darknet, click [here](http://bennycheung.github.io/yolo-for-real-time-food-detection).
+
+
 # Team Members
 1. Nardiena Althafia Pratama - 46223713
 2. Muhammad Naufal - 46223638
